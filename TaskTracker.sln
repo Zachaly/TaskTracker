@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Domain", "TaskTracker.Domain\TaskTracker.Domain.csproj", "{8777E08A-9624-43E7-9DD2-3BFF784B6680}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Domain", "TaskTracker.Domain\TaskTracker.Domain.csproj", "{8777E08A-9624-43E7-9DD2-3BFF784B6680}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Model", "TaskTracker.Model\TaskTracker.Model.csproj", "{51940811-8BD4-41DA-AAC2-78107B2C0D22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Model", "TaskTracker.Model\TaskTracker.Model.csproj", "{51940811-8BD4-41DA-AAC2-78107B2C0D22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Database", "TaskTracker.Database\TaskTracker.Database.csproj", "{690DCC2F-B5DE-456D-A3A2-97C4DCCC6CA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Database", "TaskTracker.Database\TaskTracker.Database.csproj", "{690DCC2F-B5DE-456D-A3A2-97C4DCCC6CA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Application", "TaskTracker.Application\TaskTracker.Application.csproj", "{4A3405F3-DF40-4E1F-A63E-7BFE3FD3C60B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Application", "TaskTracker.Application\TaskTracker.Application.csproj", "{4A3405F3-DF40-4E1F-A63E-7BFE3FD3C60B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Api", "TaskTracker.Api\TaskTracker.Api.csproj", "{B1B84283-BAF4-4039-BAFA-65527CFFE078}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Api", "TaskTracker.Api\TaskTracker.Api.csproj", "{B1B84283-BAF4-4039-BAFA-65527CFFE078}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Tests.Unit", "TaskTracker.Tests.Unit\TaskTracker.Tests.Unit.csproj", "{3E29A5C8-D68C-4312-92A5-61C9B7C7FB1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Tests.Unit", "TaskTracker.Tests.Unit\TaskTracker.Tests.Unit.csproj", "{3E29A5C8-D68C-4312-92A5-61C9B7C7FB1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Tests.Integration", "TaskTracker.Tests.Integration\TaskTracker.Tests.Integration.csproj", "{3037D1C9-C2FD-4339-BF2D-B44083449F77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Tests.Integration", "TaskTracker.Tests.Integration\TaskTracker.Tests.Integration.csproj", "{3037D1C9-C2FD-4339-BF2D-B44083449F77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Expressions", "TaskTracker.Expressions\TaskTracker.Expressions.csproj", "{5C4D3E68-0600-42A6-A8D8-079F800D1298}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{3037D1C9-C2FD-4339-BF2D-B44083449F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3037D1C9-C2FD-4339-BF2D-B44083449F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3037D1C9-C2FD-4339-BF2D-B44083449F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C4D3E68-0600-42A6-A8D8-079F800D1298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C4D3E68-0600-42A6-A8D8-079F800D1298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C4D3E68-0600-42A6-A8D8-079F800D1298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C4D3E68-0600-42A6-A8D8-079F800D1298}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
