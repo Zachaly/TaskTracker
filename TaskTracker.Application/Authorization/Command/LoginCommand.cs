@@ -39,8 +39,8 @@ namespace TaskTracker.Application.Authorization.Command
                 return new DataResponseModel<LoginResponse>("Invalid password or email");
             }
 
-            var accessToken = await _tokenService.GenerateAccessToken(user);
-            var refreshToken = await _tokenService.GenerateRefreshToken();
+            var accessToken = await _tokenService.GenerateAccessTokenAsync(user);
+            var refreshToken = await _tokenService.GenerateRefreshTokenAsync();
 
             user.RefreshToken = refreshToken;
 

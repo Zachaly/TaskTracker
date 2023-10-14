@@ -12,9 +12,9 @@ namespace TaskTracker.Application.Authorization.Service
 {
     public interface ITokenService
     {
-        Task<string> GenerateAccessToken(User user);
-        Task<string> GenerateRefreshToken();
-        Task<long> GetUserIdFromAccessToken(string accessToken);
+        Task<string> GenerateAccessTokenAsync(User user);
+        Task<string> GenerateRefreshTokenAsync();
+        Task<long> GetUserIdFromAccessTokenAsync(string accessToken);
 
     }
 
@@ -31,7 +31,7 @@ namespace TaskTracker.Application.Authorization.Service
             _secretKey = configuration["Auth:SecretKey"]!;
         }
 
-        public Task<string> GenerateAccessToken(User user)
+        public Task<string> GenerateAccessTokenAsync(User user)
         {
             var claims = new List<Claim> 
             { 
@@ -41,20 +41,23 @@ namespace TaskTracker.Application.Authorization.Service
 
             var handler = new JsonWebTokenHandler();
 
+            handler.MapInboundClaims = false;
+
             var token = handler.CreateToken(new SecurityTokenDescriptor
             {
                 Audience = _authAudience,
                 Issuer = _authIssuer,
                 Subject = new ClaimsIdentity(claims),
-                SigningCredentials = new SigningCredentials(GetRsaSecurityKey(), SecurityAlgorithms.Sha256),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
+                SecurityAlgorithms.HmacSha256Signature),
                 Expires = DateTime.UtcNow.AddHours(1),
-                NotBefore = DateTime.UtcNow
+                NotBefore = DateTime.UtcNow,
             });
 
             return Task.FromResult(token);
         }
 
-        public Task<string> GenerateRefreshToken()
+        public Task<string> GenerateRefreshTokenAsync()
         {
             var randomNumber = new byte[64];
             using (var rng = RandomNumberGenerator.Create())
@@ -64,19 +67,22 @@ namespace TaskTracker.Application.Authorization.Service
             }
         }
 
-        public Task<long> GetUserIdFromAccessToken(string accessToken)
+        public Task<long> GetUserIdFromAccessTokenAsync(string accessToken)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = true,
                 ValidateIssuer = true,
-                IssuerSigningKey = GetRsaSecurityKey(),
+                ValidIssuer = _authIssuer,
+                ValidAudience = _authAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidAlgorithms = new[] { SecurityAlgorithms.Sha256 }
+                ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256Signature }
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            tokenHandler.MapInboundClaims = false;
 
             var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
 
@@ -95,14 +101,6 @@ namespace TaskTracker.Application.Authorization.Service
             var id = long.Parse(idClaim.Value);
 
             return Task.FromResult(id);
-        }
-
-        private RsaSecurityKey GetRsaSecurityKey()
-        {
-            var rsa = RSA.Create();
-            rsa.ImportRSAPrivateKey(Encoding.UTF8.GetBytes(_secretKey), out _);
-
-            return new RsaSecurityKey(rsa);
         }
     }
 }
