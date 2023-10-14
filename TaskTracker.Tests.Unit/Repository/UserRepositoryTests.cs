@@ -120,5 +120,46 @@ namespace TaskTracker.Tests.Unit.Repository
             Assert.Equal(user.LastName, createdUser.LastName);
             Assert.Equal(user.PasswordHash, createdUser.PasswordHash);
         }
+
+        [Fact]
+        public async Task GetByEmailAsync_ReturnsCorrectUser()
+        {
+            var faker = new Faker<User>()
+                .RuleFor(u => u.Email, f => f.Person.Email)
+                .RuleFor(u => u.FirstName, f => f.Person.FirstName)
+                .RuleFor(u => u.LastName, f => f.Person.LastName)
+                .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
+
+            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.SaveChanges();
+
+            var user = _dbContext.Users.Last();
+
+            var result = await _repository.GetByEmailAsync(user.Email);
+
+            Assert.Equal(user, result);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_UpdatesProperUser()
+        {
+            var faker = new Faker<User>()
+                .RuleFor(u => u.Email, f => f.Person.Email)
+                .RuleFor(u => u.FirstName, f => f.Person.FirstName)
+                .RuleFor(u => u.LastName, f => f.Person.LastName)
+                .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
+
+            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.SaveChanges();
+
+
+            var user = _dbContext.Users.First();
+
+            user.Email = "newemail";
+
+            await _repository.UpdateAsync(user);
+
+            Assert.Equal(_dbContext.Users.First(x => x.Id == user.Id).Email, user.Email);
+        }
     }
 }
