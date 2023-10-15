@@ -2,7 +2,9 @@
 {
     public class CreatedResponseModel : ResponseModel
     {
-        public long? NewEntityId { get; }
+        public long? NewEntityId { get; set; }
+
+        public CreatedResponseModel() : base("") { }
 
         public CreatedResponseModel(string error) : base(error) { }
 

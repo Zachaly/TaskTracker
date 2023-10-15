@@ -2,7 +2,9 @@
 {
     public class DataResponseModel<TData> : ResponseModel
     {
-        public TData? Data { get; } = default;
+        public TData? Data { get; set; } = default;
+
+        public DataResponseModel() { }
 
         public DataResponseModel(TData data) : base()
         {

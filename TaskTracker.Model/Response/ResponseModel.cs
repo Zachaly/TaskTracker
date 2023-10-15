@@ -2,9 +2,9 @@
 {
     public class ResponseModel
     {
-        public bool IsSuccess { get; }
-        public string? Error { get; }
-        public IDictionary<string, string[]>? ValidationErrors { get; }
+        public bool IsSuccess { get; set; }
+        public string? Error { get; set; }
+        public IDictionary<string, string[]>? ValidationErrors { get; set; }
 
         public ResponseModel()
         {

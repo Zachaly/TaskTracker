@@ -1,25 +1,16 @@
 ﻿using Bogus;
-using Microsoft.EntityFrameworkCore;
-using TaskTracker.Database;
 using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 
-namespace TaskTracker.Tests.Unit.Repository
+namespace TaskTracker.Tests.Integration.DatabaseTests
 {
-    public class UserRepositoryTests
+    public class UserRepositoryTests : DatabaseTest
     {
         private readonly UserRepository _repository;
-        private readonly ApplicationDbContext _dbContext;
 
         public UserRepositoryTests()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            _dbContext = new ApplicationDbContext(options);
-
             _repository = new UserRepository(_dbContext);
         }
 
@@ -35,7 +26,7 @@ namespace TaskTracker.Tests.Unit.Repository
             _dbContext.Users.AddRange(faker.Generate(5));
             _dbContext.SaveChanges();
 
-            var user = _dbContext.Users.Last();
+            var user = _dbContext.Users.First();
 
             await _repository.DeleteByIdAsync(user.Id);
 
@@ -54,9 +45,7 @@ namespace TaskTracker.Tests.Unit.Repository
             _dbContext.Users.AddRange(faker.Generate(5));
             _dbContext.SaveChanges();
 
-            var user = _dbContext.Users.Last();
-
-            await Assert.ThrowsAsync<EntityNotFoundException>(async () => await _repository.DeleteByIdAsync(user.Id + 1));
+            await Assert.ThrowsAsync<EntityNotFoundException>(async () => await _repository.DeleteByIdAsync(2137));
         }
 
         [Fact]
@@ -71,7 +60,7 @@ namespace TaskTracker.Tests.Unit.Repository
             _dbContext.Users.AddRange(faker.Generate(5));
             _dbContext.SaveChanges();
 
-            var user = _dbContext.Users.Last();
+            var user = _dbContext.Users.First();
 
             var model = await _repository.GetByIdAsync(user.Id);
 
@@ -93,7 +82,7 @@ namespace TaskTracker.Tests.Unit.Repository
             _dbContext.Users.AddRange(faker.Generate(5));
             _dbContext.SaveChanges();
 
-            var user = _dbContext.Users.Last();
+            var user = _dbContext.Users.First();
 
             var email = await _repository.GetByIdAsync(user.Id, u => u.Email);
 
@@ -133,7 +122,7 @@ namespace TaskTracker.Tests.Unit.Repository
             _dbContext.Users.AddRange(faker.Generate(5));
             _dbContext.SaveChanges();
 
-            var user = _dbContext.Users.Last();
+            var user = _dbContext.Users.First();
 
             var result = await _repository.GetByEmailAsync(user.Email);
 

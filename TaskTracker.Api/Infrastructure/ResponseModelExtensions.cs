@@ -3,7 +3,7 @@ using TaskTracker.Model.Response;
 
 namespace TaskTracker.Api.Infrastructure
 {
-    public static class ResponseModelExtenstions
+    public static class ResponseModelExtensions
     {
         public static ActionResult<T> ReturnOkOrBadRequest<T>(this DataResponseModel<T> response)
         {
