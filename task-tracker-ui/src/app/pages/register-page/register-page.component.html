@@ -1,0 +1,31 @@
+<div class="columns is-centered">
+    <div class="column is-3 mt-6">
+        <h1 class="title is-1 has-text-centered">Register</h1>
+        <form class="is-flex is-flex-direction-column" (ngSubmit)="register()">
+            <div class="control">
+                <label class="label">Email</label>
+                <input class="input" name="email" [(ngModel)]="request.email"/>
+                <app-form-error-list [errors]="validationErrors.Email"/>
+            </div>
+            <div class="control">
+                <label class="label">First name</label>
+                <input class="input" name="firstName" [(ngModel)]="request.firstName"/>
+                <app-form-error-list [errors]="validationErrors.FirstName"/>
+            </div>
+            <div class="control">
+                <label class="label">Last Name</label>
+                <input class="input" name="lastName" [(ngModel)]="request.lastName"/>
+                <app-form-error-list [errors]="validationErrors.LastName"/>
+            </div>
+            <div class="control">
+                <label class="label">Password</label>
+                <input class="input" name="password" type="password" [(ngModel)]="request.password"/>
+                <app-form-error-list [errors]="validationErrors.Password"/>
+            </div>
+            <div class="is-flex is-justify-content-space-between mt-2">
+                <button class="button is-primary">Register</button>
+                <button class="button is-info" type="button" (click)="goToLogin()">Login</button>
+            </div>
+        </form>
+    </div>
+</div>

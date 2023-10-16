@@ -1,0 +1,19 @@
+<div class="columns is-centered">
+    <div class="column is-3 mt-6">
+        <h1 class="title is-1 has-text-centered">Login</h1>
+        <form class="is-flex is-flex-direction-column" (ngSubmit)="login()">
+            <div class="control">
+                <label class="label">Email</label>
+                <input class="input" name="email" [(ngModel)]="request.email"/>
+            </div>
+            <div class="control">
+                <label class="label">Password</label>
+                <input class="input" name="password" type="password" [(ngModel)]="request.password"/>
+            </div>
+            <div class="is-flex is-justify-content-space-between mt-2">
+                <button class="button is-primary">Login</button>
+                <button class="button is-info" type="button" (click)="goToRegister()">Register</button>
+            </div>
+        </form>
+    </div>
+</div>

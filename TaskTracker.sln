@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Tests.Unit", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Tests.Integration", "TaskTracker.Tests.Integration\TaskTracker.Tests.Integration.csproj", "{3037D1C9-C2FD-4339-BF2D-B44083449F77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Expressions", "TaskTracker.Expressions\TaskTracker.Expressions.csproj", "{5C4D3E68-0600-42A6-A8D8-079F800D1298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.Expressions", "TaskTracker.Expressions\TaskTracker.Expressions.csproj", "{5C4D3E68-0600-42A6-A8D8-079F800D1298}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "task-tracker-ui", "task-tracker-ui\task-tracker-ui.esproj", "{E786DD94-68DA-477B-A00C-A60105663A9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,12 @@ Global
 		{5C4D3E68-0600-42A6-A8D8-079F800D1298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C4D3E68-0600-42A6-A8D8-079F800D1298}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C4D3E68-0600-42A6-A8D8-079F800D1298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E786DD94-68DA-477B-A00C-A60105663A9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E786DD94-68DA-477B-A00C-A60105663A9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E786DD94-68DA-477B-A00C-A60105663A9F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E786DD94-68DA-477B-A00C-A60105663A9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E786DD94-68DA-477B-A00C-A60105663A9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E786DD94-68DA-477B-A00C-A60105663A9F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
