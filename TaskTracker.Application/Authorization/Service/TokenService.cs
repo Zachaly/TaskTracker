@@ -15,7 +15,6 @@ namespace TaskTracker.Application.Authorization.Service
         Task<string> GenerateAccessTokenAsync(User user);
         Task<string> GenerateRefreshTokenAsync();
         Task<long> GetUserIdFromAccessTokenAsync(string accessToken);
-
     }
 
     public class TokenService : ITokenService
@@ -95,7 +94,7 @@ namespace TaskTracker.Application.Authorization.Service
 
             if(idClaim is null)
             {
-                throw new InvalidTokenException("Token lacks required claim");
+                throw new InvalidTokenException("Token is not valid jwt");
             }
 
             var id = long.Parse(idClaim.Value);

@@ -17,12 +17,17 @@ namespace TaskTracker.Application.Authorization.Command
         private readonly IUserRepository _userRepository;
         private readonly IHashService _hashService;
         private readonly ITokenService _tokenService;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IRefreshTokenFactory _refreshTokenFactory;
 
-        public LoginCommandHandler(IUserRepository userRepository, IHashService hashService, ITokenService tokenService)
+        public LoginCommandHandler(IUserRepository userRepository, IHashService hashService, ITokenService tokenService,
+            IRefreshTokenRepository refreshTokenRepository, IRefreshTokenFactory refreshTokenFactory)
         {
             _userRepository = userRepository;
             _hashService = hashService;
             _tokenService = tokenService;
+            _refreshTokenRepository = refreshTokenRepository;
+            _refreshTokenFactory = refreshTokenFactory;
         }
 
         public async Task<DataResponseModel<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -40,11 +45,16 @@ namespace TaskTracker.Application.Authorization.Command
             }
 
             var accessToken = await _tokenService.GenerateAccessTokenAsync(user);
-            var refreshToken = await _tokenService.GenerateRefreshTokenAsync();
+            var refreshTokenString = await _tokenService.GenerateRefreshTokenAsync();
 
-            user.RefreshToken = refreshToken;
+            while(await _refreshTokenRepository.CheckIfTokenExistsAsync(refreshTokenString))
+            {
+                refreshTokenString = await _tokenService.GenerateRefreshTokenAsync();
+            }
 
-            await _userRepository.UpdateAsync(user);
+            var refreshToken = _refreshTokenFactory.Create(user.Id, refreshTokenString);
+
+            await _refreshTokenRepository.AddAsync(refreshToken);
 
             return new DataResponseModel<LoginResponse>(new LoginResponse
             {
@@ -56,7 +66,7 @@ namespace TaskTracker.Application.Authorization.Command
                     LastName = user.LastName,
                 },
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshTokenString
             });
         }
     }

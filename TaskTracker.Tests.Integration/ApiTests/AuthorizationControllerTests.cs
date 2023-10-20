@@ -43,7 +43,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
             Assert.Equal(registerRequest.LastName, content.UserData.LastName);
             Assert.Equal(registerRequest.Email, content.UserData.Email);
             Assert.Equal(userId, content.UserData.Id);
-            Assert.Contains(_dbContext.Users, x => x.Id == userId && x.RefreshToken == content.RefreshToken);
+            Assert.Contains(_dbContext.RefreshTokens, t => t.UserId == userId && t.Token == content.RefreshToken);
         }
 
         [Fact]
