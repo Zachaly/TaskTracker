@@ -6,6 +6,7 @@ namespace TaskTracker.Database
     public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -30,6 +31,11 @@ namespace TaskTracker.Database
 
             modelBuilder.Entity<User>()
                 .Property(u => u.PasswordHash);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.RefreshTokens)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserId);
         }
     }
 }
