@@ -7,7 +7,7 @@ namespace TaskTracker.Database.Repository
     public interface IRefreshTokenRepository : IRepositoryBase<RefreshToken, RefreshTokenModel>
     {
         Task UpdateAsync(RefreshToken refreshToken);
-        Task<bool> CheckIfTokenExistsAsync(string token);
+        Task<RefreshToken> GetTokenAsync(string token);
     }
 
     public class RefreshTokenRepository : RepositoryBase<RefreshToken, RefreshTokenModel>, IRefreshTokenRepository
@@ -17,7 +17,7 @@ namespace TaskTracker.Database.Repository
             ModelExpression = RefreshTokenExpressions.Model;
         }
 
-        public Task<bool> CheckIfTokenExistsAsync(string token)
+        public Task<RefreshToken> GetTokenAsync(string token)
         {
             throw new NotImplementedException();
         }

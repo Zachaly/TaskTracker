@@ -47,7 +47,7 @@ namespace TaskTracker.Application.Authorization.Command
             var accessToken = await _tokenService.GenerateAccessTokenAsync(user);
             var refreshTokenString = await _tokenService.GenerateRefreshTokenAsync();
 
-            while(await _refreshTokenRepository.CheckIfTokenExistsAsync(refreshTokenString))
+            while(await _refreshTokenRepository.GetTokenAsync(refreshTokenString) is not null)
             {
                 refreshTokenString = await _tokenService.GenerateRefreshTokenAsync();
             }

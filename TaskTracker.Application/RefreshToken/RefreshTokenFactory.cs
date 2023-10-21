@@ -10,8 +10,13 @@ namespace TaskTracker.Application
     public class RefreshTokenFactory : IRefreshTokenFactory
     {
         public RefreshToken Create(long userId, string token)
-        {
-            throw new NotImplementedException();
-        }
+            => new RefreshToken
+            {
+                UserId = userId,
+                Token = token,
+                CreationDate = DateTime.UtcNow,
+                ExpiryDate = DateTime.UtcNow.AddMonths(6),
+                IsValid = true,
+            };
     }
 }

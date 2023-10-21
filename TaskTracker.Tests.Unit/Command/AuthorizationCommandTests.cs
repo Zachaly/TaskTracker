@@ -40,7 +40,7 @@ namespace TaskTracker.Tests.Unit.Command
 
             var tokenRepository = Substitute.For<IRefreshTokenRepository>();
 
-            tokenRepository.CheckIfTokenExistsAsync(RefreshToken).Returns(false);
+            tokenRepository.GetTokenAsync(RefreshToken).ReturnsNull();
 
             tokenRepository.AddAsync(Arg.Any<RefreshToken>())
                 .Returns(0L)
