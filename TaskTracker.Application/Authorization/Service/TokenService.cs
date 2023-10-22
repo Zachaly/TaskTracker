@@ -35,7 +35,8 @@ namespace TaskTracker.Application.Authorization.Service
             var claims = new List<Claim> 
             { 
                 new Claim("sub", user.Id.ToString()),
-                new Claim("name", user.FirstName)
+                new Claim("name", user.FirstName),
+                new Claim("jti", Guid.NewGuid().ToString()),
             };
 
             var handler = new JsonWebTokenHandler();
@@ -83,7 +84,17 @@ namespace TaskTracker.Application.Authorization.Service
             var tokenHandler = new JwtSecurityTokenHandler();
             tokenHandler.MapInboundClaims = false;
 
-            var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
+            ClaimsPrincipal claimsPrincipal;
+            SecurityToken securityToken;
+
+            try
+            {
+                claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out securityToken);
+            }
+            catch (System.Exception)
+            {
+                throw new InvalidTokenException("Token is not valid jwt");
+            }
 
             if(securityToken is not JwtSecurityToken)
             {
