@@ -15,7 +15,6 @@ namespace TaskTracker.Application.Authorization.Service
         Task<string> GenerateAccessTokenAsync(User user);
         Task<string> GenerateRefreshTokenAsync();
         Task<long> GetUserIdFromAccessTokenAsync(string accessToken);
-
     }
 
     public class TokenService : ITokenService
@@ -36,7 +35,8 @@ namespace TaskTracker.Application.Authorization.Service
             var claims = new List<Claim> 
             { 
                 new Claim("sub", user.Id.ToString()),
-                new Claim("name", user.FirstName)
+                new Claim("name", user.FirstName),
+                new Claim("jti", Guid.NewGuid().ToString()),
             };
 
             var handler = new JsonWebTokenHandler();
@@ -84,7 +84,17 @@ namespace TaskTracker.Application.Authorization.Service
             var tokenHandler = new JwtSecurityTokenHandler();
             tokenHandler.MapInboundClaims = false;
 
-            var claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var securityToken);
+            ClaimsPrincipal claimsPrincipal;
+            SecurityToken securityToken;
+
+            try
+            {
+                claimsPrincipal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out securityToken);
+            }
+            catch (System.Exception)
+            {
+                throw new InvalidTokenException("Token is not valid jwt");
+            }
 
             if(securityToken is not JwtSecurityToken)
             {
@@ -95,7 +105,7 @@ namespace TaskTracker.Application.Authorization.Service
 
             if(idClaim is null)
             {
-                throw new InvalidTokenException("Token lacks required claim");
+                throw new InvalidTokenException("Token is not valid jwt");
             }
 
             var id = long.Parse(idClaim.Value);

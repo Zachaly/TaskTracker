@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using TaskTracker.Application.Authorization.Command;
 using TaskTracker.Application.Command;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.Response;
 using TaskTracker.Model.User;
 
@@ -43,7 +44,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
             Assert.Equal(registerRequest.LastName, content.UserData.LastName);
             Assert.Equal(registerRequest.Email, content.UserData.Email);
             Assert.Equal(userId, content.UserData.Id);
-            Assert.Contains(_dbContext.Users, x => x.Id == userId && x.RefreshToken == content.RefreshToken);
+            Assert.Contains(_dbContext.RefreshTokens, t => t.UserId == userId && t.Token == content.RefreshToken);
         }
 
         [Fact]
@@ -86,6 +87,99 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.NotEmpty(content.Error);
+        }
+
+        [Fact]
+        public async Task RefreshToken_ReturnsNewTokens()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new RefreshTokenCommand
+            {
+                AccessToken = loginData.AccessToken!,
+                RefreshToken = loginData.RefreshToken!
+            };
+
+            var response = await _httpClient.PostAsJsonAsync($"{Endpoint}/refresh-token", request);
+
+            var content = await response.Content.ReadFromJsonAsync<LoginResponse>();
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(content.AccessToken);
+            Assert.NotEmpty(content.RefreshToken);
+            Assert.NotEqual(loginData.RefreshToken, content.RefreshToken);
+            Assert.NotEqual(loginData.AccessToken, content.AccessToken);
+            Assert.False(_dbContext.Set<RefreshToken>().First(x => x.Token == loginData.RefreshToken).IsValid);
+            Assert.True(_dbContext.Set<RefreshToken>().First(x => x.Token == content.RefreshToken).IsValid);
+        }
+
+        [Fact]
+        public async Task RefreshToken_InvalidRefreshToken_BadRequest()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new RefreshTokenCommand
+            {
+                AccessToken = loginData.AccessToken!,
+                RefreshToken = "invalid token"
+            };
+
+            var response = await _httpClient.PostAsJsonAsync($"{Endpoint}/refresh-token", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RefreshToken_InvalidatedRefreshToken_BadRequest()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var token = _dbContext.Set<RefreshToken>().First(x => x.Token == loginData.RefreshToken);
+            token.IsValid = false;
+            _dbContext.Set<RefreshToken>().Update(token);
+            _dbContext.SaveChanges();
+
+            var request = new RefreshTokenCommand
+            {
+                AccessToken = loginData.AccessToken!,
+                RefreshToken = loginData.RefreshToken!
+            };
+
+            var response = await _httpClient.PostAsJsonAsync($"{Endpoint}/refresh-token", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RefreshToken_InvalidAccessToken_BadRequest()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new RefreshTokenCommand
+            {
+                AccessToken = "not jwt token",
+                RefreshToken = loginData.RefreshToken!
+            };
+
+            var response = await _httpClient.PostAsJsonAsync($"{Endpoint}/refresh-token", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RevokeToken_RevokesRefreshToken()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new InvalidateRefreshTokenCommand
+            {
+                RefreshToken = loginData.RefreshToken
+            };
+
+            var response = await _httpClient.PutAsJsonAsync($"{Endpoint}/revoke-token", request);
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.False(_dbContext.RefreshTokens.First(x => x.Token == request.RefreshToken).IsValid);
         }
     }
 }
