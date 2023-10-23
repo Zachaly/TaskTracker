@@ -1,0 +1,15 @@
+<aside class="menu">
+    <p class="menu-label">
+        Navigation
+    </p>
+    <ul class="menu-list">
+        <app-side-bar-link name="Main" link="/" [isActive]="isCurrentRoute('/')"/>
+    </ul>
+    <p class="menu-label">
+        Account
+    </p>
+    <ul class="menu-list">
+        <li><button class="button is-danger" (click)="logout()">Logout</button></li>
+    </ul>
+
+</aside>

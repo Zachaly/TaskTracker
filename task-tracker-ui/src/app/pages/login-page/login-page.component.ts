@@ -15,6 +15,8 @@ export class LoginPageComponent {
     password: ''
   }
 
+  public rememberMe = false
+
   constructor(private router: Router, private authService: AuthService) {}
 
   public goToRegister(){
@@ -22,7 +24,7 @@ export class LoginPageComponent {
   }
 
   public login() {
-    this.authService.login(this.request).subscribe({
+    this.authService.login(this.request, this.rememberMe).subscribe({
       next: () => this.router.navigate(['/']),
       error: (err) => alert(err.error.error)
     })

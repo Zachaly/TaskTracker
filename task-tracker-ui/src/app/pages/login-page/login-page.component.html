@@ -10,6 +10,12 @@
                 <label class="label">Password</label>
                 <input class="input" name="password" type="password" [(ngModel)]="request.password"/>
             </div>
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" name="remember-me" [(ngModel)]="rememberMe"/>
+                    Remember me
+                </label>
+            </div>
             <div class="is-flex is-justify-content-space-between mt-2">
                 <button class="button is-primary">Login</button>
                 <button class="button is-info" type="button" (click)="goToRegister()">Register</button>

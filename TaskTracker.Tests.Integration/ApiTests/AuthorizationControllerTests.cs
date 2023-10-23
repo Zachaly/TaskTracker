@@ -165,5 +165,21 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [Fact]
+        public async Task RevokeToken_RevokesRefreshToken()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new InvalidateRefreshTokenCommand
+            {
+                RefreshToken = loginData.RefreshToken
+            };
+
+            var response = await _httpClient.PutAsJsonAsync($"{Endpoint}/revoke-token", request);
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.False(_dbContext.RefreshTokens.First(x => x.Token == request.RefreshToken).IsValid);
+        }
     }
 }
