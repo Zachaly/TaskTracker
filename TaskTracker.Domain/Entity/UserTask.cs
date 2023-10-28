@@ -1,0 +1,13 @@
+﻿namespace TaskTracker.Domain.Entity
+{
+    public class UserTask : IEntity
+    {
+        public long Id { get; set; }
+        public long CreatorId { get; set; }
+        public User Creator { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public long CreationTimestamp { get; set; }
+        public long? DueTimestamp { get; set; }
+    }
+}
