@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using TaskTracker.Database.Repository;
 using TaskTracker.Model.UserTask;
+using TaskTracker.Model.UserTask.Request;
 
 namespace TaskTracker.Application.Command
 {
-    public class GetUserTaskQuery : IRequest<IEnumerable<UserTaskModel>>
+    public class GetUserTaskQuery : GetUserTaskRequest, IRequest<IEnumerable<UserTaskModel>>
     {
     }
 
@@ -19,7 +20,7 @@ namespace TaskTracker.Application.Command
 
         public Task<IEnumerable<UserTaskModel>> Handle(GetUserTaskQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _userTaskRepository.GetAsync(request);
         }
     }
 }

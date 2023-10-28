@@ -1,7 +1,7 @@
 ﻿using TaskTracker.Application.Command;
 using TaskTracker.Application.Validator;
 
-namespace TaskTracker.Tests.Unit.Validator
+namespace TaskTracker.Tests.Unit.ValidatorTests
 {
     public class RegisterCommandValidatorTests
     {

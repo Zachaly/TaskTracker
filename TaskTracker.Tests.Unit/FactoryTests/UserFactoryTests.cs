@@ -1,7 +1,7 @@
 ﻿using TaskTracker.Application;
 using TaskTracker.Model.User.Request;
 
-namespace TaskTracker.Tests.Unit.Factory
+namespace TaskTracker.Tests.Unit.FactoryTests
 {
     public class UserFactoryTests
     {

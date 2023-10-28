@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskTracker.Database.Repository;
+﻿using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTask.Request;
 
@@ -161,6 +156,57 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             var t = _dbContext.Tasks.Where(x => x.DueTimestamp <= Timestamp).ToList();
 
             Assert.Equivalent(_dbContext.Tasks.Where(x => x.DueTimestamp <= Timestamp).Select(x => x.Id), res.Select(x => x.Id), true);
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ReturnsProperTask()
+        {
+            var user = new User
+            {
+                FirstName = "fname",
+                LastName = "lname",
+                Email = "email",
+                PasswordHash = "hash",
+            };
+
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            var task = new UserTask
+            {
+                CreatorId = user.Id,
+                CreationTimestamp = 1,
+                DueTimestamp = 2,
+                Description = "desc",
+                Title = "title",
+            };
+
+            _dbContext.Set<UserTask>().AddRange(new UserTask[] 
+            {
+                task,
+                new UserTask
+                {
+                    CreatorId = user.Id,
+                    Description = "desc2",
+                    Title = "title2",
+                    CreationTimestamp = 0,
+                    DueTimestamp = 1
+                }
+            });
+
+            _dbContext.SaveChanges();
+
+            var res = await _repository.GetByIdAsync(task.Id);
+
+            Assert.Equal(task.Id, res.Id);
+            Assert.Equal(task.Title, res.Title);
+            Assert.Equal(task.Description, res.Description);
+            Assert.Equal(task.CreationTimestamp, res.CreationTimestamp);
+            Assert.Equal(task.DueTimestamp, res.DueTimestamp);
+            Assert.Equal(task.CreatorId, res.Creator.Id);
+            Assert.Equal(user.FirstName, res.Creator.FirstName);
+            Assert.Equal(user.LastName, res.Creator.LastName);
+            Assert.Equal(user.Email, res.Creator.Email);
         }
     }
 }

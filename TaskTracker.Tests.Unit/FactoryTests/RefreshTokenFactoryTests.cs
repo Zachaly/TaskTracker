@@ -1,6 +1,6 @@
 ﻿using TaskTracker.Application;
 
-namespace TaskTracker.Tests.Unit.Factory
+namespace TaskTracker.Tests.Unit.FactoryTests
 {
     public class RefreshTokenFactoryTests
     {

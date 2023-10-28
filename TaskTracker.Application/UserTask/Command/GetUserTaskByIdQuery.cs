@@ -20,7 +20,7 @@ namespace TaskTracker.Application.Command
 
         public Task<UserTaskModel> Handle(GetUserTaskByIdQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _userTaskRepository.GetByIdAsync(request.Id);
         }
     }
 }

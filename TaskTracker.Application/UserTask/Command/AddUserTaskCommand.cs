@@ -11,7 +11,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class AddUserTaskHandler : IRequestHandler<AddUserTaskCommand, ResponseModel>
+    public class AddUserTaskHandler : IRequestHandler<AddUserTaskCommand, CreatedResponseModel>
     {
         private readonly IUserTaskFactory _userTaskFactory;
         private readonly IUserTaskRepository _userTaskRepository;
@@ -25,9 +25,20 @@ namespace TaskTracker.Application.Command
             _validator = validator;
         }
 
-        public Task<ResponseModel> Handle(AddUserTaskCommand request, CancellationToken cancellationToken)
+        public async Task<CreatedResponseModel> Handle(AddUserTaskCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var validation = await _validator.ValidateAsync(request, cancellationToken);
+
+            if(!validation.IsValid)
+            {
+                return new CreatedResponseModel(validation.ToDictionary());
+            }
+
+            var task = _userTaskFactory.Create(request);
+
+            var id = await _userTaskRepository.AddAsync(task);
+
+            return new CreatedResponseModel(id);
         }
     }
 }

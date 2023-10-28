@@ -11,8 +11,13 @@ namespace TaskTracker.Application
     public class UserTaskFactory : IUserTaskFactory
     {
         public UserTask Create(AddUserTaskRequest request)
-        {
-            throw new NotImplementedException();
-        }
+            => new UserTask
+            {
+                CreationTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                CreatorId = request.CreatorId,
+                Description = request.Description,
+                DueTimestamp = request.DueTimestamp,
+                Title = request.Title,
+            };
     }
 }

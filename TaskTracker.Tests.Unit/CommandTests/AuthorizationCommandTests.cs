@@ -6,7 +6,7 @@ using TaskTracker.Application.Authorization.Service;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 
-namespace TaskTracker.Tests.Unit.Command
+namespace TaskTracker.Tests.Unit.CommandTests
 {
     public class AuthorizationCommandTests
     {
