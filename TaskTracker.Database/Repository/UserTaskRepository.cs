@@ -19,7 +19,9 @@ namespace TaskTracker.Database.Repository
 
         public Task<IEnumerable<UserTaskModel>> GetAsync(GetUserTaskRequest request)
         {
-            throw new NotImplementedException();
+            var filteredQueryable = FilterWithRequest(_dbContext.Set<UserTask>(), request);
+
+            return Task.FromResult(AddPagination(filteredQueryable, request).Select(ModelExpression).AsEnumerable());
         }
     }
 }

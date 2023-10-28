@@ -5,5 +5,6 @@ namespace TaskTracker.Model.Attribute
     public class CustomFilterAttribute : System.Attribute
     {
         public ComparisonType ComparisonType { get; set; }
+        public string PropertyName { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace TaskTracker.Database
     {
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<UserTask> Tasks { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -36,6 +37,17 @@ namespace TaskTracker.Database
                 .HasMany(u => u.RefreshTokens)
                 .WithOne(t => t.User)
                 .HasForeignKey(t => t.UserId);
+
+            modelBuilder.Entity<UserTask>()
+                .HasOne(t => t.Creator)
+                .WithMany(c => c.Tasks)
+                .HasForeignKey(t => t.CreatorId);
+
+            modelBuilder.Entity<UserTask>()
+                .Property(t => t.Description).HasMaxLength(1000);
+
+            modelBuilder.Entity<UserTask>()
+                .Property(t => t.Title).HasMaxLength(200);
         }
     }
 }
