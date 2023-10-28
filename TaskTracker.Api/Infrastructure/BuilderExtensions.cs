@@ -111,7 +111,7 @@ namespace TaskTracker.Api.Infrastructure
                     ValidAudience = builder.Configuration["Auth:Audience"],
                     ValidateAudience = true,
                     ValidateIssuer = true,
-                    ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
+                    ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256Signature },
                     ValidateIssuerSigningKey = true,
                 };
 

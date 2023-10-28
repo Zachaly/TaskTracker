@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using System.Threading.Tasks;
 using TaskTracker.Application;
 using TaskTracker.Application.Command;
+using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTask;
@@ -104,6 +106,40 @@ namespace TaskTracker.Tests.Unit.CommandTests
 
             Assert.False(res.IsSuccess);
             Assert.Null(res.NewEntityId);
+        }
+
+        [Fact]
+        public async Task DeleteUserTaskByIdCommand_Success()
+        {
+            const long Id = 1;
+            var repository = Substitute.For<IUserTaskRepository>();
+            repository.DeleteByIdAsync(Id).Returns(Task.CompletedTask);
+
+            var command = new DeleteUserTaskByIdCommand { Id = Id };
+
+            var handler = new DeleteUserTaskByIdHandler(repository);
+
+            var res = await handler.Handle(command, default);
+
+            await repository.Received(1).DeleteByIdAsync(Id);
+            Assert.True(res.IsSuccess);
+        }
+
+        [Fact]
+        public async Task DeleteUserTaskByIdCommand_EntityNotFoundException_Failure()
+        {
+            const long Id = 1;
+            var repository = Substitute.For<IUserTaskRepository>();
+            repository.DeleteByIdAsync(Id).Throws(new EntityNotFoundException("ex"));
+
+            var command = new DeleteUserTaskByIdCommand { Id = Id };
+
+            var handler = new DeleteUserTaskByIdHandler(repository);
+
+            var res = await handler.Handle(command, default);
+
+            Assert.False(res.IsSuccess);
+            Assert.NotEmpty(res.Error);
         }
     }
 }
