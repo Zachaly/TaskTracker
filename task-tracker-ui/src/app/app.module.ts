@@ -14,6 +14,8 @@ import { UserService } from './services/user.service';
 import { FormErrorListComponent } from './components/form-error-list/form-error-list.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { SideBarLinkComponent } from './components/side-bar-link/side-bar-link.component';
+import { UserTaskListItemComponent } from './components/user-task-list-item/user-task-list-item.component';
+import { TaskDialogComponent } from './components/task-dialog/task-dialog.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -31,7 +33,9 @@ const routes: Routes = [
     MainPageComponent,
     FormErrorListComponent,
     SideBarComponent,
-    SideBarLinkComponent
+    SideBarLinkComponent,
+    UserTaskListItemComponent,
+    TaskDialogComponent
   ],
   imports: [
     BrowserModule,
