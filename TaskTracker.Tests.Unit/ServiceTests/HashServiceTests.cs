@@ -2,7 +2,7 @@
 using NSubstitute;
 using TaskTracker.Application.Authorization.Service;
 
-namespace TaskTracker.Tests.Unit.Service
+namespace TaskTracker.Tests.Unit.ServiceTests
 {
     public class HashServiceTests
     {

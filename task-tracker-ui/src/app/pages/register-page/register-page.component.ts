@@ -32,7 +32,6 @@ export class RegisterPageComponent {
   }
 
   public register() {
-    console.log(this.request)
     this.userService.register(this.request).subscribe({
       next: () => {
         alert('Account created')
@@ -40,7 +39,6 @@ export class RegisterPageComponent {
       },
       error: (err) => {
         alert(err.error.error)
-        console.log(err)
         if(err.error.validationErrors) {
           this.validationErrors = err.error.validationErrors
         }

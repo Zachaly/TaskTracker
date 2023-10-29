@@ -34,5 +34,15 @@ namespace TaskTracker.Api.Infrastructure
 
             return new NoContentResult();
         }
+
+        public static ActionResult ReturnOkOrNotFound<T>(T response)
+        {
+            if(response is null)
+            {
+                return new NotFoundResult();
+            }
+
+            return new OkObjectResult(response);
+        }
     }
 }

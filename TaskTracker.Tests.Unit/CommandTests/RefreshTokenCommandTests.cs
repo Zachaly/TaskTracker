@@ -8,7 +8,7 @@ using TaskTracker.Application.Command;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 
-namespace TaskTracker.Tests.Unit.Command
+namespace TaskTracker.Tests.Unit.CommandTests
 {
     public class RefreshTokenCommandTests
     {

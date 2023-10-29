@@ -1,0 +1,19 @@
+<div class="columns">
+    <div class="column" (click)="showDialog = true">
+        <p class="title has-text-centered" >{{ task.title }}</p>
+    </div>
+    <div class="column">
+        <p class="subtitle has-text-centered">{{ task.creator.firstName }} {{ task.creator.lastName }}</p>
+    </div>
+    <div class="column">
+        <p class="subtitle has-text-centered"> {{ creationTimestamp() | date: 'dd-MM-yyyy'}} </p>
+    </div>
+    <div class="column">
+        <p class="subtitle has-text-centered" *ngIf="task.dueTimestamp"> {{ dueTimestamp() | date: 'dd-MM-yyyy'}}</p>
+    </div>
+    <div class="column">
+        <button class="button is-danger" (click)="deleteTask.emit(task.id)">Delete</button>
+    </div>
+
+    <app-task-dialog [id]="task.id" *ngIf="showDialog" (close)="showDialog = false" (deleteTask)="deleteTask.emit(task.id)"/>
+</div>

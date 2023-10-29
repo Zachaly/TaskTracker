@@ -1,0 +1,6 @@
+.dialog {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    min-width: 40%;
+}

@@ -1,0 +1,23 @@
+<div class="card dialog">
+    <header class="card-header">
+        <p class="card-header-title">
+            {{ task.title }}
+        </p>
+        <button class="button is-danger" (click)="onDeleteTask()">Delete</button>
+        <button class="delete is-large" (click)="close.emit()"></button>
+    </header>
+    <div class="card-content columns">
+        <div class="column is-9">
+            <div class="is-justify-content-space-between is-flex">
+                <div class="subtitle">Created: {{ creationDate() | date: 'dd-MM-yyyy'}}</div>
+                <div class="subtitle" *ngIf="task.dueTimestamp">Due date: {{ dueDate() | date: 'dd-MM-yyyy' }}</div>
+            </div>
+            <p>{{ task.description}}</p>
+        </div>
+        <div class="column is-3">
+            <p class="title is-5">Creator</p>
+            <p class="subtitle">{{ task.creator.firstName }} {{ task.creator.firstName }}</p>
+            <p class="subtitle">{{ task.creator.email }}</p>
+        </div>
+    </div>
+</div>

@@ -9,7 +9,7 @@ using TaskTracker.Application.Authorization.Exception;
 using TaskTracker.Application.Authorization.Service;
 using TaskTracker.Domain.Entity;
 
-namespace TaskTracker.Tests.Unit.Service
+namespace TaskTracker.Tests.Unit.ServiceTests
 {
     public class TokenServiceTests
     {

@@ -9,7 +9,7 @@ using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.User.Request;
 
-namespace TaskTracker.Tests.Unit.Command
+namespace TaskTracker.Tests.Unit.CommandTests
 {
     public class UserCommandTests
     {
