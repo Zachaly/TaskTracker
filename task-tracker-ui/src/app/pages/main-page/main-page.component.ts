@@ -65,6 +65,5 @@ export class MainPageComponent implements OnInit {
     var date = new Date(target.value)
 
     this.newTask.dueTimestamp = date.getTime()
-    console.log(date.getTime())
   }
 }

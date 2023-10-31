@@ -50,7 +50,7 @@ namespace TaskTracker.Application.Authorization.Service
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
                 SecurityAlgorithms.HmacSha256Signature),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddMinutes(1),
                 NotBefore = DateTime.UtcNow,
             });
 
@@ -76,7 +76,7 @@ namespace TaskTracker.Application.Authorization.Service
                 ValidIssuer = _authIssuer,
                 ValidAudience = _authAudience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ValidateIssuerSigningKey = true,
                 ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256Signature }
             };
