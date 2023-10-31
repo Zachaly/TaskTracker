@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RouteGuard } from './route.guard';
+import { RouteGuard } from './infrastructure/route.guard';
 
 describe('RouteGuard', () => {
   let guard: RouteGuard;
