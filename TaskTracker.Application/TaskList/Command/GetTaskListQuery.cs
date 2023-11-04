@@ -20,7 +20,7 @@ namespace TaskTracker.Application.Command
 
         public Task<IEnumerable<TaskListModel>> Handle(GetTaskListQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _taskListRepository.GetAsync(request);
         }
     }
 }

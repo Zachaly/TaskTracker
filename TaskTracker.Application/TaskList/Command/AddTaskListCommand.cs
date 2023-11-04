@@ -24,9 +24,20 @@ namespace TaskTracker.Application.Command
             _validator = validator;
         }
 
-        public Task<CreatedResponseModel> Handle(AddTaskListCommand request, CancellationToken cancellationToken)
+        public async Task<CreatedResponseModel> Handle(AddTaskListCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var validation = await _validator.ValidateAsync(request);
+
+            if(!validation.IsValid)
+            {
+                return new CreatedResponseModel(validation.ToDictionary());
+            }
+
+            var list = _taskListFactory.Create(request);
+
+            var id = await _taskListRepository.AddAsync(list);
+
+            return new CreatedResponseModel(id);
         }
     }
 }

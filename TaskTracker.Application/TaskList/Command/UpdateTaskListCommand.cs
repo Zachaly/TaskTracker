@@ -21,9 +21,29 @@ namespace TaskTracker.Application.Command
             _validator = validator;
         }
 
-        public Task<ResponseModel> Handle(UpdateTaskListCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseModel> Handle(UpdateTaskListCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var validation = await _validator.ValidateAsync(request);
+
+            if (!validation.IsValid)
+            {
+                return new ResponseModel(validation.ToDictionary());
+            }
+
+            var list = await _taskListRepository.GetByIdAsync(request.Id, l => l);
+
+            if(list is null)
+            {
+                return new ResponseModel("Entity not found");
+            }
+
+            list.Description = request.Description ?? list.Description;
+            list.Title = request.Title ?? list.Title;
+            list.Color = request.Color ?? list.Color;
+
+            await _taskListRepository.UpdateAsync(list);
+
+            return new ResponseModel();
         }
     }
 }

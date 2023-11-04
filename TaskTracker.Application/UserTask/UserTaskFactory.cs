@@ -18,6 +18,7 @@ namespace TaskTracker.Application
                 Description = request.Description,
                 DueTimestamp = request.DueTimestamp,
                 Title = request.Title,
+                ListId = request.ListId,
             };
     }
 }

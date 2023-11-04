@@ -11,8 +11,12 @@ namespace TaskTracker.Application
     public class TaskListFactory : ITaskListFactory
     {
         public TaskList Create(AddTaskListRequest request)
-        {
-            throw new NotImplementedException();
-        }
+            => new TaskList
+            {
+                Color = request.Color,
+                CreatorId = request.CreatorId,
+                Description = request.Description,
+                Title = request.Title,
+            };
     }
 }

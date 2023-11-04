@@ -4,12 +4,12 @@ using TaskTracker.Model.TaskList;
 
 namespace TaskTracker.Application.Command
 {
-    public class GetTaskListByIdQuery : IRequest<TaskListModel>
+    public class GetTaskListByIdQuery : IRequest<TaskListModel?>
     {
         public long Id { get; set; }
     }
 
-    public class GetTaskListByIdHandler : IRequestHandler<GetTaskListByIdQuery, TaskListModel>
+    public class GetTaskListByIdHandler : IRequestHandler<GetTaskListByIdQuery, TaskListModel?>
     {
         private readonly ITaskListRepository _taskListRepository;
 
@@ -18,9 +18,9 @@ namespace TaskTracker.Application.Command
             _taskListRepository = taskListRepository;
         }
 
-        public Task<TaskListModel> Handle(GetTaskListByIdQuery request, CancellationToken cancellationToken)
+        public Task<TaskListModel?> Handle(GetTaskListByIdQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _taskListRepository.GetByIdAsync(request.Id);
         }
     }
 }
