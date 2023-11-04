@@ -1,4 +1,6 @@
-﻿using TaskTracker.Domain.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Expressions;
 using TaskTracker.Model.TaskList;
 using TaskTracker.Model.TaskList.Request;
@@ -20,12 +22,18 @@ namespace TaskTracker.Database.Repository
 
         public Task<IEnumerable<TaskListModel>> GetAsync(GetTaskListRequest request)
         {
-            throw new NotImplementedException();
+            var query = FilterWithRequest(_dbContext.Set<TaskList>(), request);
+
+            query = query.Include(l => l.Creator);
+
+            return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
         }
 
         public Task UpdateAsync(TaskList list)
         {
-            throw new NotImplementedException();
+            _dbContext.Set<TaskList>().Update(list);
+
+            return _dbContext.SaveChangesAsync();
         }
     }
 }

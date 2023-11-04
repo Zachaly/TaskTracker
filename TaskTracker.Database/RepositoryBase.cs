@@ -137,8 +137,6 @@ namespace TaskTracker.Database
                 queryable = queryable.Where(lambdaExpression);
             }
 
-            var t = queryable.ToList();
-
             return queryable;
         }
 
