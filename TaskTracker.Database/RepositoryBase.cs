@@ -42,7 +42,7 @@ namespace TaskTracker.Database
             return entity.Id;
         }
 
-        public async Task DeleteByIdAsync(long id)
+        public virtual async Task DeleteByIdAsync(long id)
         {
             TEntity entity;
 

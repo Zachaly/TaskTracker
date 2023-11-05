@@ -35,5 +35,13 @@ namespace TaskTracker.Database.Repository
 
             return _dbContext.SaveChangesAsync();
         }
+
+        public override Task DeleteByIdAsync(long id)
+        {
+            var tasks = _dbContext.Set<UserTask>().Where(t => t.ListId == id);
+            _dbContext.Set<UserTask>().RemoveRange(tasks);
+
+            return base.DeleteByIdAsync(id);
+        }
     }
 }
