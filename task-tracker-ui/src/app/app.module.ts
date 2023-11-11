@@ -17,13 +17,19 @@ import { SideBarLinkComponent } from './components/side-bar-link/side-bar-link.c
 import { UserTaskListItemComponent } from './components/user-task-list-item/user-task-list-item.component';
 import { TaskDialogComponent } from './components/task-dialog/task-dialog.component';
 import { tokenInterceptor } from './infrastructure/token-refresh-interceptor';
+import { TaskListPageComponent } from './pages/task-list-page/task-list-page.component';
+import { AddTaskFormComponent } from './components/add-task-form/add-task-form.component';
+import { SideBarListLinkComponent } from './components/side-bar-list-link/side-bar-list-link.component';
+import { AddListPageComponent } from './pages/add-list-page/add-list-page.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
 const routes: Routes = [
   route('register', RegisterPageComponent),
   route('login', LoginPageComponent),
-  route('', MainPageComponent, [RouteGuard])
+  route('', MainPageComponent, [RouteGuard]),
+  route('list/add', AddListPageComponent, [RouteGuard]),
+  route('list/:id', TaskListPageComponent, [RouteGuard])
 ]
 
 @NgModule({
@@ -36,7 +42,11 @@ const routes: Routes = [
     SideBarComponent,
     SideBarLinkComponent,
     UserTaskListItemComponent,
-    TaskDialogComponent
+    TaskDialogComponent,
+    TaskListPageComponent,
+    AddTaskFormComponent,
+    SideBarListLinkComponent,
+    AddListPageComponent,
   ],
   imports: [
     BrowserModule,

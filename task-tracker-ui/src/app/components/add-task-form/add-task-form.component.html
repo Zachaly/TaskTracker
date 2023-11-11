@@ -1,0 +1,25 @@
+<div class="has-text-centered" *ngIf="!isAddingTask">
+    <button class="button is-info" (click)="isAddingTask = true">Add new</button>
+</div>
+<div class="columns is-centered">
+    <form class="column is-half" *ngIf="isAddingTask" (ngSubmit)="addTask()">
+        <div class="control">
+            <label class="label">Title</label>
+            <input type="text" name="title" class="input" [(ngModel)]="newTask.title">
+        </div>
+        <div class="control">
+            <label class="label">Description</label>
+            <textarea class="textarea" type="text" name="description" [(ngModel)]="newTask.description">
+
+            </textarea>
+        </div>
+        <div class="control">
+            <label class="label">Due date</label>
+            <input class="input" type="date" (change)="changeDueDate($event)" />
+        </div>
+        <div class="control">
+            <button class="button is-success">Add</button>
+            <button class="button is-danger" type="button" (click)="cancelAddingTask()">Cancel</button>
+        </div>
+    </form>
+</div>

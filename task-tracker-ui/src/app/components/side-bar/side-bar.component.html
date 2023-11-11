@@ -6,6 +6,13 @@
         <app-side-bar-link name="Main" link="/" [isActive]="isCurrentRoute('/')"/>
     </ul>
     <p class="menu-label">
+        Lists
+    </p>
+    <ul class="menu-list">
+        <app-side-bar-link name="Add new" link="/list/add" [isActive]="isCurrentRoute('/list/add')"/>
+        <app-side-bar-list-link *ngFor="let list of lists" [list]="list"/>
+    </ul>
+    <p class="menu-label">
         Account
     </p>
     <ul class="menu-list">

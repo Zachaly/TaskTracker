@@ -3,4 +3,5 @@ export default interface AddUserTaskRequest {
     title: string,
     description: string,
     dueTimestamp?: number
+    listId?: number
 }

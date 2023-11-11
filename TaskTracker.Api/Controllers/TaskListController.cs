@@ -9,7 +9,7 @@ using TaskTracker.Model.TaskList;
 namespace TaskTracker.Api.Controllers
 {
     [Authorize]
-    [Route("/api/task-list")]
+    [Route("api/task-list")]
     public class TaskListController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,7 +22,7 @@ namespace TaskTracker.Api.Controllers
         /// <summary>
         /// Returns list of task lists filtered by request
         /// </summary>
-        /// <response type="200">List of task list info</response>
+        /// <response code="200">List of task list info</response>
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<TaskListModel>>> GetAsync([FromQuery] GetTaskListQuery query)

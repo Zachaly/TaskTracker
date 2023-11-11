@@ -1,0 +1,25 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar></app-side-bar>
+    </div>
+    <div class="column columns is-centered" >
+        <form class="column is-6" (ngSubmit)="addList()">
+            <div class="control">
+                <label class="label" for="title">Title</label>
+                <input type="text" name="title" class="input" [(ngModel)]="newList.title">
+            </div>
+            <div class="control">
+                <label for="description" class="label">Description</label>
+                <textarea name="description" class="textarea" [(ngModel)]="newList.description"></textarea>
+            </div>
+            <div class="control">
+                <label for="color">Color</label>
+                <input name="color" type="color" class="input" [(ngModel)]="newList.color">
+            </div>
+            <div class="control">
+                <button class="button is-info">Add new list</button>
+            </div>
+        </form>
+
+    </div>
+</div>

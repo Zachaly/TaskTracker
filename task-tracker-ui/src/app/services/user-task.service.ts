@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import GetUserTaskRequest, { mapGetUserTaskRequest } from '../model/request/get/GetUserTaskRequest';
 import { Observable } from 'rxjs';
 import UserTaskModel from '../model/UserTaskModel';
-import AddUserTaskRequest from '../model/request/get/AddUserTaskRequest';
+import AddUserTaskRequest from '../model/request/AddUserTaskRequest';
 
 const API_URL = 'https://localhost:5001/api/user-task'
 
@@ -13,35 +13,23 @@ const API_URL = 'https://localhost:5001/api/user-task'
 })
 export class UserTaskService {
 
-  private httpHeaders = () =>
-    new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authService.userData?.accessToken}`
-    })
+  constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
-
-  public get(request: GetUserTaskRequest) : Observable<UserTaskModel[]> {
+  public get(request: GetUserTaskRequest): Observable<UserTaskModel[]> {
     let params = mapGetUserTaskRequest(request)
 
-    return this.http.get<UserTaskModel[]>(API_URL, { params, headers: this.httpHeaders() })
+    return this.http.get<UserTaskModel[]>(API_URL, { params })
   }
 
-  public post(request: AddUserTaskRequest) : Observable<any> {
-    return this.http.post(API_URL, request, {
-      headers: this.httpHeaders()
-    })
+  public post(request: AddUserTaskRequest): Observable<any> {
+    return this.http.post(API_URL, request)
   }
 
-  public getById(id: number) : Observable<UserTaskModel> {
-    return this.http.get<UserTaskModel>(`${API_URL}/${id}`, {
-      headers: this.httpHeaders()
-    })
+  public getById(id: number): Observable<UserTaskModel> {
+    return this.http.get<UserTaskModel>(`${API_URL}/${id}`)
   }
 
-  public deleteById(id: number) : Observable<any> {
-    return this.http.delete(`${API_URL}/${id}`, {
-      headers: this.httpHeaders()
-    })
+  public deleteById(id: number): Observable<any> {
+    return this.http.delete(`${API_URL}/${id}`)
   }
 }

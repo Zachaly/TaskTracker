@@ -14,6 +14,12 @@ builder.AddDatabase();
 builder.AddServices();
 builder.ConfigureSwagger();
 builder.ConfigureAuthorization();
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(policy => policy.WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+});
 
 var app = builder.Build();
 
@@ -32,20 +38,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(opt =>
-{
-    opt.AllowAnyMethod()
-        .AllowAnyHeader()
-        .WithOrigins("http://localhost:4200")
-        .AllowCredentials();
-});
-
 app.Run();
-
 
 public partial class Program { }
