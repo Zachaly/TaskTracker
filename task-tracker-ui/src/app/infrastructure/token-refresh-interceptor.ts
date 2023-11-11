@@ -2,27 +2,27 @@ import { HTTP_INTERCEPTORS, HttpErrorResponse, HttpEvent, HttpHandler, HttpInter
 import { Observable, retry, tap } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { Injectable } from "@angular/core";
+import { TokenService } from "../services/token.service";
 
 @Injectable()
 export class TokenRefreshInterceptor implements HttpInterceptor {
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService, private tokenService: TokenService) {
 
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        req = req.clone()
-
-        req.headers.set('Authorization', `Bearer ${this.authService.userData?.accessToken}`)
-
+        req = req.clone({
+            setHeaders: {
+                'Authorization': `Bearer ${this.tokenService.getAccessToken()}`
+            }
+        })
+        
         return next.handle(req).pipe(tap({
             error: async (err: HttpErrorResponse) => {
-                console.log(err)
-                if(err.status == 401 && !this.authService.isRefreshingToken) {
-                    await this.authService.refreshToken()
-
-                    if(this.authService.userData) {
+                if (err.status == 401 && !this.authService.isRefreshingToken) {
+                    this.authService.refreshToken()?.subscribe(() => {
                         retry(1)
-                    }
+                    })
                 }
             }
         }))
@@ -34,4 +34,4 @@ export const tokenInterceptor = {
     provide: HTTP_INTERCEPTORS,
     useClass: TokenRefreshInterceptor,
     multi: true
-  };
+};

@@ -8,6 +8,7 @@ namespace TaskTracker.Database
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<UserTask> Tasks { get; set; }
+        public DbSet<TaskList> TaskLists { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -48,6 +49,23 @@ namespace TaskTracker.Database
 
             modelBuilder.Entity<UserTask>()
                 .Property(t => t.Title).HasMaxLength(200);
+
+            modelBuilder.Entity<TaskList>()
+                .HasOne(l => l.Creator)
+                .WithMany(u => u.Lists)
+                .HasForeignKey(l => l.CreatorId);
+
+            modelBuilder.Entity<TaskList>()
+                .HasMany(l => l.Tasks)
+                .WithOne(t => t.List)
+                .HasForeignKey(t => t.ListId)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder.Entity<TaskList>()
+                .Property(l => l.Description).HasMaxLength(1000);
+
+            modelBuilder.Entity<TaskList>()
+                .Property(l => l.Title).HasMaxLength(200);
         }
     }
 }

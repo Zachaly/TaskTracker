@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import TaskListModel from 'src/app/model/TaskListModel';
 import UserModel from 'src/app/model/UserModel';
 import UserTaskModel from 'src/app/model/UserTaskModel';
-import AddUserTaskRequest from 'src/app/model/request/get/AddUserTaskRequest';
+import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
 import { AuthService } from 'src/app/services/auth.service';
+import { TaskListService } from 'src/app/services/task-list.service';
 import { UserTaskService } from 'src/app/services/user-task.service';
 
 @Component({
@@ -14,6 +16,7 @@ export class MainPageComponent implements OnInit {
 
   public userData: UserModel
   public tasks: UserTaskModel[] = []
+  public lists: TaskListModel[] = []
   public isAddingTask = false
   public newTask: AddUserTaskRequest = {
     title: '',
@@ -21,7 +24,7 @@ export class MainPageComponent implements OnInit {
     description: ''
   }
 
-  constructor(private authService: AuthService, private taskService: UserTaskService) { 
+  constructor(private authService: AuthService, private taskService: UserTaskService) {
     this.userData = authService.userData!.userData!
   }
 
@@ -29,41 +32,13 @@ export class MainPageComponent implements OnInit {
     this.taskService.get({ creatorId: this.userData.id }).subscribe(res => this.tasks = res)
   }
 
-  private loadTasks() {
+  public loadTasks() {
     this.taskService.get({ creatorId: this.userData.id }).subscribe(res => this.tasks = res)
   }
 
   deleteTask(id: number) {
     this.taskService.deleteById(id).subscribe(() => {
       this.tasks = this.tasks.filter(t => t.id !== id)
-    })    
-  }
-
-  cancelAddingTask() {
-    this.newTask = {
-      title: '',
-      description: '',
-      creatorId: this.userData.id
-    }
-    this.isAddingTask = false
-  }
-
-  addTask() {
-    this.newTask.creatorId = this.userData.id
-    this.taskService.post(this.newTask).subscribe(() => this.loadTasks())
-    this.newTask = {
-      title: '',
-      description: '',
-      creatorId: this.userData.id
-    }
-    this.isAddingTask = false
-  }
-
-  changeDueDate(e: Event) {
-    const target = e.target as HTMLInputElement
-
-    var date = new Date(target.value)
-
-    this.newTask.dueTimestamp = date.getTime()
+    })
   }
 }

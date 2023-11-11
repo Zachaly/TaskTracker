@@ -10,5 +10,7 @@ namespace TaskTracker.Model.UserTask.Request
         public long? MaxDueTimestamp { get; set; }
         [CustomFilter(ComparisonType = ComparisonType.GreaterOrEqual, PropertyName = "CreationTimestamp")]
         public long? MinCreationTimestamp { get; set; }
+
+        public long? ListId { get; set; }
     }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, tap } from 'rxjs';
 import LoginRequest from '../model/request/LoginRequest';
 import LoginResponse from '../model/LoginResponse';
+import { TokenService } from './token.service';
 
 const API_URL = 'https://localhost:5001/api/auth'
 
@@ -16,7 +17,7 @@ export class AuthService {
   private rememberMe = false
   public isRefreshingToken = false
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   public login(request: LoginRequest, rememberMe = false): Observable<any> {
     return this.http.post<LoginResponse>(`${API_URL}/login`, request).pipe(tap({
@@ -24,7 +25,7 @@ export class AuthService {
         this.rememberMe = rememberMe
         this.userData = res
         this.userDataSubject.next(res)
-        this.saveUserData()
+        this.setTokens()
       }
     }))
   }
@@ -40,19 +41,18 @@ export class AuthService {
 
     this.isRefreshingToken = true
     return this.http.post<LoginResponse>(`${API_URL}/refresh-token`, {
-      accessToken: this.userData?.accessToken,
-      refreshToken: this.userData?.refreshToken
-    }).subscribe({
+      accessToken: this.tokenService.getAccessToken(),
+      refreshToken: this.tokenService.getRefreshToken()
+    }).pipe(tap({
       next: (res) => {
         this.userData = res
         this.userDataSubject.next(res)
-        if(this.rememberMe) {
-          this.saveUserData()
-        }
+        this.setTokens()
+        console.log(res)
         this.isRefreshingToken = false
       }, 
       error: () => this.isRefreshingToken = false
-    })
+    }))
   }
 
   public revokeToken() {
@@ -63,26 +63,24 @@ export class AuthService {
     })
   }
 
-  public saveUserData() {
-    if (!this.rememberMe) {
-      return
-    }
-
-    localStorage.setItem('access_token', this.userData!.accessToken!)
-    localStorage.setItem('refresh_token', this.userData!.refreshToken!)
-  }
-
   private clearUserData() {
     this.userData = undefined
     this.rememberMe = false
 
-    localStorage.setItem('access_token', '')
-    localStorage.setItem('refresh_token', '')
+    this.tokenService.clearTokens()
+  }
+
+  private setTokens() {
+    const { accessToken, refreshToken } = this.userData!
+
+    this.tokenService.setSessionTokens(accessToken, refreshToken);
+    if(this.rememberMe) {
+      this.tokenService.saveTokens()
+    }
   }
 
   public loadUserData() {
-    const refreshToken = localStorage.getItem('refresh_token')
-    const accessToken = localStorage.getItem('access_token')
+    const { accessToken, refreshToken } = this.tokenService.getStorageTokens()
 
     if (!refreshToken || !accessToken || this.isRefreshingToken) {
       return
@@ -96,8 +94,8 @@ export class AuthService {
     }).subscribe({
       next: (res) => {
         this.userData = res
-        this.saveUserData()
         this.userDataSubject.next(res)
+        this.setTokens()
         this.isRefreshingToken = false
       },
       error: () =>  {

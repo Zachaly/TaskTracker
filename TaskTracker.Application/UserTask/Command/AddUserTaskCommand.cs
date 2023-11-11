@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using TaskTracker.Application.Validator;
 using TaskTracker.Database.Repository;
 using TaskTracker.Model.Response;
 using TaskTracker.Model.UserTask.Request;

@@ -53,6 +53,36 @@ namespace TaskTracker.Database.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskList", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("CreatorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("TaskLists");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.User", b =>
                 {
                     b.Property<long>("Id")
@@ -107,6 +137,9 @@ namespace TaskTracker.Database.Migrations
                     b.Property<long?>("DueTimestamp")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("ListId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -115,6 +148,8 @@ namespace TaskTracker.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
+
+                    b.HasIndex("ListId");
 
                     b.ToTable("Tasks");
                 });
@@ -130,6 +165,17 @@ namespace TaskTracker.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskList", b =>
+                {
+                    b.HasOne("TaskTracker.Domain.Entity.User", "Creator")
+                        .WithMany("Lists")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.UserTask", b =>
                 {
                     b.HasOne("TaskTracker.Domain.Entity.User", "Creator")
@@ -138,11 +184,25 @@ namespace TaskTracker.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TaskTracker.Domain.Entity.TaskList", "List")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ListId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
                     b.Navigation("Creator");
+
+                    b.Navigation("List");
+                });
+
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskList", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("TaskTracker.Domain.Entity.User", b =>
                 {
+                    b.Navigation("Lists");
+
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("Tasks");

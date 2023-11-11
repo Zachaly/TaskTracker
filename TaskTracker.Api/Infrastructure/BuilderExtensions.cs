@@ -26,6 +26,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             builder.Services.AddScoped<IUserTaskRepository, UserTaskRepository>();
+            builder.Services.AddScoped<ITaskListRepository, TaskListRepository>();
 
             return builder;
         }
@@ -44,6 +45,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<IHashService, HashService>();
             builder.Services.AddScoped<IRefreshTokenFactory, RefreshTokenFactory>();
             builder.Services.AddScoped<IUserTaskFactory, UserTaskFactory>();
+            builder.Services.AddScoped<ITaskListFactory, TaskListFactory>();
 
             return builder;
         }

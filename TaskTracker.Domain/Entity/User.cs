@@ -9,5 +9,6 @@
         public string PasswordHash { get; set; }
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
         public ICollection<UserTask> Tasks { get; set; }
+        public ICollection<TaskList> Lists { get; set; }
     }
 }

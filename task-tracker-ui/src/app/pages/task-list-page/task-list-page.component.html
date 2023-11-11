@@ -1,0 +1,42 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar />
+    </div>
+    <div class="column">
+        <p *ngIf="!isUpdatingList" class="title has-text-centered" [ngStyle]="{ 'background-color': list?.color }">{{
+            list?.title }}</p>
+        <p *ngIf="!isUpdatingList" class="subtitle has-text-centered"> {{ list?.description }}</p>
+        <p *ngIf="!isUpdatingList" class="has-text-centered">
+            <button class="button is-danger" (click)="deleteList()">Delete</button>
+            <button class="button is-info" (click)="isUpdatingList = true">Update</button>
+        </p>
+
+        <div *ngIf="isUpdatingList">
+            <form (ngSubmit)="updateList()">
+                <div class="control">
+                    <label class="title" for="title">Title</label>
+                    <input type="text" name="title" class="input" [(ngModel)]="updateRequest.title">
+                </div>
+                <div class="control">
+                    <label class="label" for="description">Description</label>
+                    <textarea name="description" [(ngModel)]="updateRequest.description" class="textarea" cols="30"
+                        rows="10"></textarea>
+                </div>
+                <div class="control">
+                    <input type="color" name="color" [(ngModel)]="updateRequest.color" class="input">
+                </div>
+                <div class="control buttons">
+                    <button class="button is-info" type="button" (click)="isUpdatingList = false">Cancel</button>
+                    <button class="button is-success">Confirm</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="mt-4">
+            <app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask($event)" />
+        </div>
+        <app-add-task-form [listId]="listId" [creatorId]="userId" (taskAdded)="loadTasks()">
+
+        </app-add-task-form>
+    </div>
+</div>
