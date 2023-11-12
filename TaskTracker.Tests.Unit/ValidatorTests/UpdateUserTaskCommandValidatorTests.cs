@@ -3,23 +3,21 @@ using TaskTracker.Application.Validator;
 
 namespace TaskTracker.Tests.Unit.ValidatorTests
 {
-    public class AddUserTaskCommandValidatorTests
+    public class UpdateUserTaskCommandValidatorTests
     {
-        private readonly AddUserTaskCommandValidator _validator;
+        private readonly UpdateUserTaskCommandValidator _validator;
 
-        public AddUserTaskCommandValidatorTests()
+        public UpdateUserTaskCommandValidatorTests()
         {
-            _validator = new AddUserTaskCommandValidator();
+            _validator = new UpdateUserTaskCommandValidator();
         }
 
         [Fact]
-        public async Task ValidRequest_PassesValidation()
+        public async Task ValidRequest_OnlyRequiredFields_PassesValidation()
         {
-            var request = new AddUserTaskCommand
+            var request = new UpdateUserTaskCommand
             {
-                CreatorId = 1,
-                Description = "Test",
-                Title = "Test",
+                Id = 1
             };
 
             var result = await _validator.ValidateAsync(request);
@@ -28,13 +26,27 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
         }
 
         [Fact]
-        public async Task InvalidCreatorId_DoesNotPassValidation()
+        public async Task ValidRequest_PassesValidation()
         {
-            var request = new AddUserTaskCommand
+            var request = new UpdateUserTaskCommand
             {
-                CreatorId = -1,
-                Description = "Test",
-                Title = "Test",
+                Id = 1,
+                Title = "title",
+                Description = "desc",
+                DueTimestamp = 2137
+            };
+
+            var result = await _validator.ValidateAsync(request);
+
+            Assert.True(result.IsValid);
+        }
+
+        [Fact]
+        public async Task InvalidId_DoesNotPassValidation()
+        {
+            var request = new UpdateUserTaskCommand
+            {
+                Id = -1,
             };
 
             var result = await _validator.ValidateAsync(request);
@@ -45,11 +57,10 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
         [Fact]
         public async Task InvalidDescriptionLength_DoesNotPassValidation()
         {
-            var request = new AddUserTaskCommand
+            var request = new UpdateUserTaskCommand
             {
-                CreatorId = 1,
+                Id = 1,
                 Description = new string('a', 1001),
-                Title = "Test",
             };
 
             var result = await _validator.ValidateAsync(request);
@@ -57,16 +68,13 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
             Assert.False(result.IsValid);
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(201)]
-        public async Task InvalidTitleLength_DoesNotPassValidation(int length)
+        [Fact]
+        public async Task InvalidTitleLength_DoesNotPassValidation()
         {
-            var request = new AddUserTaskCommand
+            var request = new UpdateUserTaskCommand
             {
-                CreatorId = 1,
-                Description = "Test",
-                Title = new string('a', length),
+                Id = 1,
+                Title = new string('a', 201),
             };
 
             var result = await _validator.ValidateAsync(request);
@@ -77,11 +85,9 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
         [Fact]
         public async Task InvalidDueTimestamp_DoesNotPassValidation()
         {
-            var request = new AddUserTaskCommand
+            var request = new UpdateUserTaskCommand
             {
-                CreatorId = 1,
-                Description = "Test",
-                Title = "Test",
+                Id = 1,
                 DueTimestamp = -1
             };
 
