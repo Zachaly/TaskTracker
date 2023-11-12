@@ -69,5 +69,18 @@ namespace TaskTracker.Api.Controllers
 
             return res.ReturnNoContentOrBadRequest();
         }
+
+        /// <summary>
+        /// Updates user task with data specified in request
+        /// </summary>
+        /// <response code="204">Task updated successfully</response>
+        /// <response code="400">Invalid request</response>
+        [HttpPut]
+        public async Task<ActionResult<ResponseModel>> UpdateAsync(UpdateUserTaskCommand command)
+        {
+            var res = await _mediator.Send(command);
+
+            return res.ReturnNoContentOrBadRequest();
+        }
     }
 }

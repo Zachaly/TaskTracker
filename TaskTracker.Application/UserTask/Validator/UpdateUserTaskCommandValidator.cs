@@ -10,7 +10,7 @@ namespace TaskTracker.Application.Validator
             RuleFor(t => t.Id).GreaterThan(0);
             RuleFor(t => t.DueTimestamp).GreaterThanOrEqualTo(0);
             RuleFor(t => t.Description).MaximumLength(1000);
-            RuleFor(t => t.Title).MaximumLength(200);
+            RuleFor(t => t.Title).MinimumLength(1).MaximumLength(200);
         }
     }
 }
