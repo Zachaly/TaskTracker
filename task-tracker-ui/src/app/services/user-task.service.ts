@@ -5,6 +5,7 @@ import GetUserTaskRequest, { mapGetUserTaskRequest } from '../model/request/get/
 import { Observable } from 'rxjs';
 import UserTaskModel from '../model/UserTaskModel';
 import AddUserTaskRequest from '../model/request/AddUserTaskRequest';
+import UpdateUserTaskRequest from '../model/request/UpdateUserTaskRequest';
 
 const API_URL = 'https://localhost:5001/api/user-task'
 
@@ -31,5 +32,9 @@ export class UserTaskService {
 
   public deleteById(id: number): Observable<any> {
     return this.http.delete(`${API_URL}/${id}`)
+  }
+
+  public update(request: UpdateUserTaskRequest) : Observable<any> {
+    return this.http.put(API_URL, request)
   }
 }

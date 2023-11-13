@@ -1,9 +1,10 @@
-<div class="card dialog">
+<div class="card dialog" *ngIf="!isUpdating">
     <header class="card-header">
         <p class="card-header-title">
             {{ task.title }}
         </p>
         <button class="button is-danger" (click)="onDeleteTask()">Delete</button>
+        <button class="button is-info" (click)="isUpdating = true">Update</button>
         <button class="delete is-large" (click)="close.emit()"></button>
     </header>
     <div class="card-content columns">
@@ -19,5 +20,24 @@
             <p class="subtitle">{{ task.creator.firstName }} {{ task.creator.firstName }}</p>
             <p class="subtitle">{{ task.creator.email }}</p>
         </div>
+    </div>
+</div>
+
+<div class="card dialog" *ngIf="isUpdating">
+    <div class="control">
+        <label for="title" class="label">Title</label>
+        <input type="text" [(ngModel)]="updateRequest.title" name="title" class="input">
+    </div>
+    <div class="control">
+        <label for="description" class="label">Description</label>
+        <textarea name="description" [(ngModel)]="updateRequest.description" class="textarea" cols="30" rows="10"></textarea>
+    </div>
+    <div class="control">
+        <label for="dueTimestamp" class="label">Due date</label>
+        <input type="date" class="input" (change)="changeDueDate($event)">
+    </div>
+    <div class="buttons">
+        <button class="button is-info" (click)="updateTask()">Confirm</button>
+        <button class="button is-warning" (click)="isUpdating = false">Cancel</button>
     </div>
 </div>

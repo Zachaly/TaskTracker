@@ -2,14 +2,13 @@
 using FluentValidation.Results;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using System.Threading.Tasks;
+using NSubstitute.ReturnsExtensions;
 using TaskTracker.Application;
 using TaskTracker.Application.Command;
 using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTask;
-using TaskTracker.Model.UserTask.Request;
 
 namespace TaskTracker.Tests.Unit.CommandTests
 {
@@ -137,6 +136,80 @@ namespace TaskTracker.Tests.Unit.CommandTests
             var handler = new DeleteUserTaskByIdHandler(repository);
 
             var res = await handler.Handle(command, default);
+
+            Assert.False(res.IsSuccess);
+            Assert.NotEmpty(res.Error);
+        }
+
+        [Fact]
+        public async Task UpdateUserTaskCommand_Success()
+        {
+            var request = new UpdateUserTaskCommand
+            {
+                Id = 1,
+                Description = "desc2"
+            };
+
+            var task = new UserTask { Description = "desc" };
+
+            var repository = Substitute.For<IUserTaskRepository>();
+            repository.GetByIdAsync(request.Id, Arg.Any<Func<UserTask, UserTask>>()).Returns(task);
+            repository.UpdateAsync(task).Returns(Task.CompletedTask);
+
+            var validator = Substitute.For<IValidator<UpdateUserTaskCommand>>();
+            validator.ValidateAsync(request).Returns(new ValidationResult());
+
+            var handler = new UpdateUserTaskHandler(repository, validator);
+
+            var res = await handler.Handle(request, default);
+
+            Assert.True(res.IsSuccess);
+            Assert.Equal(request.Description, task.Description);
+        }
+
+        [Fact]
+        public async Task UpdateUserTaskCommand_InvalidRequest_Failure()
+        {
+            var request = new UpdateUserTaskCommand
+            {
+                Id = 1,
+                Description = "desc2"
+            };
+
+            var repository = Substitute.For<IUserTaskRepository>();
+
+            var validator = Substitute.For<IValidator<UpdateUserTaskCommand>>();
+            validator.ValidateAsync(request).Returns(new ValidationResult(new List<ValidationFailure>
+            {
+                new ValidationFailure("Prop", "error")
+            }));
+
+            var handler = new UpdateUserTaskHandler(repository, validator);
+
+            var res = await handler.Handle(request, default);
+
+            Assert.False(res.IsSuccess);
+            Assert.NotEmpty(res.ValidationErrors);
+        }
+
+        [Fact]
+        public async Task UpdateUserTaskCommand_EntityNotFounc_Failure()
+        {
+            var request = new UpdateUserTaskCommand
+            {
+                Id = 1,
+                Description = "desc2"
+            };
+
+            var repository = Substitute.For<IUserTaskRepository>();
+            repository.GetByIdAsync(request.Id, Arg.Any<Func<UserTask, UserTask>>()).ReturnsNull();
+
+            var validator = Substitute.For<IValidator<UpdateUserTaskCommand>>();
+            validator.ValidateAsync(request).Returns(new ValidationResult());
+
+            var handler = new UpdateUserTaskHandler(repository, validator);
+
+            var res = await handler.Handle(request, default);
 
             Assert.False(res.IsSuccess);
             Assert.NotEmpty(res.Error);

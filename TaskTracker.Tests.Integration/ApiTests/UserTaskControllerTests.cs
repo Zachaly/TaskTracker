@@ -4,6 +4,7 @@ using TaskTracker.Application.Command;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.Response;
 using TaskTracker.Model.UserTask;
+using TaskTracker.Model.UserTask.Request;
 
 namespace TaskTracker.Tests.Integration.ApiTests
 {
@@ -146,6 +147,87 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.NotEmpty(content.Error);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_UserTaskUpdated()
+        {
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(2));
+            _dbContext.SaveChanges();
+
+            var userIds = _dbContext.Users.Select(x => x.Id).ToList();
+            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id));
+
+            _dbContext.Tasks.AddRange(tasks);
+            _dbContext.SaveChanges();
+
+            var updatedTask = _dbContext.Tasks.First();
+
+            var request = new UpdateUserTaskRequest
+            {
+                Id = updatedTask.Id,
+                Title = updatedTask.Title + "new",
+                Description = updatedTask.Description + "new",
+                DueTimestamp = updatedTask.DueTimestamp + 1,
+            };
+
+            await AuthorizeAsync();
+
+            var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
+
+            await _dbContext.Entry(updatedTask).ReloadAsync();
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.Equal(request.Id, updatedTask.Id);
+            Assert.Equal(request.Title, updatedTask.Title);
+            Assert.Equal(request.Description, updatedTask.Description);
+            Assert.Equal(request.DueTimestamp, updatedTask.DueTimestamp);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_InvalidRequest_Failure()
+        {
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(2));
+            _dbContext.SaveChanges();
+
+            var userIds = _dbContext.Users.Select(x => x.Id).ToList();
+            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id));
+
+            _dbContext.Tasks.AddRange(tasks);
+            _dbContext.SaveChanges();
+
+            var updatedTask = _dbContext.Tasks.First();
+
+            var request = new UpdateUserTaskRequest
+            {
+                Id = updatedTask.Id,
+                Title = "",
+                Description = updatedTask.Description + "new",
+                DueTimestamp = updatedTask.DueTimestamp + 1,
+            };
+
+            await AuthorizeAsync();
+
+            var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
+            var content = await GetContentFromBadRequest<ResponseModel>(response);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Contains(content.ValidationErrors.Keys, x => x == "Title");
+        }
+
+        [Fact]
+        public async Task UpdateAsync_EntityNotFound_Failure()
+        {
+            await AuthorizeAsync();
+
+            var request = new UpdateUserTaskRequest
+            {
+                Id = 0,
+            };
+
+            var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }
 }

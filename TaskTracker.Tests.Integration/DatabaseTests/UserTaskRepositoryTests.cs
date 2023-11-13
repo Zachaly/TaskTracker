@@ -1,4 +1,5 @@
-﻿using TaskTracker.Database.Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTask.Request;
 
@@ -207,6 +208,27 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             Assert.Equal(user.FirstName, res.Creator.FirstName);
             Assert.Equal(user.LastName, res.Creator.LastName);
             Assert.Equal(user.Email, res.Creator.Email);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_UpdatesCorrectEntity()
+        {
+            var user = FakeDataFactory.GenerateUsers(1).First();
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(2, 1));
+            _dbContext.SaveChanges();
+
+            var task = _dbContext.Tasks.First();
+
+            const string Description = "new desc";
+
+            task.Description = Description;
+
+            await _repository.UpdateAsync(task);
+
+            Assert.Equal(Description, _dbContext.Tasks.First(x => x.Id == task.Id).Description);
         }
     }
 }
