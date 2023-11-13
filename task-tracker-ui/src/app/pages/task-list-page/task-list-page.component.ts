@@ -4,6 +4,7 @@ import TaskListModel from 'src/app/model/TaskListModel';
 import UserTaskModel from 'src/app/model/UserTaskModel';
 import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
 import UpdateTaskListRequest from 'src/app/model/request/UpdateTaskListRequest';
+import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 import { UserTaskService } from 'src/app/services/user-task.service';
@@ -33,7 +34,7 @@ export class TaskListPageComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private taskListService: TaskListService, private taskService: UserTaskService,
     private authService: AuthService, private router: Router) {
-      this.userId = authService.userData!.userData.id
+    this.userId = authService.userData!.userData.id
   }
 
   ngOnInit(): void {
@@ -71,7 +72,7 @@ export class TaskListPageComponent implements OnInit {
   deleteList() {
     const shouldDelete = confirm('Do you want to delete this list?')
 
-    if(!shouldDelete) {
+    if (!shouldDelete) {
       return
     }
 
@@ -82,6 +83,28 @@ export class TaskListPageComponent implements OnInit {
     this.taskListService.update(this.updateRequest).subscribe(() => {
       this.isUpdatingList = false
       this.taskListService.getById(this.list!.id).subscribe(res => this.list = res)
+    })
+  }
+
+  updateTaskTitle(id: number, title: string) {
+    const request: UpdateUserTaskRequest = {
+      id,
+      title
+    }
+
+    this.taskService.update(request).subscribe(() => {
+      this.tasks.find(x => x.id == id)!.title = title
+    })
+  }
+
+  updateTaskDueTimestamp(id: number, dueTimestamp?: number) {
+    const request: UpdateUserTaskRequest = {
+      id,
+      dueTimestamp
+    }
+
+    this.taskService.update(request).subscribe(() => {
+      this.tasks.find(x => x.id == id)!.dueTimestamp = dueTimestamp
     })
   }
 }

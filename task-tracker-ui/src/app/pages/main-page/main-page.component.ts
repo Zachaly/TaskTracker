@@ -3,6 +3,7 @@ import TaskListModel from 'src/app/model/TaskListModel';
 import UserModel from 'src/app/model/UserModel';
 import UserTaskModel from 'src/app/model/UserTaskModel';
 import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
+import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 import { UserTaskService } from 'src/app/services/user-task.service';
@@ -39,6 +40,28 @@ export class MainPageComponent implements OnInit {
   deleteTask(id: number) {
     this.taskService.deleteById(id).subscribe(() => {
       this.tasks = this.tasks.filter(t => t.id !== id)
+    })
+  }
+
+  updateTaskTitle(id: number, title: string) {
+    const request: UpdateUserTaskRequest = {
+      id,
+      title
+    }
+
+    this.taskService.update(request).subscribe(() => {
+      this.tasks.find(x => x.id == id)!.title = title
+    })
+  }
+
+  updateTaskDueTimestamp(id: number, dueTimestamp?: number) {
+    const request: UpdateUserTaskRequest = {
+      id,
+      dueTimestamp
+    }
+
+    this.taskService.update(request).subscribe(() => {
+      this.tasks.find(x => x.id == id)!.dueTimestamp = dueTimestamp
     })
   }
 }

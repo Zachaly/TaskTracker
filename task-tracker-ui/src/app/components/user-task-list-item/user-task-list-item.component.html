@@ -1,6 +1,13 @@
 <div class="columns">
-    <div class="column" (click)="showDialog = true">
-        <p class="title has-text-centered" >{{ task.title }}</p>
+    <div class="column">
+        <p class="title has-text-centered" *ngIf="!isUpdatingTitle" (click)="isUpdatingTitle = true">
+            {{ task.title }}
+        </p>
+        <div class="is-flex" *ngIf="isUpdatingTitle">
+            <input type="text" name="title" [(ngModel)]="updatedTitle" class="input">
+            <button class="delete is-large" (click)="isUpdatingTitle = false"></button>
+            <button class="button is-info" (click)="confirmUpdateTitle()">Confirm</button>
+        </div>
     </div>
     <div class="column">
         <p class="subtitle has-text-centered">{{ task.creator.firstName }} {{ task.creator.lastName }}</p>
@@ -9,11 +16,23 @@
         <p class="subtitle has-text-centered"> {{ creationTimestamp() | date: 'dd-MM-yyyy'}} </p>
     </div>
     <div class="column">
-        <p class="subtitle has-text-centered" *ngIf="task.dueTimestamp"> {{ dueTimestamp() | date: 'dd-MM-yyyy'}}</p>
+        <p *ngIf="!isUpdatingDueTimestamp" class="subtitle has-text-centered" (click)="isUpdatingDueTimestamp = true">
+            <span *ngIf="task.dueTimestamp">{{ dueTimestamp() | date: 'dd-MM-yyyy'}}</span>
+            <span *ngIf="!task.dueTimestamp">Due date</span>
+        </p>
+        <div class="is-flex is-align-content-center" *ngIf="isUpdatingDueTimestamp">
+            <input type="date" name="timestamp" (change)="changeDueDate($event)" class="input">
+            <button class="delete is-large" (click)="isUpdatingDueTimestamp = false"></button>
+            <button class="button is-info" (click)="confirmUpdateDueTimestamp()">Confirm</button>
+        </div>
+    </div>
+    <div class="column">
+        <button class="button is-info" (click)="showDialog = true">More</button>
     </div>
     <div class="column">
         <button class="button is-danger" (click)="deleteTask.emit(task.id)">Delete</button>
     </div>
 
-    <app-task-dialog [id]="task.id" *ngIf="showDialog" (close)="showDialog = false" (deleteTask)="deleteTask.emit(task.id)"/>
+    <app-task-dialog [id]="task.id" *ngIf="showDialog" (close)="showDialog = false"
+        (deleteTask)="deleteTask.emit(task.id)" (taskUpdated)="updateTask($event)" />
 </div>

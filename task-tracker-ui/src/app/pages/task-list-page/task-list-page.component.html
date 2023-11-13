@@ -11,8 +11,8 @@
             <button class="button is-info" (click)="isUpdatingList = true">Update</button>
         </p>
 
-        <div *ngIf="isUpdatingList">
-            <form (ngSubmit)="updateList()">
+        <div class="columns is-centered" *ngIf="isUpdatingList">
+            <form class="column is-6 mt-2" (ngSubmit)="updateList()">
                 <div class="control">
                     <label class="title" for="title">Title</label>
                     <input type="text" name="title" class="input" [(ngModel)]="updateRequest.title">
@@ -33,7 +33,9 @@
         </div>
 
         <div class="mt-4">
-            <app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask($event)" />
+            <app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask($event)"
+            (updateDueTimestamp)="updateTaskDueTimestamp(task.id, $event)"
+            (updateTitle)="updateTaskTitle(task.id, $event)" />
         </div>
         <app-add-task-form [listId]="listId" [creatorId]="userId" (taskAdded)="loadTasks()">
 
