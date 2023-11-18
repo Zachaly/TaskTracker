@@ -17,6 +17,7 @@ namespace TaskTracker.Database
         Task<TModel?> GetByIdAsync(long id);
         Task<T> GetByIdAsync<T>(long id, Func<TEntity, T> selector);
         Task<long> AddAsync(TEntity entity);
+        Task AddAsync(params TEntity[] entities);
         Task DeleteByIdAsync(long id);
     }
 
@@ -146,6 +147,13 @@ namespace TaskTracker.Database
             var pageSize = request.PageSize ?? 10;
 
             return queryable.Skip(index * pageSize).Take(pageSize);
+        }
+
+        public Task AddAsync(params TEntity[] entities)
+        {
+            _dbContext.Set<TEntity>().AddRange(entities);
+
+            return _dbContext.SaveChangesAsync();
         }
     }
 }

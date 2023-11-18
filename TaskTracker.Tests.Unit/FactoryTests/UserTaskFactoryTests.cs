@@ -21,7 +21,8 @@ namespace TaskTracker.Tests.Unit.FactoryTests
                 Description = "desc",
                 DueTimestamp = 2,
                 Title = "title",
-                ListId = 3
+                ListId = 3,
+                StatusId = 4,
             };
 
             var task = _factory.Create(request);
@@ -32,6 +33,7 @@ namespace TaskTracker.Tests.Unit.FactoryTests
             Assert.Equal(request.DueTimestamp, task.DueTimestamp);
             Assert.Equal(request.ListId, task.ListId);
             Assert.NotEqual(default, task.CreationTimestamp);
+            Assert.Equal(request.StatusId, task.StatusId);
         }
     }
 }

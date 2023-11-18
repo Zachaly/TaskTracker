@@ -6,6 +6,7 @@ namespace TaskTracker.Model.TaskStatusGroup
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public bool IsDefault { get; set; }
         public IEnumerable<UserTaskStatusModel> Statuses { get; set; }
     }
 }

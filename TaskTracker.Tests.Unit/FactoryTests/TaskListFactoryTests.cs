@@ -29,6 +29,7 @@ namespace TaskTracker.Tests.Unit.FactoryTests
             Assert.Equal(request.CreatorId, list.CreatorId);
             Assert.Equal(request.Color, list.Color);
             Assert.Equal(request.Description, list.Description);
+            Assert.Equal(request.StatusGroupId, list.TaskStatusGroupId);
         }
     }
 }

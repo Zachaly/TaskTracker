@@ -3,7 +3,7 @@
     public class UserTaskStatus : IEntity
     {
         public long Id { get; set; }
-        public bool IsRemovable { get; set; }
+        public bool IsDefault { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }
         public long GroupId { get; set; }

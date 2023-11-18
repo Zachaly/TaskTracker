@@ -6,5 +6,6 @@
         public string? Title { get; set; }
         public string? Description { get; set; }
         public long? DueTimestamp { get; set; }
+        public long? StatusId { get; set; }
     }
 }

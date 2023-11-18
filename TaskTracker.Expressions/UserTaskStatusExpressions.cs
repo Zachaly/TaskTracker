@@ -12,6 +12,7 @@ namespace TaskTracker.Expressions
                 Id = status.Id,
                 Index = status.Index,
                 Name = status.Name,
+                IsDefault = status.IsDefault,
             };
     }
 }

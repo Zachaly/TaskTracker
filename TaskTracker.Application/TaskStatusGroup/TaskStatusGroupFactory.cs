@@ -5,12 +5,12 @@ namespace TaskTracker.Application
 {
     public interface ITaskStatusGroupFactory
     {
-        TaskStatusGroup Create(AddTaskStatusGroupRequest request, bool isRemovable = false);
+        TaskStatusGroup Create(AddTaskStatusGroupRequest request, bool isDefault = false);
     }
 
     public class TaskStatusGroupFactory : ITaskStatusGroupFactory
     {
-        public TaskStatusGroup Create(AddTaskStatusGroupRequest request, bool isRemovable = false)
+        public TaskStatusGroup Create(AddTaskStatusGroupRequest request, bool isDefault = false)
         {
             throw new NotImplementedException();
         }

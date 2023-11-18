@@ -5,12 +5,12 @@ namespace TaskTracker.Application
 {
     public interface IUserTaskStatusFactory
     {
-        UserTaskStatus Create(AddUserTaskStatusRequest request, bool isRemovable = false);
+        UserTaskStatus Create(AddUserTaskStatusRequest request, bool isDefault = false);
     }
 
     public class UserTaskStatusFactory : IUserTaskStatusFactory
     {
-        public UserTaskStatus Create(AddUserTaskStatusRequest request, bool isRemovable = false)
+        public UserTaskStatus Create(AddUserTaskStatusRequest request, bool isDefault = false)
         {
             throw new NotImplementedException();
         }

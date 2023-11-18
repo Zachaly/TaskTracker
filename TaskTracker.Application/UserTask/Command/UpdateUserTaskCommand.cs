@@ -40,6 +40,7 @@ namespace TaskTracker.Application.Command
             task.Title = request.Title ?? task.Title;
             task.Description = request.Description ?? task.Description;
             task.DueTimestamp = request.DueTimestamp;
+            task.StatusId = request.StatusId ?? task.StatusId;
 
             await _userTaskRepository.UpdateAsync(task);
 
