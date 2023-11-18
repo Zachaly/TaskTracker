@@ -10,5 +10,6 @@
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
         public ICollection<UserTask> Tasks { get; set; }
         public ICollection<TaskList> Lists { get; set; }
+        public ICollection<TaskStatusGroup> StatusGroups { get; set; }
     }
 }
