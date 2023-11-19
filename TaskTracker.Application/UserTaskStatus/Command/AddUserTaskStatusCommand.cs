@@ -24,9 +24,20 @@ namespace TaskTracker.Application.Command
             _validator = validator;
         }
 
-        public Task<CreatedResponseModel> Handle(AddUserTaskStatusCommand request, CancellationToken cancellationToken)
+        public async Task<CreatedResponseModel> Handle(AddUserTaskStatusCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var validation = await _validator.ValidateAsync(request);
+
+            if (!validation.IsValid)
+            {
+                return new CreatedResponseModel(validation.ToDictionary());
+            }
+
+            var status = _userTaskStatusFactory.Create(request);
+
+            var statusId = await _userTaskStatusRepository.AddAsync(status);
+
+            return new CreatedResponseModel(statusId);
         }
     }
 }

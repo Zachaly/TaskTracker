@@ -21,9 +21,29 @@ namespace TaskTracker.Application.Command
             _userTaskStatusRepository = userTaskStatusRepository;
             _validator = validator;
         }
-        public Task<ResponseModel> Handle(UpdateUserTaskStatusCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseModel> Handle(UpdateUserTaskStatusCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var validation = await _validator.ValidateAsync(request);
+
+            if(!validation.IsValid)
+            {
+                return new ResponseModel(validation.ToDictionary());
+            }
+
+            var status = await _userTaskStatusRepository.GetByIdAsync(request.Id, x => x);
+
+            if(status is null)
+            {
+                return new ResponseModel("Entity not found");
+            }
+
+            status.Name = request.Name ?? status.Name;
+            status.Index = request.Index ?? status.Index;
+            status.Color = request.Color ?? status.Color;
+
+            await _userTaskStatusRepository.UpdateAsync(status);
+
+            return new ResponseModel();
         }
     }
 }

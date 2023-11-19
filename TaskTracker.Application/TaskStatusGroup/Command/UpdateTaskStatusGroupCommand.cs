@@ -22,9 +22,27 @@ namespace TaskTracker.Application.Command
             _validator = validator;
         }
 
-        public Task<ResponseModel> Handle(UpdateTaskStatusGroupCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseModel> Handle(UpdateTaskStatusGroupCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var validation = await _validator.ValidateAsync(request);
+
+            if (!validation.IsValid)
+            {
+                return new ResponseModel(validation.ToDictionary());
+            }
+
+            var group = await _taskStatusGroupRepository.GetByIdAsync(request.Id, x => x);
+
+            if(group is null)
+            {
+                return new ResponseModel("Entity not found");
+            }
+
+            group.Name = request.Name ?? group.Name;
+
+            await _taskStatusGroupRepository.UpdateAsync(group);
+
+            return new ResponseModel();
         }
     }
 }

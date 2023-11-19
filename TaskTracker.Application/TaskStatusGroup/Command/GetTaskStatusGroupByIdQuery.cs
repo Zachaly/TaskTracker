@@ -4,12 +4,12 @@ using TaskTracker.Model.TaskStatusGroup;
 
 namespace TaskTracker.Application.Command
 {
-    public class GetTaskStatusGroupByIdQuery : IRequest<TaskStatusGroupModel>
+    public class GetTaskStatusGroupByIdQuery : IRequest<TaskStatusGroupModel?>
     {
         public long Id { get; set; }
     }
 
-    public class GetTaskStatusGroupByIdHandler : IRequestHandler<GetTaskStatusGroupByIdQuery, TaskStatusGroupModel>
+    public class GetTaskStatusGroupByIdHandler : IRequestHandler<GetTaskStatusGroupByIdQuery, TaskStatusGroupModel?>
     {
         private readonly ITaskStatusGroupRepository _taskStatusGroupRepository;
 
@@ -18,9 +18,9 @@ namespace TaskTracker.Application.Command
             _taskStatusGroupRepository = taskStatusGroupRepository;
         }
 
-        public Task<TaskStatusGroupModel> Handle(GetTaskStatusGroupByIdQuery request, CancellationToken cancellationToken)
+        public Task<TaskStatusGroupModel?> Handle(GetTaskStatusGroupByIdQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _taskStatusGroupRepository.GetByIdAsync(request.Id);
         }
     }
 }

@@ -11,8 +11,11 @@ namespace TaskTracker.Application
     public class TaskStatusGroupFactory : ITaskStatusGroupFactory
     {
         public TaskStatusGroup Create(AddTaskStatusGroupRequest request, bool isDefault = false)
-        {
-            throw new NotImplementedException();
-        }
+            => new TaskStatusGroup
+            {
+                IsDefault = isDefault,
+                UserId = request.UserId,
+                Name = request.Name,
+            };
     }
 }

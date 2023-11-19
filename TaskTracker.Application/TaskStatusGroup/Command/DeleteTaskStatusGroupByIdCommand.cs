@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
 using TaskTracker.Model.Response;
 
@@ -18,9 +19,25 @@ namespace TaskTracker.Application.Command
             _taskStatusGroupRepository = taskStatusGroupRepository;
         }
 
-        public Task<ResponseModel> Handle(DeleteTaskStatusGroupByIdCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseModel> Handle(DeleteTaskStatusGroupByIdCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var isDefault = await _taskStatusGroupRepository.GetByIdAsync(request.Id, x => x.IsDefault);
+
+            if (isDefault)
+            {
+                return new ResponseModel("This status group cannot be deleted");
+            }
+
+            try
+            {
+                await _taskStatusGroupRepository.DeleteByIdAsync(request.Id);
+            }
+            catch(EntityNotFoundException ex)
+            {
+                return new ResponseModel(ex.Message);
+            }
+
+            return new ResponseModel();
         }
     }
 }

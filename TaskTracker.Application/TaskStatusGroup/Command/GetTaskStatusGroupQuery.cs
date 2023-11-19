@@ -20,7 +20,7 @@ namespace TaskTracker.Application.Command
 
         public Task<IEnumerable<TaskStatusGroupModel>> Handle(GetTaskStatusGroupQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _taskStatusGroupRepository.GetAsync(request);
         }
     }
 }

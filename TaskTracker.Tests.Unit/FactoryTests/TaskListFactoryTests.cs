@@ -21,6 +21,7 @@ namespace TaskTracker.Tests.Unit.FactoryTests
                 CreatorId = 1,
                 Description = "desc",
                 Title = "title",
+                StatusGroupId = 2
             };
 
             var list = _factory.Create(request);

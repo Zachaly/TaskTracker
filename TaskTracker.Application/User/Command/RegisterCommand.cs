@@ -77,7 +77,7 @@ namespace TaskTracker.Application.Command
 
             var backlogStatus = _userTaskStatusFactory.Create(new AddUserTaskStatusRequest
             {
-                Color = "#",
+                Color = "#4d4e4f",
                 GroupId = statusGroupId,
                 Index = 0,
                 Name = "Backlog"
@@ -85,7 +85,7 @@ namespace TaskTracker.Application.Command
 
             var closedStatus = _userTaskStatusFactory.Create(new AddUserTaskStatusRequest
             {
-                Color = "#",
+                Color = "#08ad05",
                 GroupId = statusGroupId,
                 Index = 21,
                 Name = "Closed"

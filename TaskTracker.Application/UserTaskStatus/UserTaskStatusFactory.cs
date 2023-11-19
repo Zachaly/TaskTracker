@@ -11,8 +11,13 @@ namespace TaskTracker.Application
     public class UserTaskStatusFactory : IUserTaskStatusFactory
     {
         public UserTaskStatus Create(AddUserTaskStatusRequest request, bool isDefault = false)
-        {
-            throw new NotImplementedException();
-        }
+            => new UserTaskStatus
+            {
+                Color = request.Color,
+                GroupId = request.GroupId,
+                Index = request.Index,
+                IsDefault = isDefault,
+                Name = request.Name,
+            };
     }
 }
