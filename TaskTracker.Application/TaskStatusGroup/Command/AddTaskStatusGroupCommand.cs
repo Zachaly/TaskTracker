@@ -63,7 +63,5 @@ namespace TaskTracker.Application.Command
 
             return new CreatedResponseModel(statusGroupId);
         }
-
-
     }
 }

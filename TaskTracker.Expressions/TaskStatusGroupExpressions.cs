@@ -10,7 +10,7 @@ namespace TaskTracker.Expressions
         {
             Id = group.Id,
             Name = group.Name,
-            Statuses = group.Statuses.Select(UserTaskStatusExpressions.Model.Compile()),
+            Statuses = group.Statuses.AsQueryable().Select(UserTaskStatusExpressions.Model).AsEnumerable(),
             IsDefault = group.IsDefault,
         };
     }

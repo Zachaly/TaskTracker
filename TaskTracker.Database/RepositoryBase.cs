@@ -21,6 +21,14 @@ namespace TaskTracker.Database
         Task DeleteByIdAsync(long id);
     }
 
+    public interface IRepositoryBase<TEntity, TModel, TGetRequest> : IRepositoryBase<TEntity, TModel>
+        where TEntity : class, IEntity
+        where TModel : IModel
+        where TGetRequest : PagedRequest
+    {
+        Task<IEnumerable<TModel>> GetAsync(TGetRequest request);
+    }
+
     public abstract class RepositoryBase<TEntity, TModel> : IRepositoryBase<TEntity, TModel>
         where TEntity :  class, IEntity
         where TModel : IModel
@@ -154,6 +162,24 @@ namespace TaskTracker.Database
             _dbContext.Set<TEntity>().AddRange(entities);
 
             return _dbContext.SaveChangesAsync();
+        }
+    }
+
+    public abstract class RepositoryBase<TEntity, TModel, TGetRequest> : RepositoryBase<TEntity, TModel>,
+        IRepositoryBase<TEntity, TModel, TGetRequest>
+        where TEntity : class, IEntity
+        where TModel : IModel
+        where TGetRequest : PagedRequest
+    {
+        protected RepositoryBase(ApplicationDbContext dbContext) : base(dbContext)
+        {
+        }
+
+        public virtual Task<IEnumerable<TModel>> GetAsync(TGetRequest request)
+        {
+            var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
+
+            return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
         }
     }
 }

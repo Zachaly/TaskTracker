@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskTracker.Database.Repository;
+﻿using TaskTracker.Database.Repository;
 using TaskTracker.Model.TaskList.Request;
 
 namespace TaskTracker.Tests.Integration.DatabaseTests
 {
     public class TaskListRepositoryTests : DatabaseTest
     {
-        private TaskListRepository _repository;
+        private readonly TaskListRepository _repository;
 
         public TaskListRepositoryTests() : base()
         {
@@ -28,7 +23,12 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
 
             var userIds = _dbContext.Users.Select(x => x.Id).ToList();
 
-            _dbContext.TaskLists.AddRange(userIds.SelectMany(id => FakeDataFactory.GenerateTaskLists(5, id)));
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, userIds.First()).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(userIds.SelectMany(id => FakeDataFactory.GenerateTaskLists(5, id, group.Id)));
             _dbContext.SaveChanges();
 
             var userId = _dbContext.Users.First().Id;
@@ -52,7 +52,12 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, user.Id));
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, user.Id, group.Id));
             _dbContext.SaveChanges();
 
             var updatedList = _dbContext.TaskLists.AsEnumerable().First();
@@ -74,7 +79,17 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
-            var lists = FakeDataFactory.GenerateTaskLists(2, user.Id);
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var lists = FakeDataFactory.GenerateTaskLists(2, user.Id, group.Id);
 
             _dbContext.TaskLists.AddRange(lists);
 
@@ -82,7 +97,7 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
 
             var listIds = _dbContext.TaskLists.Select(x => x.Id).ToList();
 
-            _dbContext.Tasks.AddRange(listIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(5, user.Id, id)));
+            _dbContext.Tasks.AddRange(listIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(5, user.Id, id, status.Id)));
             _dbContext.SaveChanges();
 
             var deletedId = listIds.Last();

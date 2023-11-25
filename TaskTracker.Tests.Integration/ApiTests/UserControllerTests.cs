@@ -30,6 +30,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 && x.FirstName == request.FirstName
                 && x.LastName == request.LastName
                 && x.Id == content.NewEntityId);
+            Assert.Contains(_dbContext.TaskStatusGroups.AsEnumerable(), x => x.UserId == content.NewEntityId && x.IsDefault);
         }
 
         [Fact]

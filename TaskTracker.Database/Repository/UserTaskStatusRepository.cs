@@ -1,30 +1,28 @@
-﻿
-using TaskTracker.Domain.Entity;
+﻿using TaskTracker.Domain.Entity;
+using TaskTracker.Expressions;
 using TaskTracker.Model.UserTaskStatus;
 using TaskTracker.Model.UserTaskStatus.Request;
 
 namespace TaskTracker.Database.Repository
 {
-    public interface IUserTaskStatusRepository : IRepositoryBase<UserTaskStatus, UserTaskStatusModel>
+    public interface IUserTaskStatusRepository : IRepositoryBase<UserTaskStatus, UserTaskStatusModel, GetUserTaskStatusRequest>
     {
-        Task<IEnumerable<UserTaskStatusModel>> GetAsync(GetUserTaskStatusRequest request);
         Task UpdateAsync(UserTaskStatus entity);
     }
 
-    public class UserTaskStatusRepository : RepositoryBase<UserTaskStatus, UserTaskStatusModel>, IUserTaskStatusRepository
+    public class UserTaskStatusRepository : RepositoryBase<UserTaskStatus, UserTaskStatusModel, GetUserTaskStatusRequest>,
+        IUserTaskStatusRepository
     {
         public UserTaskStatusRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-        }
-
-        public Task<IEnumerable<UserTaskStatusModel>> GetAsync(GetUserTaskStatusRequest request)
-        {
-            throw new NotImplementedException();
+            ModelExpression = UserTaskStatusExpressions.Model;
         }
 
         public Task UpdateAsync(UserTaskStatus entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Set<UserTaskStatus>().Update(entity);
+
+            return _dbContext.SaveChangesAsync();
         }
     }
 }

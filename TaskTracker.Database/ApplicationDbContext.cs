@@ -9,6 +9,8 @@ namespace TaskTracker.Database
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<UserTask> Tasks { get; set; }
         public DbSet<TaskList> TaskLists { get; set; }
+        public DbSet<TaskStatusGroup> TaskStatusGroups { get; set; }
+        public DbSet<UserTaskStatus> UserTaskStatuses { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -66,6 +68,35 @@ namespace TaskTracker.Database
 
             modelBuilder.Entity<TaskList>()
                 .Property(l => l.Title).HasMaxLength(200);
+
+            modelBuilder.Entity<UserTaskStatus>()
+                .Property(s => s.Color).HasMaxLength(10);
+
+            modelBuilder.Entity<UserTaskStatus>()
+                .Property(s => s.Name).HasMaxLength(100);
+
+            modelBuilder.Entity<TaskStatusGroup>()
+                .Property(g => g.Name).HasMaxLength(100);
+
+            modelBuilder.Entity<UserTaskStatus>()
+                .HasOne(s => s.Group)
+                .WithMany(g => g.Statuses)
+                .HasForeignKey(s => s.GroupId);
+
+            modelBuilder.Entity<UserTask>()
+                .HasOne(t => t.Status)
+                .WithMany(s => s.Tasks)
+                .HasForeignKey(t => t.StatusId);
+
+            modelBuilder.Entity<TaskStatusGroup>()
+                .HasOne(g => g.User)
+                .WithMany(u => u.StatusGroups)
+                .HasForeignKey(g => g.UserId);
+
+            modelBuilder.Entity<TaskList>()
+                .HasOne(l => l.TaskStatusGroup)
+                .WithMany(g => g.Lists)
+                .HasForeignKey(l => l.TaskStatusGroupId);
         }
     }
 }

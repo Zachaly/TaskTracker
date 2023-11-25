@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Expressions;
 using TaskTracker.Model.TaskList;
@@ -7,20 +6,19 @@ using TaskTracker.Model.TaskList.Request;
 
 namespace TaskTracker.Database.Repository
 {
-    public interface ITaskListRepository : IRepositoryBase<TaskList, TaskListModel>
+    public interface ITaskListRepository : IRepositoryBase<TaskList, TaskListModel, GetTaskListRequest>
     {
-        Task<IEnumerable<TaskListModel>> GetAsync(GetTaskListRequest request);
         Task UpdateAsync(TaskList list);
     }
 
-    public class TaskListRepository : RepositoryBase<TaskList, TaskListModel>, ITaskListRepository
+    public class TaskListRepository : RepositoryBase<TaskList, TaskListModel, GetTaskListRequest>, ITaskListRepository
     {
         public TaskListRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             ModelExpression = TaskListExpressions.Model;
         }
 
-        public Task<IEnumerable<TaskListModel>> GetAsync(GetTaskListRequest request)
+        public override Task<IEnumerable<TaskListModel>> GetAsync(GetTaskListRequest request)
         {
             var query = FilterWithRequest(_dbContext.Set<TaskList>(), request);
 
