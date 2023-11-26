@@ -1,0 +1,45 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar />
+    </div>
+    <div class="column is-10">
+        <div class="columns is-centered">
+            <div class="column is-6">
+                <p class="title">Task status groups</p>
+                <div class="has-text-centered m-1" *ngIf="!isAddingGroup">
+                    <button class="button is-info" (click)="isAddingGroup = true">Add new</button>
+                </div>
+                <form *ngIf="isAddingGroup" (ngSubmit)="addGroup()">
+                    <div class="control">
+                        <label for="name" class="label">Name</label>
+                        <input type="text" name="name" class="input" [(ngModel)]="newGroup.name">
+                    </div>
+                    <div class="control buttons">
+                        <button class="button is-warning" type="button" (click)="isAddingGroup = false">Cancel</button>
+                        <button class="button is-info">Add</button>
+                    </div>
+                </form>
+                <div class="card p-1 m-1" *ngFor="let group of groups">
+                    <div class="card-header is-justify-content-space-between">
+                        <p class="title">{{ group.name }}</p>
+                        <div class="buttons">
+                            <a [routerLink]="['/task-status/update', group.id]" class="button is-info">
+                                Modify
+                            </a>
+                            <button class="button is-danger" *ngIf="!group.isDefault" (click)="deleteGroup(group.id)">Delete</button>
+                        </div>
+
+                    </div>
+                    <div class="card m-1 p-1" *ngFor="let status of group.statuses">
+                        <div class="card-header is-justify-content-space-between is-align-items-center">
+                            <div class="task-status-icon" [ngStyle]="{'background-color': status.color}"></div>
+                            <div class="is-flex is-align-content-center has-text-centered subtitle">{{ status.name }}
+                            </div>
+                            <p class="subtitle">{{ status.index }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 import UserModel from "./UserModel";
+import UserTaskModel from "./UserTaskModel";
 
 export default interface TaskListModel {
     id: number,
@@ -6,4 +7,5 @@ export default interface TaskListModel {
     description?: string,
     color?: string
     creator: UserModel
+    tasks?: UserTaskModel[]
 }

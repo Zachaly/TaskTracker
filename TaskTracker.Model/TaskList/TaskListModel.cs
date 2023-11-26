@@ -1,4 +1,5 @@
 ﻿using TaskTracker.Model.User;
+using TaskTracker.Model.UserTask;
 
 namespace TaskTracker.Model.TaskList
 {
@@ -10,5 +11,6 @@ namespace TaskTracker.Model.TaskList
         public string? Description { get; set; }
         public string? Color { get; set; }
         public long StatusGroupId { get; set; }
+        public IEnumerable<UserTaskModel> Tasks { get; set; }
     }
 }

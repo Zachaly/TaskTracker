@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.Response;
+using TaskTracker.Model.UserTaskStatus.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -30,7 +32,11 @@ namespace TaskTracker.Application.Command
 
             try 
             {
+                var status = await _userTaskStatusRepository.GetByIdAsync(request.Id, x => x);
+
                 await _userTaskStatusRepository.DeleteByIdAsync(request.Id);
+
+                await UpdateGroupStatuses(status);
             }
             catch(EntityNotFoundException ex)
             {
@@ -38,6 +44,22 @@ namespace TaskTracker.Application.Command
             }
 
             return new ResponseModel();
+        }
+
+        private async Task UpdateGroupStatuses(UserTaskStatus deletedStatus)
+        {
+            var statuses = await _userTaskStatusRepository.GetAsync(new GetUserTaskStatusRequest
+            {
+                GroupId = deletedStatus.GroupId,
+                SkipPagination = true,
+                IsDefault = false
+            }, x => x);
+
+            foreach(var status in statuses.ToList().Where(x => x.Index >= deletedStatus.Index && x.Id != deletedStatus.Id))
+            {
+                status.Index--;
+                await _userTaskStatusRepository.UpdateAsync(status);
+            }
         }
     }
 }

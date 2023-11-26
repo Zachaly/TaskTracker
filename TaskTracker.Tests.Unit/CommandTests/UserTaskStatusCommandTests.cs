@@ -9,6 +9,7 @@ using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTaskStatus;
+using TaskTracker.Model.UserTaskStatus.Request;
 
 namespace TaskTracker.Tests.Unit.CommandTests
 {
@@ -80,13 +81,33 @@ namespace TaskTracker.Tests.Unit.CommandTests
 
             repository.GetByIdAsync(command.Id, Arg.Any<Func<UserTaskStatus, bool>>()).Returns(false);
 
+            var deletedStatus = new UserTaskStatus
+            {
+                Index = 2,
+                Id = command.Id,
+            };
+
+            var updatedStatuses = new List<UserTaskStatus>
+            {
+                new UserTaskStatus { Index = 3, },
+                new UserTaskStatus { Index = 4, }
+            };
+
+            repository.GetByIdAsync(command.Id, Arg.Any<Func<UserTaskStatus, UserTaskStatus>>()).Returns(deletedStatus);
+            repository.GetAsync(Arg.Any<GetUserTaskStatusRequest>(), Arg.Any<Func<UserTaskStatus, UserTaskStatus>>())
+                .Returns(updatedStatuses);
+
+            repository.UpdateAsync(Arg.Any<UserTaskStatus>()).Returns(Task.CompletedTask);
+
             var handler = new DeleteUserTaskStatusByIdHandler(repository);
 
             var res = await handler.Handle(command, default);
 
             await repository.Received(1).DeleteByIdAsync(command.Id);
+            await repository.Received(2).UpdateAsync(Arg.Any<UserTaskStatus>());
 
             Assert.True(res.IsSuccess);
+            Assert.Equivalent(new int[] { 2, 3 }, updatedStatuses.Select(x => x.Index));
         }
 
         [Fact]
@@ -116,7 +137,7 @@ namespace TaskTracker.Tests.Unit.CommandTests
             var repository = Substitute.For<IUserTaskStatusRepository>();
 
             repository.GetByIdAsync(command.Id, Arg.Any<Func<UserTaskStatus, bool>>()).Returns(false);
-
+            repository.GetByIdAsync(command.Id, Arg.Any<Func<UserTaskStatus, UserTaskStatus>>()).Returns(new UserTaskStatus());
             repository.DeleteByIdAsync(command.Id).Throws(new EntityNotFoundException("ex"));
 
             var handler = new DeleteUserTaskStatusByIdHandler(repository);
@@ -176,6 +197,9 @@ namespace TaskTracker.Tests.Unit.CommandTests
             var repository = Substitute.For<IUserTaskStatusRepository>();
 
             repository.GetByIdAsync(command.Id, Arg.Any<Func<UserTaskStatus, UserTaskStatus>>()).Returns(status);
+
+            repository.GetAsync(Arg.Any<GetUserTaskStatusRequest>(), Arg.Any<Func<UserTaskStatus, UserTaskStatus>>())
+                .Returns(Array.Empty<UserTaskStatus>());
 
             var validator = Substitute.For<IValidator<UpdateUserTaskStatusCommand>>();
             validator.ValidateAsync(command).Returns(new ValidationResult());

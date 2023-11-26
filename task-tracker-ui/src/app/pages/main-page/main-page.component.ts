@@ -16,30 +16,36 @@ import { UserTaskService } from 'src/app/services/user-task.service';
 export class MainPageComponent implements OnInit {
 
   public userData: UserModel
-  public tasks: UserTaskModel[] = []
   public lists: TaskListModel[] = []
-  public isAddingTask = false
-  public newTask: AddUserTaskRequest = {
-    title: '',
-    creatorId: 0,
-    description: ''
-  }
 
-  constructor(private authService: AuthService, private taskService: UserTaskService) {
+  constructor(private authService: AuthService, private taskService: UserTaskService, private taskListService: TaskListService) {
     this.userData = authService.userData!.userData!
   }
 
   ngOnInit(): void {
-    this.taskService.get({ creatorId: this.userData.id }).subscribe(res => this.tasks = res)
+    this.taskListService.get({ creatorId: this.userData.id })
+      .subscribe(res => this.lists = res)
   }
 
-  public loadTasks() {
-    this.taskService.get({ creatorId: this.userData.id }).subscribe(res => this.tasks = res)
+  public loadListTasks(list: TaskListModel, reload: boolean = false) {
+    if (list.tasks && !reload) {
+      return
+    }
+
+    this.taskService.get({ listId: list.id }).subscribe(res => list.tasks = res)
   }
 
-  deleteTask(id: number) {
+  deleteTask(id: number, list: TaskListModel) {
     this.taskService.deleteById(id).subscribe(() => {
-      this.tasks = this.tasks.filter(t => t.id !== id)
+      list.tasks = list.tasks?.filter(x => x.id !== id)
+    })
+  }
+
+  updateTask(request: UpdateUserTaskRequest, list: TaskListModel) {
+    this.taskService.update(request).subscribe(() => {
+      this.taskService.getById(request.id).subscribe(updatedTask => {
+        list.tasks![list.tasks!.findIndex(t => t.id == updatedTask.id)] = updatedTask
+      })
     })
   }
 
@@ -49,9 +55,7 @@ export class MainPageComponent implements OnInit {
       title
     }
 
-    this.taskService.update(request).subscribe(() => {
-      this.tasks.find(x => x.id == id)!.title = title
-    })
+    this.taskService.update(request).subscribe()
   }
 
   updateTaskDueTimestamp(id: number, dueTimestamp?: number) {
@@ -60,8 +64,6 @@ export class MainPageComponent implements OnInit {
       dueTimestamp
     }
 
-    this.taskService.update(request).subscribe(() => {
-      this.tasks.find(x => x.id == id)!.dueTimestamp = dueTimestamp
-    })
+    this.taskService.update(request).subscribe()
   }
 }

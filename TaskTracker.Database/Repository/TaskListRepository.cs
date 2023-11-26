@@ -24,6 +24,11 @@ namespace TaskTracker.Database.Repository
 
             query = query.Include(l => l.Creator);
 
+            if (request.JoinTasks.GetValueOrDefault())
+            {
+                query = query.Include(l => l.Tasks);
+            }
+
             return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
         }
 

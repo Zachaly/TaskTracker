@@ -3,15 +3,11 @@
         <app-side-bar />
     </div>
     <div class="column">
-        <p class="title has-text-centered">{{ userData.firstName }} {{ userData.firstName }}</p>
-        <p class="title has-text-centered">Tasks</p>
-        <div>
-            <app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask(task.id)"
-                (updateDueTimestamp)="updateTaskDueTimestamp(task.id, $event)"
-                (updateTitle)="updateTaskTitle(task.id, $event)" />
-        </div>
-        <app-add-task-form [creatorId]="userData.id" (taskAdded)="loadTasks()">
-
-        </app-add-task-form>
+        <p class="title has-text-centered">Hello {{ userData.firstName }} {{ userData.firstName }}</p>
+        <p class="title has-text-centered">Your lists</p>
+        <app-task-list *ngFor="let list of lists" [list]="list" (updateTask)="updateTask($event, list)"
+            (taskAdded)="loadListTasks(list, true)"
+            (deleteTask)="deleteTask($event, list)"
+            (loadTasks)="loadListTasks(list)"/>
     </div>
 </div>

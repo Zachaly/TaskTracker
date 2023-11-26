@@ -1,2 +1,8 @@
 @import url('../node_modules/bulma/css/bulma.css');
 @import url('../node_modules/bulmaswatch/darkly/bulmaswatch.min.css');
+
+.task-status-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 5px;
+}

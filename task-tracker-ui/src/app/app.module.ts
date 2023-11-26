@@ -21,6 +21,11 @@ import { TaskListPageComponent } from './pages/task-list-page/task-list-page.com
 import { AddTaskFormComponent } from './components/add-task-form/add-task-form.component';
 import { SideBarListLinkComponent } from './components/side-bar-list-link/side-bar-list-link.component';
 import { AddListPageComponent } from './pages/add-list-page/add-list-page.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
+import { TaskStatusPageComponent } from './pages/task-status-page/task-status-page.component';
+import { UpdateStatusGroupPageComponent } from './pages/update-status-group-page/update-status-group-page.component';
+import { TaskStatusListItemComponent } from './components/task-status-list-item/task-status-list-item.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -29,7 +34,9 @@ const routes: Routes = [
   route('login', LoginPageComponent),
   route('', MainPageComponent, [RouteGuard]),
   route('list/add', AddListPageComponent, [RouteGuard]),
-  route('list/:id', TaskListPageComponent, [RouteGuard])
+  route('list/:id', TaskListPageComponent, [RouteGuard]),
+  route('task-status', TaskStatusPageComponent, [RouteGuard]),
+  route('task-status/update/:groupId', UpdateStatusGroupPageComponent, [RouteGuard])
 ]
 
 @NgModule({
@@ -47,12 +54,17 @@ const routes: Routes = [
     AddTaskFormComponent,
     SideBarListLinkComponent,
     AddListPageComponent,
+    TaskListComponent,
+    TaskStatusPageComponent,
+    UpdateStatusGroupPageComponent,
+    TaskStatusListItemComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    FontAwesomeModule
   ],
   providers: [RouteGuard, AuthService, UserService, tokenInterceptor],
   bootstrap: [AppComponent]

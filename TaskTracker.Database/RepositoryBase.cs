@@ -27,6 +27,7 @@ namespace TaskTracker.Database
         where TGetRequest : PagedRequest
     {
         Task<IEnumerable<TModel>> GetAsync(TGetRequest request);
+        Task<IEnumerable<T>> GetAsync<T>(TGetRequest request, Func<TEntity, T> selector);
     }
 
     public abstract class RepositoryBase<TEntity, TModel> : IRepositoryBase<TEntity, TModel>
@@ -92,7 +93,7 @@ namespace TaskTracker.Database
         protected IQueryable<TEntity> FilterWithRequest<TRequest>(IQueryable<TEntity> queryable, TRequest request)
         {
             ImmutableList<(string Name, CustomFilterAttribute? Attr)> requestProps = typeof(TRequest).GetProperties()
-                .Where(p => p.Name != "PageIndex" && p.Name != "PageSize")
+                .Where(p => p.Name != "PageIndex" && p.Name != "PageSize" && p.GetCustomAttribute<JoinAttribute>() is null)
                 .Where(p => p.GetValue(request) is not null)
                 .Select(p =>  (p.Name, p.GetCustomAttribute<CustomFilterAttribute>())).ToImmutableList();
 
@@ -151,6 +152,11 @@ namespace TaskTracker.Database
 
         protected IQueryable<TEntity> AddPagination(IQueryable<TEntity> queryable, PagedRequest request)
         {
+            if (request.SkipPagination.GetValueOrDefault())
+            {
+                return queryable;
+            }
+
             var index = request.PageIndex ?? 0;
             var pageSize = request.PageSize ?? 10;
 
@@ -180,6 +186,13 @@ namespace TaskTracker.Database
             var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
 
             return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
+        }
+
+        public Task<IEnumerable<T>> GetAsync<T>(TGetRequest request, Func<TEntity, T> selector)
+        {
+            var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
+
+            return Task.FromResult(AddPagination(query, request).Select(selector).AsEnumerable());
         }
     }
 }

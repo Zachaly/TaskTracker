@@ -19,7 +19,6 @@ export class AddTaskFormComponent {
     creatorId: 0,
     title: '',
     description: '',
-    
   }
 
   constructor(private taskService: UserTaskService, private authService: AuthService) {
