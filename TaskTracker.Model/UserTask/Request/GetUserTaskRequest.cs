@@ -12,5 +12,7 @@ namespace TaskTracker.Model.UserTask.Request
         public long? MinCreationTimestamp { get; set; }
 
         public long? ListId { get; set; }
+
+        public long? StatusId { get; set; }
     }
 }

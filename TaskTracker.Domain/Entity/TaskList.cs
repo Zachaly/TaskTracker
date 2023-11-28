@@ -9,5 +9,7 @@
         public List<UserTask> Tasks { get; set; }
         public long CreatorId { get; set; }
         public User Creator { get; set; }
+        public long TaskStatusGroupId { get; set; }
+        public TaskStatusGroup TaskStatusGroup { get; set; }
     }
 }

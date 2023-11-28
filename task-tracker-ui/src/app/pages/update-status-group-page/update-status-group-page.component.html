@@ -1,0 +1,51 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar></app-side-bar>
+    </div>
+    <div class="column is-10">
+        <div class="columns is-centered">
+            <div class="column is-6 mt-2">
+                <div class="is-fullwidth" *ngIf="!isUpdatingName">
+                    <p class="title has-text-centered">{{ group.name }}</p>
+                    <p class="has-text-centered">
+                        <button class="button is-info" (click)="isUpdatingName = true">
+                            Update
+                        </button>
+                    </p>
+                </div>
+                <form *ngIf="isUpdatingName" (ngSubmit)="updateName()">
+                    <div class="control">
+                        <input type="text" name="name" class="input" [(ngModel)]="newName">
+                    </div>
+                    <div class="control buttons">
+                        <button class="button is-warning" type="button" (click)="isUpdatingName = false">Cancel</button>
+                        <button class="button is-info">Update</button>
+                    </div>
+                </form>
+                <app-task-status-list-item *ngFor="let status of group.statuses" [status]="status"
+                    (deleteStatus)="deleteStatus(status.id)" (moveIndexDown)="moveStatusIndexDown(status)"
+                    (moveIndexUp)="moveStatusIndexUp(status)"
+                    (updateColor)="updateStatus({ id: status.id, color: $event })"
+                    (updateName)="updateStatus({ id: status.id, name: $event })">
+                </app-task-status-list-item>
+                <div *ngIf="!isAddingStatus" class="has-text-centered">
+                    <button class="button is-info" (click)="isAddingStatus = true">Add new status</button>
+                </div>
+                <form *ngIf="isAddingStatus" (ngSubmit)="addStatus()">
+                    <div class="control">
+                        <label for="name" class="label">Name</label>
+                        <input type="text" name="name" [(ngModel)]="newStatus.name" class="input">
+                    </div>
+                    <div class="control">
+                        <label for="color" class="label">Color</label>
+                        <input type="color" name="color" [(ngModel)]="newStatus.color" class="input">
+                    </div>
+                    <div class="control buttons">
+                        <button class="button is-warning" type="button" (click)="isAddingStatus = false">Cancel</button>
+                        <button class="button is-info">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,19 @@ namespace TaskTracker.Tests.Integration.ApiTests
             _dbContext.SaveChanges();
 
             var userIds = _dbContext.Users.Select(x => x.Id).ToList();
-            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id));
+            var statusGroup = FakeDataFactory.GenerateTaskStatusGroups(1, userIds.First()).First();
+
+            _dbContext.Set<TaskStatusGroup>().Add(statusGroup);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, statusGroup.Id).First();
+            _dbContext.Set<UserTaskStatus>().Add(status);
+
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), statusGroup.Id).First();
+            _dbContext.Set<TaskList>().Add(list);
+            _dbContext.SaveChanges();
+
+            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id, list.Id, status.Id));
 
             _dbContext.Tasks.AddRange(tasks);
             _dbContext.SaveChanges();
@@ -40,13 +52,22 @@ namespace TaskTracker.Tests.Integration.ApiTests
         {
             var loginData = await AuthorizeAsync();
 
+            var status = _dbContext.UserTaskStatuses.First();
+            var group = _dbContext.TaskStatusGroups.First();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
             var task = new UserTask
             {
                 CreatorId = loginData.UserData.Id,
                 CreationTimestamp = 1,
                 DueTimestamp = 2,
                 Description = "desc",
-                Title = "title"
+                Title = "title",
+                StatusId = status.Id,
+                ListId = list.Id,
             };
 
             _dbContext.Tasks.Add(task);
@@ -65,6 +86,9 @@ namespace TaskTracker.Tests.Integration.ApiTests
             Assert.Equal(loginData.UserData.FirstName, content.Creator.FirstName);
             Assert.Equal(loginData.UserData.LastName, content.Creator.LastName);
             Assert.Equal(loginData.UserData.Id, content.Creator.Id);
+            Assert.Equal(status.Id, content.Status.Id);
+            Assert.Equal(status.Name, content.Status.Name);
+            Assert.Equal(status.Index, content.Status.Index);
         }
 
         [Fact]
@@ -80,14 +104,23 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task PostAsync_AddsNewTask()
         {
-            var logindata = await AuthorizeAsync();
+            var loginData = await AuthorizeAsync();
+
+            var status = _dbContext.UserTaskStatuses.First();
+            var group = _dbContext.TaskStatusGroups.First();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
 
             var request = new AddUserTaskCommand
             {
-                CreatorId = logindata.UserData.Id,
+                CreatorId = loginData.UserData.Id,
                 Description = "desc",
                 DueTimestamp = 1,
-                Title = "title"
+                Title = "title",
+                StatusId = status.Id,
+                ListId = list.Id
             };
 
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
@@ -98,7 +131,8 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 t.Title == request.Title &&
                 t.Description == request.Description &&
                 t.CreatorId == request.CreatorId &&
-                t.Id == content.NewEntityId);
+                t.Id == content.NewEntityId &&
+                t.StatusId == request.StatusId);
         }
 
         [Fact]
@@ -111,7 +145,8 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 CreatorId = logindata.UserData.Id,
                 Description = "desc",
                 DueTimestamp = 1,
-                Title = ""
+                Title = "",
+                StatusId = 1
             };
 
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
@@ -126,7 +161,14 @@ namespace TaskTracker.Tests.Integration.ApiTests
         {
             var loginData = await AuthorizeAsync();
 
-            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(5, loginData.UserData.Id));
+            var status = _dbContext.UserTaskStatuses.First();
+            var group = _dbContext.TaskStatusGroups.First();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(5, loginData.UserData.Id, list.Id, status.Id));
             _dbContext.SaveChanges();
 
             var taskId = _dbContext.Tasks.OrderBy(t => t.Id).Last().Id;
@@ -156,7 +198,23 @@ namespace TaskTracker.Tests.Integration.ApiTests
             _dbContext.SaveChanges();
 
             var userIds = _dbContext.Users.Select(x => x.Id).ToList();
-            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id));
+
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, userIds.First()).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id).First();
+
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id, list.Id, status.Id));
 
             _dbContext.Tasks.AddRange(tasks);
             _dbContext.SaveChanges();
@@ -191,7 +249,23 @@ namespace TaskTracker.Tests.Integration.ApiTests
             _dbContext.SaveChanges();
 
             var userIds = _dbContext.Users.Select(x => x.Id).ToList();
-            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id));
+
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, userIds.First()).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id).First();
+
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            var tasks = userIds.SelectMany(id => FakeDataFactory.GenerateUserTasks(3, id, list.Id, status.Id));
 
             _dbContext.Tasks.AddRange(tasks);
             _dbContext.SaveChanges();

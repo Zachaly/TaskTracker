@@ -2,7 +2,8 @@ import { HttpParams } from "@angular/common/http"
 
 export default interface PagedRequest {
     pageIndex?: number,
-    pageSize?: number
+    pageSize?: number,
+    skipPagination?: boolean
 }
 
 export const mapPagedRequest = (request: PagedRequest) : HttpParams => {
@@ -13,6 +14,9 @@ export const mapPagedRequest = (request: PagedRequest) : HttpParams => {
     } 
     if(request.pageSize) {
         params = params.append('PageSize', request.pageSize)
+    }
+    if(request.skipPagination != undefined) {
+        params = params.append('SkipPagination', request.skipPagination)
     }
 
     return params;

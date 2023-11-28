@@ -13,13 +13,14 @@ export class AddTaskFormComponent {
   @Input() isAddingTask = false
   @Input() listId?: number
   @Input() creatorId: number = 0
+  @Input() statusId: number = 0
   @Output() taskAdded: EventEmitter<any> = new EventEmitter()
 
   newTask: AddUserTaskRequest = {
     creatorId: 0,
     title: '',
     description: '',
-    
+    statusId: 0
   }
 
   constructor(private taskService: UserTaskService, private authService: AuthService) {
@@ -31,7 +32,8 @@ export class AddTaskFormComponent {
       title: '',
       description: '',
       creatorId: 0,
-      listId: 0
+      listId: 0,
+      statusId: this.statusId
     }
     this.isAddingTask = false
   }
@@ -39,13 +41,15 @@ export class AddTaskFormComponent {
   addTask() {
     this.newTask.listId = this.listId
     this.newTask.creatorId = this.authService.userData!.userData.id
+    this.newTask.statusId = this.statusId
 
     this.taskService.post(this.newTask).subscribe(() => this.taskAdded.emit())
     this.newTask = {
       title: '',
       description: '',
       creatorId: 0,
-      listId: 0
+      listId: 0,
+      statusId: this.statusId
     }
     this.isAddingTask = false
   }

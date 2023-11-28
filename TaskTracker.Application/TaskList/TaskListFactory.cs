@@ -17,6 +17,7 @@ namespace TaskTracker.Application
                 CreatorId = request.CreatorId,
                 Description = request.Description,
                 Title = request.Title,
+                TaskStatusGroupId = request.StatusGroupId
             };
     }
 }

@@ -2,7 +2,7 @@
     <div class="column is-2">
         <app-side-bar></app-side-bar>
     </div>
-    <div class="column columns is-centered" >
+    <div class="column columns is-centered">
         <form class="column is-6" (ngSubmit)="addList()">
             <div class="control">
                 <label class="label" for="title">Title</label>
@@ -15,6 +15,14 @@
             <div class="control">
                 <label for="color">Color</label>
                 <input name="color" type="color" class="input" [(ngModel)]="newList.color">
+            </div>
+            <div class="control">
+                <label for="groupId" class="label">Status group</label>
+                <div class="select">
+                    <select name="groupId" [(ngModel)]="newList.statusGroupId">
+                        <option *ngFor="let group of statusGroups" [value]="group.id">{{ group.name }}</option>
+                    </select>
+                </div>
             </div>
             <div class="control">
                 <button class="button is-info">Add new list</button>

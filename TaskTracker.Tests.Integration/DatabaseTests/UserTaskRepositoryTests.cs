@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TaskTracker.Database.Repository;
+﻿using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTask.Request;
 
@@ -35,15 +34,36 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             });
             _dbContext.SaveChanges();
 
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
             var tasks = new List<UserTask>
             {
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id },
+                new UserTask { Description = "desc", Title = "tit",
+                    CreatorId = user.Id, StatusId = status.Id, ListId = list.Id },
+                new UserTask { Description = "desc", Title = "tit",
+                    CreatorId = 2, StatusId = status.Id, ListId = list.Id },
+                new UserTask { Description = "desc", Title = "tit",
+                    CreatorId = 2, StatusId = status.Id, ListId = list.Id },
+                new UserTask { Description = "desc", Title = "tit",
+                    CreatorId = user.Id, StatusId = status.Id, ListId = list.Id },
+                new UserTask { Description = "desc", Title = "tit",
+                    CreatorId = 2, StatusId = status.Id, ListId = list.Id },
+                new UserTask { Description = "desc", Title = "tit",
+                    CreatorId = user.Id, StatusId = status.Id, ListId = list.Id },
+                new UserTask { Description = "desc", Title = "tit",
+                    CreatorId = user.Id, StatusId = status.Id, ListId = list.Id },
             };
 
             _dbContext.Tasks.AddRange(tasks);
@@ -83,15 +103,36 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
 
             const long Timestamp = 3;
 
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
             var tasks = new List<UserTask>
             {
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, CreationTimestamp = Timestamp },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2, CreationTimestamp = 1 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2, CreationTimestamp = Timestamp + 1 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, CreationTimestamp = 2 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2, CreationTimestamp = Timestamp + 2 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, CreationTimestamp = 1 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, CreationTimestamp = Timestamp },
+                new UserTask { Description = "desc", Title = "tit", ListId = list.Id,
+                    CreatorId = user.Id, StatusId = status.Id, CreationTimestamp = Timestamp },
+                new UserTask { Description = "desc", Title = "tit", ListId = list.Id,
+                    CreatorId = 2, StatusId = status.Id, CreationTimestamp = 1 },
+                new UserTask { Description = "desc", Title = "tit", ListId = list.Id,
+                    CreatorId = 2, StatusId = status.Id, CreationTimestamp = Timestamp + 1 },
+                new UserTask { Description = "desc", Title = "tit", ListId = list.Id,
+                    CreatorId = user.Id, StatusId = status.Id, CreationTimestamp = 2 },
+                new UserTask { Description = "desc", Title = "tit", ListId = list.Id,
+                    CreatorId = 2, StatusId = status.Id, CreationTimestamp = Timestamp + 2 },
+                new UserTask { Description = "desc", Title = "tit", ListId = list.Id,
+                    CreatorId = user.Id, StatusId = status.Id, CreationTimestamp = 1 },
+                new UserTask { Description = "desc", Title = "tit", ListId = list.Id,
+                    CreatorId = user.Id, StatusId = status.Id, CreationTimestamp = Timestamp },
             };
 
             _dbContext.Tasks.AddRange(tasks);
@@ -129,18 +170,40 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             });
             _dbContext.SaveChanges();
 
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
             const long Timestamp = 3;
 
             var tasks = new List<UserTask>
             {
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, DueTimestamp = Timestamp },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2, DueTimestamp = 1 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2, DueTimestamp = Timestamp + 1 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, DueTimestamp = 2 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = 2, DueTimestamp = Timestamp + 2 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, DueTimestamp = 1 },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, DueTimestamp = Timestamp, },
-                new UserTask { Description = "desc", Title = "tit", CreatorId = user.Id, DueTimestamp = null, },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = user.Id, StatusId = status.Id, DueTimestamp = Timestamp },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = 2, StatusId = status.Id, DueTimestamp = 1 },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = 2, StatusId = status.Id, DueTimestamp = Timestamp + 1 },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = user.Id, StatusId = status.Id, DueTimestamp = 2 },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = 2, StatusId = status.Id, DueTimestamp = Timestamp + 2 },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = user.Id, StatusId = status.Id, DueTimestamp = 1 },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = user.Id, StatusId = status.Id, DueTimestamp = Timestamp, },
+                new UserTask { Description = "desc", Title = "tit",
+                    ListId = list.Id, CreatorId = user.Id, StatusId = status.Id, DueTimestamp = null, },
             };
 
             _dbContext.Tasks.AddRange(tasks);
@@ -173,6 +236,20 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
             var task = new UserTask
             {
                 CreatorId = user.Id,
@@ -180,6 +257,8 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
                 DueTimestamp = 2,
                 Description = "desc",
                 Title = "title",
+                StatusId = status.Id,
+                ListId = list.Id,
             };
 
             _dbContext.Set<UserTask>().AddRange(new UserTask[] 
@@ -191,7 +270,9 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
                     Description = "desc2",
                     Title = "title2",
                     CreationTimestamp = 0,
-                    DueTimestamp = 1
+                    DueTimestamp = 1,
+                    StatusId = status.Id,
+                    ListId = list.Id
                 }
             });
 
@@ -217,7 +298,21 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
-            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(2, 1));
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(2, 1, list.Id, status.Id));
             _dbContext.SaveChanges();
 
             var task = _dbContext.Tasks.First();

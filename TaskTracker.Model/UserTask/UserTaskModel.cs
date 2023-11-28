@@ -1,4 +1,5 @@
 ﻿using TaskTracker.Model.User;
+using TaskTracker.Model.UserTaskStatus;
 
 namespace TaskTracker.Model.UserTask
 {
@@ -10,5 +11,6 @@ namespace TaskTracker.Model.UserTask
         public UserModel Creator { get; set; }
         public long CreationTimestamp { get; set; }
         public long? DueTimestamp { get; set; }
+        public UserTaskStatusModel Status { get; set; }
     }
 }

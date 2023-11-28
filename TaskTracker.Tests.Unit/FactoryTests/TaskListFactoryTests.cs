@@ -21,6 +21,7 @@ namespace TaskTracker.Tests.Unit.FactoryTests
                 CreatorId = 1,
                 Description = "desc",
                 Title = "title",
+                StatusGroupId = 2
             };
 
             var list = _factory.Create(request);
@@ -29,6 +30,7 @@ namespace TaskTracker.Tests.Unit.FactoryTests
             Assert.Equal(request.CreatorId, list.CreatorId);
             Assert.Equal(request.Color, list.Color);
             Assert.Equal(request.Description, list.Description);
+            Assert.Equal(request.StatusGroupId, list.TaskStatusGroupId);
         }
     }
 }

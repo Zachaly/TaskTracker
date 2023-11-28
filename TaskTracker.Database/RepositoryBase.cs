@@ -17,7 +17,17 @@ namespace TaskTracker.Database
         Task<TModel?> GetByIdAsync(long id);
         Task<T> GetByIdAsync<T>(long id, Func<TEntity, T> selector);
         Task<long> AddAsync(TEntity entity);
+        Task AddAsync(params TEntity[] entities);
         Task DeleteByIdAsync(long id);
+    }
+
+    public interface IRepositoryBase<TEntity, TModel, TGetRequest> : IRepositoryBase<TEntity, TModel>
+        where TEntity : class, IEntity
+        where TModel : IModel
+        where TGetRequest : PagedRequest
+    {
+        Task<IEnumerable<TModel>> GetAsync(TGetRequest request);
+        Task<IEnumerable<T>> GetAsync<T>(TGetRequest request, Func<TEntity, T> selector);
     }
 
     public abstract class RepositoryBase<TEntity, TModel> : IRepositoryBase<TEntity, TModel>
@@ -83,7 +93,7 @@ namespace TaskTracker.Database
         protected IQueryable<TEntity> FilterWithRequest<TRequest>(IQueryable<TEntity> queryable, TRequest request)
         {
             ImmutableList<(string Name, CustomFilterAttribute? Attr)> requestProps = typeof(TRequest).GetProperties()
-                .Where(p => p.Name != "PageIndex" && p.Name != "PageSize")
+                .Where(p => p.Name != "PageIndex" && p.Name != "PageSize" && p.GetCustomAttribute<JoinAttribute>() is null)
                 .Where(p => p.GetValue(request) is not null)
                 .Select(p =>  (p.Name, p.GetCustomAttribute<CustomFilterAttribute>())).ToImmutableList();
 
@@ -142,10 +152,47 @@ namespace TaskTracker.Database
 
         protected IQueryable<TEntity> AddPagination(IQueryable<TEntity> queryable, PagedRequest request)
         {
+            if (request.SkipPagination.GetValueOrDefault())
+            {
+                return queryable;
+            }
+
             var index = request.PageIndex ?? 0;
             var pageSize = request.PageSize ?? 10;
 
             return queryable.Skip(index * pageSize).Take(pageSize);
+        }
+
+        public Task AddAsync(params TEntity[] entities)
+        {
+            _dbContext.Set<TEntity>().AddRange(entities);
+
+            return _dbContext.SaveChangesAsync();
+        }
+    }
+
+    public abstract class RepositoryBase<TEntity, TModel, TGetRequest> : RepositoryBase<TEntity, TModel>,
+        IRepositoryBase<TEntity, TModel, TGetRequest>
+        where TEntity : class, IEntity
+        where TModel : IModel
+        where TGetRequest : PagedRequest
+    {
+        protected RepositoryBase(ApplicationDbContext dbContext) : base(dbContext)
+        {
+        }
+
+        public virtual Task<IEnumerable<TModel>> GetAsync(TGetRequest request)
+        {
+            var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
+
+            return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
+        }
+
+        public Task<IEnumerable<T>> GetAsync<T>(TGetRequest request, Func<TEntity, T> selector)
+        {
+            var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
+
+            return Task.FromResult(AddPagination(query, request).Select(selector).AsEnumerable());
         }
     }
 }
