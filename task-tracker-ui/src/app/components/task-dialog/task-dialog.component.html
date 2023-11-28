@@ -1,11 +1,28 @@
 <div class="card dialog" *ngIf="!isUpdating">
     <header class="card-header">
+        <div class="mt-2 ml-2">
+            <div class="task-status-icon" [ngStyle]="{'background-color': task.status.color}" (click)="isUpdatingStatus = true">
+
+            </div>
+            <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingStatus">
+                <p class="has-text-centered">
+                    <button class="delete is-large" (click)="isUpdatingStatus = false"></button>
+                </p>
+                <div *ngFor="let status of statuses" (click)="selectStatus(status.id)">
+                    <div class="task-status-icon" [ngStyle]="{ 'background-color': status.color }"></div>
+                    <p> {{ status.name }} <span *ngIf="status.id == task.status.id"
+                            class="has-text-success">(Current)</span></p>
+                </div>
+            </div>
+        </div>
         <p class="card-header-title">
             {{ task.title }}
         </p>
-        <button class="button is-danger" (click)="onDeleteTask()">Delete</button>
-        <button class="button is-info" (click)="isUpdating = true">Update</button>
-        <button class="delete is-large" (click)="close.emit()"></button>
+        <div class="buttons">
+            <button class="button is-danger" (click)="onDeleteTask()">Delete</button>
+            <button class="button is-info" (click)="isUpdating = true">Update</button>
+            <button class="delete is-large" (click)="close.emit()"></button>
+        </div>
     </header>
     <div class="card-content columns">
         <div class="column is-9">
@@ -30,7 +47,8 @@
     </div>
     <div class="control">
         <label for="description" class="label">Description</label>
-        <textarea name="description" [(ngModel)]="updateRequest.description" class="textarea" cols="30" rows="10"></textarea>
+        <textarea name="description" [(ngModel)]="updateRequest.description" class="textarea" cols="30"
+            rows="10"></textarea>
     </div>
     <div class="control">
         <label for="dueTimestamp" class="label">Due date</label>

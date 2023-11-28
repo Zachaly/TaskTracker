@@ -23,7 +23,7 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.taskListService.get({ creatorId: this.userData.id })
+    this.taskListService.get({ creatorId: this.userData.id, joinStatusGroup: true })
       .subscribe(res => this.lists = res)
   }
 
@@ -47,23 +47,5 @@ export class MainPageComponent implements OnInit {
         list.tasks![list.tasks!.findIndex(t => t.id == updatedTask.id)] = updatedTask
       })
     })
-  }
-
-  updateTaskTitle(id: number, title: string) {
-    const request: UpdateUserTaskRequest = {
-      id,
-      title
-    }
-
-    this.taskService.update(request).subscribe()
-  }
-
-  updateTaskDueTimestamp(id: number, dueTimestamp?: number) {
-    const request: UpdateUserTaskRequest = {
-      id,
-      dueTimestamp
-    }
-
-    this.taskService.update(request).subscribe()
   }
 }

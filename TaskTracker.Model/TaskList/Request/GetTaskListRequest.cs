@@ -7,5 +7,7 @@ namespace TaskTracker.Model.TaskList.Request
         public long? CreatorId { get; set; }
         [Join]
         public bool? JoinTasks { get; set; }
+        [Join]
+        public bool? JoinStatusGroup { get; set; }
     }
 }

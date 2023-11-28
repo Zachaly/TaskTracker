@@ -2,12 +2,16 @@
     <div class="column is-2">
         <app-side-bar />
     </div>
-    <div class="column">
-        <p class="title has-text-centered">Hello {{ userData.firstName }} {{ userData.firstName }}</p>
-        <p class="title has-text-centered">Your lists</p>
-        <app-task-list *ngFor="let list of lists" [list]="list" (updateTask)="updateTask($event, list)"
-            (taskAdded)="loadListTasks(list, true)"
-            (deleteTask)="deleteTask($event, list)"
-            (loadTasks)="loadListTasks(list)"/>
+    <div class="column is-10">
+        <div class="columns is-centered">
+            <div class="column is-10">
+                <p class="title has-text-centered">Hello {{ userData.firstName }} {{ userData.firstName }}</p>
+                <p class="title has-text-centered">Your lists</p>
+                <app-task-list *ngFor="let list of lists" [list]="list" (updateTask)="updateTask($event, list)"
+                    (taskAdded)="loadListTasks(list, true)" (deleteTask)="deleteTask($event, list)"
+                    (loadTasks)="loadListTasks(list)" />
+            </div>
+        </div>
+
     </div>
 </div>

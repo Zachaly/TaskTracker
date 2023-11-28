@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { tap } from 'rxjs';
 import UserTaskModel from 'src/app/model/UserTaskModel';
+import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
 import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
 import { UserTaskService } from 'src/app/services/user-task.service';
 
@@ -11,6 +12,7 @@ import { UserTaskService } from 'src/app/services/user-task.service';
 })
 export class TaskDialogComponent implements OnInit {
   @Input() id: number = 0
+  @Input() statuses: UserTaskStatusModel[] = []
   @Output() close: EventEmitter<any> = new EventEmitter()
   @Output() deleteTask: EventEmitter<number> = new EventEmitter()
   @Output() taskUpdated: EventEmitter<UserTaskModel> = new EventEmitter()
@@ -20,10 +22,13 @@ export class TaskDialogComponent implements OnInit {
     title: '',
     description: '',
     creationTimestamp: 0,
-    creator: { id: 0, firstName: '', lastName: '', email: '' }
+    creator: { id: 0, firstName: '', lastName: '', email: '' },
+    status: { id: 0, index: 0, name: '', color: '', isDefault: false }
   }
 
   isUpdating = false
+
+  isUpdatingStatus = false
 
   updateRequest: UpdateUserTaskRequest = {
     id: 0
@@ -44,7 +49,7 @@ export class TaskDialogComponent implements OnInit {
     return this.taskService.getById(this.id).pipe(tap(res => {
       this.task = res
       const { id, description, title, dueTimestamp } = res
-      this.updateRequest = { id, description, title, dueTimestamp }
+      this.updateRequest = { id, description, title, dueTimestamp, statusId: res.status.id }
     }))
   }
 
@@ -54,8 +59,9 @@ export class TaskDialogComponent implements OnInit {
   }
 
   public updateTask() {
-    this.taskService.update(this.updateRequest).subscribe(async () => {
+    this.taskService.update(this.updateRequest).subscribe(() => {
       this.isUpdating = false
+      this.isUpdatingStatus = false
       this.loadTask().subscribe(res => this.taskUpdated.emit(res))
     })
   }
@@ -66,5 +72,13 @@ export class TaskDialogComponent implements OnInit {
     var date = new Date(target.value)
 
     this.updateRequest.dueTimestamp = date.getTime()
+  }
+
+  selectStatus(statusId: number) {
+    this.updateRequest.statusId = statusId
+
+    this.updateTask()
+
+    this.isUpdatingStatus = false
   }
 }

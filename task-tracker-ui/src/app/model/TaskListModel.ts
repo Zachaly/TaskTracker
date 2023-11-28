@@ -1,3 +1,4 @@
+import TaskStatusGroupModel from "./TaskStatusGroupModel";
 import UserModel from "./UserModel";
 import UserTaskModel from "./UserTaskModel";
 
@@ -7,5 +8,7 @@ export default interface TaskListModel {
     description?: string,
     color?: string
     creator: UserModel
-    tasks?: UserTaskModel[]
+    tasks?: UserTaskModel[],
+    statusGroupId: number,
+    statusGroup?: TaskStatusGroupModel
 }

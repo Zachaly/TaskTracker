@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import TaskListModel from 'src/app/model/TaskListModel';
+import TaskStatusGroupModel from 'src/app/model/TaskStatusGroupModel';
 import UserTaskModel from 'src/app/model/UserTaskModel';
 import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
 import UpdateTaskListRequest from 'src/app/model/request/UpdateTaskListRequest';
 import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
+import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';
+import { UserTaskStatusService } from 'src/app/services/user-task-status.service';
 import { UserTaskService } from 'src/app/services/user-task.service';
 
 @Component({
@@ -21,19 +24,30 @@ export class TaskListPageComponent implements OnInit {
     title: '',
     creatorId: 0,
     listId: 0,
-    description: ''
+    description: '',
+    statusId: 0
   }
 
   listId: number = 0
   userId: number = 0
   isUpdatingList = false
 
+  statusGroup: TaskStatusGroupModel = {
+    id: 0,
+    statuses: [],
+    name: '',
+    isDefault: false
+  }
+
+  defaultStatusId = 0
+
   updateRequest: UpdateTaskListRequest = {
     id: 0,
   }
 
   constructor(private route: ActivatedRoute, private taskListService: TaskListService, private taskService: UserTaskService,
-    private authService: AuthService, private router: Router) {
+    private authService: AuthService, private router: Router, private taskStatusGroupService: TaskStatusGroupService,
+    private taskStatusService: UserTaskStatusService) {
     this.userId = authService.userData!.userData.id
   }
 
@@ -53,6 +67,12 @@ export class TaskListPageComponent implements OnInit {
         this.taskService.get({ listId: id }).subscribe(res => {
           this.tasks = res
         })
+
+        this.taskStatusGroupService.getById(res.statusGroupId)
+          .subscribe(res => {
+            this.statusGroup = res
+            this.defaultStatusId = this.statusGroup.statuses!.find(x => x.index == 0)!.id
+          })
       })
     })
   }
@@ -106,5 +126,21 @@ export class TaskListPageComponent implements OnInit {
     this.taskService.update(request).subscribe(() => {
       this.tasks.find(x => x.id == id)!.dueTimestamp = dueTimestamp
     })
+  }
+
+  updateTaskStatus(id: number, statusId: number){
+    const request: UpdateUserTaskRequest = {
+      id,
+      statusId
+    }
+
+    this.taskService.update(request).subscribe(() => {
+      this.taskService.getById(request.id).subscribe(res => this.tasks.find(x => x.id == res.id)!.status = res.status)
+    })
+  }
+
+  taskUpdated(task: UserTaskModel) {
+    console.log(task)
+    this.tasks[this.tasks.findIndex(x => x.id == task.id)]! = task
   }
 }

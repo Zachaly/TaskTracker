@@ -1,4 +1,5 @@
 import UserModel from "./UserModel";
+import UserTaskStatusModel from "./UserTaskStatusModel";
 
 export default interface UserTaskModel {
     id: number,
@@ -6,5 +7,6 @@ export default interface UserTaskModel {
     description: string,
     creator: UserModel,
     dueTimestamp?: number,
-    creationTimestamp: number
+    creationTimestamp: number,
+    status: UserTaskStatusModel
 }

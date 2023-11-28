@@ -3,7 +3,8 @@ import PagedRequest, { mapPagedRequest } from "./PagedRequest";
 
 export default interface GetTaskListRequest extends PagedRequest {
     creatorId?: number,
-    joinTasks?: boolean
+    joinTasks?: boolean,
+    joinStatusGroup?: boolean
 }
 
 export const mapGetTaskListRequest = (request: GetTaskListRequest): HttpParams => {
@@ -14,6 +15,9 @@ export const mapGetTaskListRequest = (request: GetTaskListRequest): HttpParams =
     }
     if(request.joinTasks){
         params = params.append('JoinTasks', request.joinTasks)
+    }
+    if(request.joinStatusGroup) {
+        params = params.append('JoinStatusGroup', request.joinStatusGroup)
     }
 
     return params

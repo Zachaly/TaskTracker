@@ -1,5 +1,20 @@
 <div class="columns">
-    <div class="column">
+    <div class="column is-2" style="position: relative;">
+        <div class="task-status-icon" [ngStyle]="{'background-color': task.status.color }"
+            (click)="toggleIsUpdatingStatus()">
+        </div>
+        <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingStatus">
+            <p class="has-text-centered">
+                <button class="delete is-large" (click)="toggleIsUpdatingStatus()"></button>
+            </p>
+            <div *ngFor="let status of statuses" (click)="confirmStatusUpdate(status.id)">
+                <div class="task-status-icon" [ngStyle]="{ 'background-color': status.color }"></div>
+                <p> {{ status.name }} <span *ngIf="status.id == task.status.id"
+                        class="has-text-success">(Current)</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="column is-3">
         <p class="title has-text-centered" *ngIf="!isUpdatingTitle" (click)="isUpdatingTitle = true">
             {{ task.title }}
         </p>
@@ -26,13 +41,15 @@
             <button class="button is-info" (click)="confirmUpdateDueTimestamp()">Confirm</button>
         </div>
     </div>
-    <div class="column">
-        <button class="button is-info" (click)="showDialog = true">More</button>
-    </div>
-    <div class="column">
-        <button class="button is-danger" (click)="deleteTask.emit(task.id)">Delete</button>
+    <div class="column is-1">
+        <span class="icon" (click)="showDialog = true">
+            <fa-icon [icon]="faEllipsis" style="color: #ad9999;"></fa-icon>
+        </span>
+        <span class="icon" (click)="deleteTask.emit()">
+            <fa-icon [icon]="faTrash" style="color: #e20000;"></fa-icon>
+        </span>
     </div>
 
     <app-task-dialog [id]="task.id" *ngIf="showDialog" (close)="showDialog = false"
-        (deleteTask)="deleteTask.emit(task.id)" (taskUpdated)="updateTask($event)" />
+        (deleteTask)="deleteTask.emit(task.id)" (taskUpdated)="updateTask($event)" (taskUpdated)="taskUpdated.emit($event)" [statuses]="statuses" />
 </div>

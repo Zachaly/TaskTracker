@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import TaskListModel from 'src/app/model/TaskListModel';
-import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
 import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-task-list',
@@ -13,7 +13,8 @@ export class TaskListComponent {
     id: 0,
     title: '',
     description: '',
-    creator: { id: 0, lastName: '', firstName: '', email: '' }
+    creator: { id: 0, lastName: '', firstName: '', email: '' },
+    statusGroupId: 0
   }
   @Input() userId = 0
  
@@ -24,11 +25,16 @@ export class TaskListComponent {
 
   showTasks = false
 
+  curentIcon = faAngleDown
+
   toggleShowTasks(){
     this.showTasks = !this.showTasks
 
     if(this.showTasks){
       this.loadTasks.emit()
+      this.curentIcon = faAngleUp
+    } else {
+      this.curentIcon = faAngleDown
     }
   }
 }

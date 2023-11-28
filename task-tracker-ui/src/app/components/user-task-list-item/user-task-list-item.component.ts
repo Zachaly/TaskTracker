@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import UserTaskModel from 'src/app/model/UserTaskModel';
+import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
+import { faTrash, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-user-task-list-item',
@@ -13,16 +15,25 @@ export class UserTaskListItemComponent implements OnInit {
     creationTimestamp: 0,
     title: '',
     description: '',
-    creator: { id: 0, firstName: '', lastName: '', email: '' }
+    creator: { id: 0, firstName: '', lastName: '', email: '' },
+    status: { id: 0, index: 0, name: '', color: '', isDefault: false }
   }
+
+  faTrash = faTrash
+  faEllipsis = faEllipsis
+
+  @Input() statuses: UserTaskStatusModel[] = []
 
   @Output() updateTitle: EventEmitter<string> = new EventEmitter()
   @Output() deleteTask: EventEmitter<number> = new EventEmitter()
   @Output() updateDueTimestamp: EventEmitter<number | undefined> = new EventEmitter()
+  @Output() updateStatus: EventEmitter<number> = new EventEmitter()
+  @Output() taskUpdated: EventEmitter<UserTaskModel> = new EventEmitter()
 
   showDialog = false
   isUpdatingTitle = false
   isUpdatingDueTimestamp = false
+  isUpdatingStatus = false
 
   updatedTitle = ''
   updatedDueTimestamp?: number = undefined
@@ -55,9 +66,19 @@ export class UserTaskListItemComponent implements OnInit {
 
   updateTask(task: UserTaskModel) {
     const { title, description, dueTimestamp } = task
-    console.log(task)
     this.task.description = description
     this.task.title = title
     this.task.dueTimestamp = dueTimestamp
+    this.task.status = task.status
+  }
+
+  toggleIsUpdatingStatus(){
+    this.isUpdatingStatus = !this.isUpdatingStatus && this.statuses.length > 0
+  }
+
+  confirmStatusUpdate(statusId: number){
+    this.updateStatus.emit(statusId)
+
+    this.toggleIsUpdatingStatus()
   }
 }

@@ -1,9 +1,9 @@
 <div class="card">
-    <div class="card-header">
-        <p class="title">{{ list.title }}</p>
+    <div class="card-header is-flex is-justify-content-space-between is-align-items-center" [ngStyle]="{ 'background-color': list.color ?? ''}">
+        <p class="card-header-title">{{ list.title }}</p>
         <button class="card-header-icon" (click)="toggleShowTasks()">
             <span class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                <fa-icon [icon]="curentIcon" ></fa-icon>
             </span>
         </button>
     </div>
@@ -13,9 +13,8 @@
     <div *ngIf="list.tasks">
         <app-user-task-list-item *ngFor="let task of list.tasks" [task]="task" (deleteTask)="deleteTask.emit(task.id)"
             (updateDueTimestamp)="updateTask.emit({ id: task.id, dueTimestamp: $event})"
-            (updateTitle)="updateTask.emit({ id: task.id, title: $event })" />
+            (updateTitle)="updateTask.emit({ id: task.id, title: $event })"
+            (updateStatus)="updateTask.emit({ id: task.id, statusId: $event})"
+            [statuses]="list.statusGroup?.statuses ?? []" />
     </div>
-    <app-add-task-form [creatorId]="userId" (taskAdded)="taskAdded.emit()">
-
-    </app-add-task-form>
 </div>

@@ -18,6 +18,17 @@ namespace TaskTracker.Database.Repository
             ModelExpression = TaskListExpressions.Model;
         }
 
+        public override Task<TaskListModel?> GetByIdAsync(long id)
+        {
+            var query = FilterById(_dbContext.Set<TaskList>(), id);
+
+            query = query
+                .Include(l => l.Creator)
+                .Include(l => l.TaskStatusGroup).ThenInclude(g => g.Statuses);
+
+            return query.Select(ModelExpression).FirstOrDefaultAsync();
+        }
+
         public override Task<IEnumerable<TaskListModel>> GetAsync(GetTaskListRequest request)
         {
             var query = FilterWithRequest(_dbContext.Set<TaskList>(), request);
@@ -27,6 +38,11 @@ namespace TaskTracker.Database.Repository
             if (request.JoinTasks.GetValueOrDefault())
             {
                 query = query.Include(l => l.Tasks);
+            }
+
+            if (request.JoinStatusGroup.GetValueOrDefault())
+            {
+                query = query.Include(l => l.TaskStatusGroup).ThenInclude(g => g.Statuses);
             }
 
             return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
