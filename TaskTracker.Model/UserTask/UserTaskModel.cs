@@ -1,4 +1,5 @@
-﻿using TaskTracker.Model.User;
+﻿using TaskTracker.Domain.Enum;
+using TaskTracker.Model.User;
 using TaskTracker.Model.UserTaskStatus;
 
 namespace TaskTracker.Model.UserTask
@@ -12,5 +13,6 @@ namespace TaskTracker.Model.UserTask
         public long CreationTimestamp { get; set; }
         public long? DueTimestamp { get; set; }
         public UserTaskStatusModel Status { get; set; }
+        public UserTaskPriority? Priority { get; set; }
     }
 }

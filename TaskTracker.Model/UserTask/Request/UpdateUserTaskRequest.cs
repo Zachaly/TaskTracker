@@ -1,4 +1,6 @@
-﻿namespace TaskTracker.Model.UserTask.Request
+﻿using TaskTracker.Domain.Enum;
+
+namespace TaskTracker.Model.UserTask.Request
 {
     public class UpdateUserTaskRequest
     {
@@ -7,5 +9,6 @@
         public string? Description { get; set; }
         public long? DueTimestamp { get; set; }
         public long? StatusId { get; set; }
+        public UserTaskPriority? Priority { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace TaskTracker.Domain.Entity
+﻿using TaskTracker.Domain.Enum;
+
+namespace TaskTracker.Domain.Entity
 {
     public class UserTask : IEntity
     {
@@ -13,5 +15,6 @@
         public TaskList List { get; set; }
         public long StatusId { get; set; }
         public UserTaskStatus Status { get; set; }
+        public UserTaskPriority? Priority { get; set; }
     }
 }

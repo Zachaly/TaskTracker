@@ -14,7 +14,8 @@ namespace TaskTracker.Expressions
                 Description = task.Description,
                 DueTimestamp = task.DueTimestamp,
                 Title = task.Title,
-                Status = UserTaskStatusExpressions.Model.Compile().Invoke(task.Status)
+                Status = UserTaskStatusExpressions.Model.Compile().Invoke(task.Status),
+                Priority = task.Priority,
             };
     }
 }
