@@ -37,6 +37,7 @@
             (updateDueTimestamp)="updateTaskDueTimestamp(task.id, $event)"
             (updateTitle)="updateTaskTitle(task.id, $event)"
             (updateStatus)="updateTaskStatus(task.id, $event)"
+            (updatePriority)="updateTaskPriority(task.id, $event)"
             [statuses]="statusGroup.statuses ?? []" />
         </div>
         <app-add-task-form [listId]="listId" [statusId]="defaultStatusId" [creatorId]="userId" (taskAdded)="loadTasks()">

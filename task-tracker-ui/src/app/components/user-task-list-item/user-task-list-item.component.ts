@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import UserTaskModel from 'src/app/model/UserTaskModel';
 import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
-import { faTrash, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEllipsis, faFlag, faBan } from '@fortawesome/free-solid-svg-icons';
+import UserTaskPriority from 'src/app/model/enum/UserTaskPriority';
 
 @Component({
   selector: 'app-user-task-list-item',
@@ -21,6 +22,10 @@ export class UserTaskListItemComponent implements OnInit {
 
   faTrash = faTrash
   faEllipsis = faEllipsis
+  faFlag = faFlag
+  faBan = faBan
+
+  priorityLevels = UserTaskPriority
 
   @Input() statuses: UserTaskStatusModel[] = []
 
@@ -28,12 +33,14 @@ export class UserTaskListItemComponent implements OnInit {
   @Output() deleteTask: EventEmitter<number> = new EventEmitter()
   @Output() updateDueTimestamp: EventEmitter<number | undefined> = new EventEmitter()
   @Output() updateStatus: EventEmitter<number> = new EventEmitter()
-  @Output() taskUpdated: EventEmitter<UserTaskModel> = new EventEmitter()
+  @Output() updatePriority: EventEmitter<UserTaskPriority | undefined> = new EventEmitter()
+  @Output() taskUpdated: EventEmitter<UserTaskModel> = new EventEmitter()  
 
   showDialog = false
   isUpdatingTitle = false
   isUpdatingDueTimestamp = false
   isUpdatingStatus = false
+  isUpdatingPriority = false
 
   updatedTitle = ''
   updatedDueTimestamp?: number = undefined
@@ -80,5 +87,32 @@ export class UserTaskListItemComponent implements OnInit {
     this.updateStatus.emit(statusId)
 
     this.toggleIsUpdatingStatus()
+  }
+
+  priorityColor(priority?: UserTaskPriority) {
+    if(priority === undefined || priority === null) {
+      return '#fafafa'
+    }
+
+    if(priority == UserTaskPriority.urgent) {
+      return '#e02626'
+    }
+    else if(priority == UserTaskPriority.medium) {
+      return '#0bcde3'
+    }
+    else if(priority == UserTaskPriority.high) {
+      return '#e7ed32'
+    }
+    else if(priority == UserTaskPriority.low) {
+      return '#7f8485'
+    }
+
+    return '#ad0505'
+  }
+
+  confirmPriorityUpdate(priority?: UserTaskPriority) {
+    this.isUpdatingPriority = false
+
+    this.updatePriority.emit(priority)
   }
 }

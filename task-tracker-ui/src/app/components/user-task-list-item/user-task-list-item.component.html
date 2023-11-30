@@ -41,6 +41,56 @@
             <button class="button is-info" (click)="confirmUpdateDueTimestamp()">Confirm</button>
         </div>
     </div>
+    <div class="column is-1" style="position: relative;">
+        <span class="icon" (click)="isUpdatingPriority = true">
+            <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(task.priority)}"/>
+        </span>
+        <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingPriority">
+            <p class="has-text-centered">
+                <button class="delete is-large" (click)="isUpdatingPriority = false"></button>
+            </p>
+            <div (click)="confirmPriorityUpdate(priorityLevels.urgent)">
+                <span class="icon" (click)="isUpdatingPriority = true">
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.urgent)}"/>
+                </span>
+                <p>
+                    Urgent
+                </p>
+            </div>
+            <div (click)="confirmPriorityUpdate(priorityLevels.high)">
+                <span class="icon" (click)="isUpdatingPriority = true">
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.high)}"/>
+                </span>
+                <p>
+                    High
+                </p>
+            </div>
+            <div (click)="confirmPriorityUpdate(priorityLevels.medium)">
+                <span class="icon" (click)="isUpdatingPriority = true">
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.medium)}"/>
+                </span>
+                <p>
+                    Medium
+                </p>
+            </div>
+            <div (click)="confirmPriorityUpdate(priorityLevels.low)">
+                <span class="icon" (click)="isUpdatingPriority = true">
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.low)}"/>
+                </span>
+                <p>
+                    Low
+                </p>
+            </div>
+            <div>
+                <span class="icon" (click)="confirmPriorityUpdate(undefined)">
+                    <fa-icon [icon]="faBan" [ngStyle]="{'color': priorityColor(undefined)}"/>
+                </span>
+                <p>
+                    Clear
+                </p>
+            </div>
+        </div>
+    </div>
     <div class="column is-1">
         <span class="icon" (click)="showDialog = true">
             <fa-icon [icon]="faEllipsis" style="color: #ad9999;"></fa-icon>

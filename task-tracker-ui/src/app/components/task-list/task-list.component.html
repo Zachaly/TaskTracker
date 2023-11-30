@@ -1,9 +1,10 @@
 <div class="card">
-    <div class="card-header is-flex is-justify-content-space-between is-align-items-center" [ngStyle]="{ 'background-color': list.color ?? ''}">
+    <div class="card-header is-flex is-justify-content-space-between is-align-items-center"
+        [ngStyle]="{ 'background-color': list.color ?? ''}">
         <p class="card-header-title">{{ list.title }}</p>
         <button class="card-header-icon" (click)="toggleShowTasks()">
             <span class="icon">
-                <fa-icon [icon]="curentIcon" ></fa-icon>
+                <fa-icon [icon]="curentIcon"></fa-icon>
             </span>
         </button>
     </div>
@@ -12,9 +13,11 @@
 <div *ngIf="showTasks" class="column">
     <div *ngIf="list.tasks">
         <app-user-task-list-item *ngFor="let task of list.tasks" [task]="task" (deleteTask)="deleteTask.emit(task.id)"
-            (updateDueTimestamp)="updateTask.emit({ id: task.id, dueTimestamp: $event})"
+            (updateDueTimestamp)="updateTask.emit({ id: task.id, dueTimestamp: $event })"
             (updateTitle)="updateTask.emit({ id: task.id, title: $event })"
-            (updateStatus)="updateTask.emit({ id: task.id, statusId: $event})"
+            (updateStatus)="updateTask.emit({ id: task.id, statusId: $event })"
+            (updatePriority)="updateTask.emit({ id: task.id, priority: $event })"
+            (taskUpdated)="onTaskUpdated($event)"
             [statuses]="list.statusGroup?.statuses ?? []" />
     </div>
 </div>
