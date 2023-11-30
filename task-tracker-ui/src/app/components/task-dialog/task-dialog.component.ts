@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { faBan, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
 import UserTaskModel from 'src/app/model/UserTaskModel';
 import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
+import UserTaskPriority from 'src/app/model/enum/UserTaskPriority';
 import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
 import { UserTaskService } from 'src/app/services/user-task.service';
 
@@ -26,9 +28,15 @@ export class TaskDialogComponent implements OnInit {
     status: { id: 0, index: 0, name: '', color: '', isDefault: false }
   }
 
+  faFlag = faFlag
+  faBan = faBan
+
   isUpdating = false
 
+  priorityLevels = UserTaskPriority
+
   isUpdatingStatus = false
+  isUpdatingPriority = false
 
   updateRequest: UpdateUserTaskRequest = {
     id: 0
@@ -48,8 +56,8 @@ export class TaskDialogComponent implements OnInit {
   private loadTask() {
     return this.taskService.getById(this.id).pipe(tap(res => {
       this.task = res
-      const { id, description, title, dueTimestamp } = res
-      this.updateRequest = { id, description, title, dueTimestamp, statusId: res.status.id }
+      const { id, description, title, dueTimestamp, priority } = res
+      this.updateRequest = { id, description, title, dueTimestamp, statusId: res.status.id, priority }
     }))
   }
 
@@ -80,5 +88,34 @@ export class TaskDialogComponent implements OnInit {
     this.updateTask()
 
     this.isUpdatingStatus = false
+  }
+
+  confirmPriorityUpdate(priority?: UserTaskPriority) {
+    this.updateRequest.priority = priority
+
+    this.updateTask()
+
+    this.isUpdatingPriority = false
+  }
+
+  priorityColor(priority?: UserTaskPriority) {
+    if(priority === undefined || priority === null) {
+      return '#fafafa'
+    }
+
+    if(priority == UserTaskPriority.urgent) {
+      return '#e02626'
+    }
+    else if(priority == UserTaskPriority.medium) {
+      return '#0bcde3'
+    }
+    else if(priority == UserTaskPriority.high) {
+      return '#e7ed32'
+    }
+    else if(priority == UserTaskPriority.low) {
+      return '#7f8485'
+    }
+
+    return '#ad0505'
   }
 }

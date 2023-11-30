@@ -3,6 +3,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import TaskListModel from 'src/app/model/TaskListModel';
 import TaskStatusGroupModel from 'src/app/model/TaskStatusGroupModel';
 import UserTaskModel from 'src/app/model/UserTaskModel';
+import UserTaskPriority from 'src/app/model/enum/UserTaskPriority';
 import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
 import UpdateTaskListRequest from 'src/app/model/request/UpdateTaskListRequest';
 import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
@@ -128,7 +129,7 @@ export class TaskListPageComponent implements OnInit {
     })
   }
 
-  updateTaskStatus(id: number, statusId: number){
+  updateTaskStatus(id: number, statusId: number) {
     const request: UpdateUserTaskRequest = {
       id,
       statusId
@@ -139,8 +140,18 @@ export class TaskListPageComponent implements OnInit {
     })
   }
 
+  updateTaskPriority(id: number, priority?: UserTaskPriority) {
+    const request: UpdateUserTaskRequest = {
+      id,
+      priority
+    }
+
+    this.taskService.update(request).subscribe(() => {
+      this.tasks.find(x => x.id == id)!.priority = priority
+    })
+  }
+
   taskUpdated(task: UserTaskModel) {
-    console.log(task)
     this.tasks[this.tasks.findIndex(x => x.id == task.id)]! = task
   }
 }

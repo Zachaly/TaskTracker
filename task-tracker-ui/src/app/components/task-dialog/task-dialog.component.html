@@ -1,7 +1,8 @@
 <div class="card dialog" *ngIf="!isUpdating">
     <header class="card-header">
         <div class="mt-2 ml-2">
-            <div class="task-status-icon" [ngStyle]="{'background-color': task.status.color}" (click)="isUpdatingStatus = true">
+            <div class="task-status-icon" [ngStyle]="{'background-color': task.status.color}"
+                (click)="isUpdatingStatus = true">
 
             </div>
             <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingStatus">
@@ -15,9 +16,59 @@
                 </div>
             </div>
         </div>
-        <p class="card-header-title">
+        <div class="card-header-title">
             {{ task.title }}
-        </p>
+            <div class="ml-2" style="position: relative;">
+                <span class="icon" (click)="isUpdatingPriority = true">
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(task.priority)}" />
+                </span>
+                <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingPriority">
+                    <p class="has-text-centered">
+                        <button class="delete is-large" (click)="isUpdatingPriority = false"></button>
+                    </p>
+                    <div (click)="confirmPriorityUpdate(priorityLevels.urgent)">
+                        <span class="icon" (click)="isUpdatingPriority = true">
+                            <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.urgent)}" />
+                        </span>
+                        <p>
+                            Urgent
+                        </p>
+                    </div>
+                    <div (click)="confirmPriorityUpdate(priorityLevels.high)">
+                        <span class="icon" (click)="isUpdatingPriority = true">
+                            <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.high)}" />
+                        </span>
+                        <p>
+                            High
+                        </p>
+                    </div>
+                    <div (click)="confirmPriorityUpdate(priorityLevels.medium)">
+                        <span class="icon" (click)="isUpdatingPriority = true">
+                            <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.medium)}" />
+                        </span>
+                        <p>
+                            Medium
+                        </p>
+                    </div>
+                    <div (click)="confirmPriorityUpdate(priorityLevels.low)">
+                        <span class="icon" (click)="isUpdatingPriority = true">
+                            <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.low)}" />
+                        </span>
+                        <p>
+                            Low
+                        </p>
+                    </div>
+                    <div>
+                        <span class="icon" (click)="confirmPriorityUpdate(undefined)">
+                            <fa-icon [icon]="faBan" [ngStyle]="{'color': priorityColor(undefined)}" />
+                        </span>
+                        <p>
+                            Clear
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="buttons">
             <button class="button is-danger" (click)="onDeleteTask()">Delete</button>
             <button class="button is-info" (click)="isUpdating = true">Update</button>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import TaskListModel from 'src/app/model/TaskListModel';
 import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import UserTaskModel from 'src/app/model/UserTaskModel';
 
 @Component({
   selector: 'app-task-list',
@@ -36,5 +37,9 @@ export class TaskListComponent {
     } else {
       this.curentIcon = faAngleDown
     }
+  }
+
+  onTaskUpdated(task: UserTaskModel) {
+    this.list.tasks![this.list.tasks!.findIndex(x => x.id == task.id)] = task
   }
 }

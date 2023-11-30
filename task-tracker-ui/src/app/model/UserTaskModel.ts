@@ -1,5 +1,6 @@
 import UserModel from "./UserModel";
 import UserTaskStatusModel from "./UserTaskStatusModel";
+import UserTaskPriority from "./enum/UserTaskPriority";
 
 export default interface UserTaskModel {
     id: number,
@@ -8,5 +9,6 @@ export default interface UserTaskModel {
     creator: UserModel,
     dueTimestamp?: number,
     creationTimestamp: number,
-    status: UserTaskStatusModel
+    status: UserTaskStatusModel,
+    priority?: UserTaskPriority
 }
