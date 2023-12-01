@@ -29,7 +29,6 @@ namespace TaskTracker.Tests.Unit.CommandTests
                 .Returns(NewId)
                 .AndDoes(info => lists.Add(info.Arg<TaskList>()));
 
-
             var factory = Substitute.For<ITaskListFactory>();
 
             factory.Create(command).Returns(info => new TaskList
