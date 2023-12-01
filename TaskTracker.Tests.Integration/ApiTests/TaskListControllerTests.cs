@@ -21,7 +21,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var request = new AddTaskListCommand
             {
-                CreatorId = userData.UserData.Id,
+                CreatorId = userData.UserData!.Id,
                 Description = "desc",
                 Color = "#000000",
                 Title = "title",
@@ -32,7 +32,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var content = await response.Content.ReadFromJsonAsync<CreatedResponseModel>();
 
-            var id = content.NewEntityId!;
+            var id = content!.NewEntityId!;
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Contains(_dbContext.TaskLists, list => 
@@ -50,7 +50,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var request = new AddTaskListCommand
             {
-                CreatorId = userData.UserData.Id,
+                CreatorId = userData.UserData!.Id,
                 Description = "desc",
                 Color = "#000000",
                 Title = new string('a', 201),
@@ -67,13 +67,13 @@ namespace TaskTracker.Tests.Integration.ApiTests
         }
 
         [Fact]
-        public async Task GetAsync_ReturnsLists()
+        public async Task GetAsync_ReturnsCorrectLists()
         {
             var userData = await AuthorizeAsync();
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData.Id, group.Id));
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id));
             await _dbContext.SaveChangesAsync();
 
             var user = FakeDataFactory.GenerateUsers(1).First();
@@ -99,7 +99,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData.Id, group.Id));
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id));
             await _dbContext.SaveChangesAsync();
 
             var list = _dbContext.TaskLists.OrderBy(x => x.Id).Last();
@@ -135,7 +135,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(2, userData.UserData.Id, group.Id));
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(2, userData.UserData!.Id, group.Id));
             await _dbContext.SaveChangesAsync();
 
             var list = _dbContext.TaskLists.AsNoTracking().First();
@@ -180,7 +180,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(1, userData.UserData.Id, group.Id));
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(1, userData.UserData!.Id, group.Id));
             await _dbContext.SaveChangesAsync();
 
             var list = _dbContext.TaskLists.First();
@@ -206,7 +206,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData.Id, group.Id));
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id));
             await _dbContext.SaveChangesAsync();
 
             var listIds = _dbContext.TaskLists.Select(x => x.Id).ToList();

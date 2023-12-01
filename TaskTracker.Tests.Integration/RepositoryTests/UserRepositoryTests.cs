@@ -1,9 +1,8 @@
-﻿using Bogus;
-using TaskTracker.Database.Exception;
+﻿using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 
-namespace TaskTracker.Tests.Integration.DatabaseTests
+namespace TaskTracker.Tests.Integration.RepositoryTests
 {
     public class UserRepositoryTests : DatabaseTest
     {
@@ -17,13 +16,7 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
         [Fact]
         public async Task DeleteByIdAsync_DeletesProperEntity()
         {
-            var faker = new Faker<User>()
-                .RuleFor(u => u.Email, f => f.Person.Email)
-                .RuleFor(u => u.FirstName, f => f.Person.FirstName)
-                .RuleFor(u => u.LastName, f => f.Person.LastName)
-                .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
-
-            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(5));
             _dbContext.SaveChanges();
 
             var user = _dbContext.Users.First();
@@ -36,13 +29,7 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
         [Fact]
         public async Task DeleteByIdAsync_UserDoesNotExists_ExceptionThrown()
         {
-            var faker = new Faker<User>()
-                .RuleFor(u => u.Email, f => f.Person.Email)
-                .RuleFor(u => u.FirstName, f => f.Person.FirstName)
-                .RuleFor(u => u.LastName, f => f.Person.LastName)
-                .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
-
-            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(5));
             _dbContext.SaveChanges();
 
             await Assert.ThrowsAsync<EntityNotFoundException>(async () => await _repository.DeleteByIdAsync(2137));
@@ -51,13 +38,7 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
         [Fact]
         public async Task GetByIdAsync_ReturnsProperUser()
         {
-            var faker = new Faker<User>()
-                .RuleFor(u => u.Email, f => f.Person.Email)
-                .RuleFor(u => u.FirstName, f => f.Person.FirstName)
-                .RuleFor(u => u.LastName, f => f.Person.LastName)
-                .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
-
-            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(5));
             _dbContext.SaveChanges();
 
             var user = _dbContext.Users.First();
@@ -73,13 +54,7 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
         [Fact]
         public async Task GetByIdAsync_WithCustomSelector_ReturnsProperValue()
         {
-            var faker = new Faker<User>()
-               .RuleFor(u => u.Email, f => f.Person.Email)
-               .RuleFor(u => u.FirstName, f => f.Person.FirstName)
-               .RuleFor(u => u.LastName, f => f.Person.LastName)
-               .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
-
-            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(5));
             _dbContext.SaveChanges();
 
             var user = _dbContext.Users.First();
@@ -113,13 +88,7 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
         [Fact]
         public async Task GetByEmailAsync_ReturnsCorrectUser()
         {
-            var faker = new Faker<User>()
-                .RuleFor(u => u.Email, f => f.Person.Email)
-                .RuleFor(u => u.FirstName, f => f.Person.FirstName)
-                .RuleFor(u => u.LastName, f => f.Person.LastName)
-                .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
-
-            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(5));
             _dbContext.SaveChanges();
 
             var user = _dbContext.Users.First();
@@ -132,15 +101,8 @@ namespace TaskTracker.Tests.Integration.DatabaseTests
         [Fact]
         public async Task UpdateAsync_UpdatesProperUser()
         {
-            var faker = new Faker<User>()
-                .RuleFor(u => u.Email, f => f.Person.Email)
-                .RuleFor(u => u.FirstName, f => f.Person.FirstName)
-                .RuleFor(u => u.LastName, f => f.Person.LastName)
-                .RuleFor(u => u.PasswordHash, f => f.Random.AlphaNumeric(20));
-
-            _dbContext.Users.AddRange(faker.Generate(5));
+            _dbContext.Users.AddRange(FakeDataFactory.GenerateUsers(5));
             _dbContext.SaveChanges();
-
 
             var user = _dbContext.Users.First();
 

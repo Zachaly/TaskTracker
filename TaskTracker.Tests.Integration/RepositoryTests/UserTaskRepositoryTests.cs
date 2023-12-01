@@ -2,7 +2,7 @@
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTask.Request;
 
-namespace TaskTracker.Tests.Integration.DatabaseTests
+namespace TaskTracker.Tests.Integration.RepositoryTests
 {
     public class UserTaskRepositoryTests : DatabaseTest
     {

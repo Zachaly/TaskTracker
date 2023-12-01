@@ -55,7 +55,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var status = _dbContext.UserTaskStatuses.First();
             var group = _dbContext.TaskStatusGroups.First();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData.Id, group.Id).First();
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id).First();
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
 
@@ -109,7 +109,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var status = _dbContext.UserTaskStatuses.First();
             var group = _dbContext.TaskStatusGroups.First();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData.Id, group.Id).First();
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id).First();
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
 
@@ -142,7 +142,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var request = new AddUserTaskCommand
             {
-                CreatorId = logindata.UserData.Id,
+                CreatorId = logindata.UserData!.Id,
                 Description = "desc",
                 DueTimestamp = 1,
                 Title = "",
@@ -164,7 +164,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var status = _dbContext.UserTaskStatuses.First();
             var group = _dbContext.TaskStatusGroups.First();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData.Id, group.Id).First();
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id).First();
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
 

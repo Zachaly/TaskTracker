@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using TaskTracker.Domain.Entity;
 using TaskTracker.Model.Response;
 using TaskTracker.Model.UserTaskStatus;
 using TaskTracker.Model.UserTaskStatus.Request;
@@ -171,7 +170,6 @@ namespace TaskTracker.Tests.Integration.ApiTests
             };
 
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
-            var content = await GetContentFromBadRequest<ResponseModel>(response);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
