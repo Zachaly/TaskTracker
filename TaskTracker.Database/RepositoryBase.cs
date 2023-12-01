@@ -19,6 +19,7 @@ namespace TaskTracker.Database
         Task<long> AddAsync(TEntity entity);
         Task AddAsync(params TEntity[] entities);
         Task DeleteByIdAsync(long id);
+        Task UpdateAsync(TEntity entity);
     }
 
     public interface IRepositoryBase<TEntity, TModel, TGetRequest> : IRepositoryBase<TEntity, TModel>
@@ -166,6 +167,13 @@ namespace TaskTracker.Database
         public Task AddAsync(params TEntity[] entities)
         {
             _dbContext.Set<TEntity>().AddRange(entities);
+
+            return _dbContext.SaveChangesAsync();
+        }
+
+        public Task UpdateAsync(TEntity entity)
+        {
+            _dbContext.Set<TEntity>().Update(entity);
 
             return _dbContext.SaveChangesAsync();
         }

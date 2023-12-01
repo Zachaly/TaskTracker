@@ -8,7 +8,6 @@ namespace TaskTracker.Database.Repository
 {
     public interface ITaskStatusGroupRepository : IRepositoryBase<TaskStatusGroup, TaskStatusGroupModel, GetTaskStatusGroupRequest>
     {
-        Task UpdateAsync(TaskStatusGroup entity);
     }
 
     public class TaskStatusGroupRepository : RepositoryBase<TaskStatusGroup, TaskStatusGroupModel, GetTaskStatusGroupRequest>,
@@ -25,13 +24,6 @@ namespace TaskTracker.Database.Repository
                 .Include(g => g.Statuses);
 
             return FilterById(query, id).Select(ModelExpression).FirstOrDefaultAsync();
-        }
-
-        public Task UpdateAsync(TaskStatusGroup entity)
-        {
-            _dbContext.Set<TaskStatusGroup>().Update(entity);
-
-            return _dbContext.SaveChangesAsync();
         }
     }
 }

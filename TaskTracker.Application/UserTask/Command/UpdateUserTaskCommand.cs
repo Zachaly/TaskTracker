@@ -1,51 +1,31 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using Azure.Core;
+using FluentValidation;
+using TaskTracker.Application.Abstraction;
 using TaskTracker.Database.Repository;
-using TaskTracker.Model.Response;
+using TaskTracker.Domain.Entity;
+using TaskTracker.Model.UserTask;
 using TaskTracker.Model.UserTask.Request;
 
 namespace TaskTracker.Application.Command
 {
-    public class UpdateUserTaskCommand : UpdateUserTaskRequest, IRequest<ResponseModel>
+    public class UpdateUserTaskCommand : UpdateUserTaskRequest, IUpdateEntityCommand
     {
     }
 
-    public class UpdateUserTaskHandler : IRequestHandler<UpdateUserTaskCommand, ResponseModel>
+    public class UpdateUserTaskHandler : UpdateEntityHandler<UserTask, UserTaskModel, UpdateUserTaskCommand>
     {
-        private readonly IUserTaskRepository _userTaskRepository;
-        private readonly IValidator<UpdateUserTaskCommand> _validator;
-
         public UpdateUserTaskHandler(IUserTaskRepository userTaskRepository, IValidator<UpdateUserTaskCommand> validator)
+            : base(userTaskRepository, validator)
         {
-            _userTaskRepository = userTaskRepository;
-            _validator = validator;
         }
 
-        public async Task<ResponseModel> Handle(UpdateUserTaskCommand request, CancellationToken cancellationToken)
+        protected override void UpdateEntity(UserTask entity, UpdateUserTaskCommand command)
         {
-            var validaton = await _validator.ValidateAsync(request);
-
-            if (!validaton.IsValid)
-            {
-                return new ResponseModel(validaton.ToDictionary());
-            }
-
-            var task = await _userTaskRepository.GetByIdAsync(request.Id, t => t);
-
-            if(task is null)
-            {
-                return new ResponseModel("Entity not found");
-            }
-
-            task.Title = request.Title ?? task.Title;
-            task.Description = request.Description ?? task.Description;
-            task.DueTimestamp = request.DueTimestamp;
-            task.StatusId = request.StatusId ?? task.StatusId;
-            task.Priority = request.Priority;
-
-            await _userTaskRepository.UpdateAsync(task);
-
-            return new ResponseModel();
+            entity.Title = command.Title ?? entity.Title;
+            entity.Description = command.Description ?? entity.Description;
+            entity.DueTimestamp = command.DueTimestamp;
+            entity.StatusId = command.StatusId ?? entity.StatusId;
+            entity.Priority = command.Priority;
         }
     }
 }

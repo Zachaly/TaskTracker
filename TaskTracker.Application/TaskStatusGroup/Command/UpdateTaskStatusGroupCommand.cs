@@ -1,48 +1,27 @@
 ﻿using FluentValidation;
-using MediatR;
+using TaskTracker.Application.Abstraction;
 using TaskTracker.Database.Repository;
-using TaskTracker.Model.Response;
+using TaskTracker.Domain.Entity;
+using TaskTracker.Model.TaskStatusGroup;
 using TaskTracker.Model.TaskStatusGroup.Request;
 
 namespace TaskTracker.Application.Command
 {
-    public class UpdateTaskStatusGroupCommand : UpdateTaskStatusGroupRequest, IRequest<ResponseModel>
+    public class UpdateTaskStatusGroupCommand : UpdateTaskStatusGroupRequest, IUpdateEntityCommand
     {
     }
 
-    public class UpdateTaskStatusGroupHandler : IRequestHandler<UpdateTaskStatusGroupCommand, ResponseModel>
+    public class UpdateTaskStatusGroupHandler : UpdateEntityHandler<TaskStatusGroup, TaskStatusGroupModel, UpdateTaskStatusGroupCommand>
     {
-        private readonly ITaskStatusGroupRepository _taskStatusGroupRepository;
-        private readonly IValidator<UpdateTaskStatusGroupCommand> _validator;
-
         public UpdateTaskStatusGroupHandler(ITaskStatusGroupRepository taskStatusGroupRepository,
             IValidator<UpdateTaskStatusGroupCommand> validator)
+            : base(taskStatusGroupRepository, validator)
         {
-            _taskStatusGroupRepository = taskStatusGroupRepository;
-            _validator = validator;
         }
 
-        public async Task<ResponseModel> Handle(UpdateTaskStatusGroupCommand request, CancellationToken cancellationToken)
+        protected override void UpdateEntity(TaskStatusGroup entity, UpdateTaskStatusGroupCommand command)
         {
-            var validation = await _validator.ValidateAsync(request);
-
-            if (!validation.IsValid)
-            {
-                return new ResponseModel(validation.ToDictionary());
-            }
-
-            var group = await _taskStatusGroupRepository.GetByIdAsync(request.Id, x => x);
-
-            if(group is null)
-            {
-                return new ResponseModel("Entity not found");
-            }
-
-            group.Name = request.Name ?? group.Name;
-
-            await _taskStatusGroupRepository.UpdateAsync(group);
-
-            return new ResponseModel();
+            entity.Name = command.Name ?? entity.Name;
         }
     }
 }

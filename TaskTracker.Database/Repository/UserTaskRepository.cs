@@ -8,7 +8,6 @@ namespace TaskTracker.Database.Repository
 {
     public interface IUserTaskRepository : IRepositoryBase<UserTask, UserTaskModel, GetUserTaskRequest>
     {
-        Task UpdateAsync(UserTask task);
     }
 
     public class UserTaskRepository : RepositoryBase<UserTask, UserTaskModel, GetUserTaskRequest>,
@@ -25,13 +24,6 @@ namespace TaskTracker.Database.Repository
                 .Include(t => t.Creator);
             
             return FilterById(queryable, id).Select(ModelExpression).FirstOrDefaultAsync();
-        }
-
-        public Task UpdateAsync(UserTask task)
-        {
-            _dbContext.Set<UserTask>().Update(task);
-
-            return _dbContext.SaveChangesAsync();
         }
     }
 }

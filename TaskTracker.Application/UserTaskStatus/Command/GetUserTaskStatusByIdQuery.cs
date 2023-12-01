@@ -1,26 +1,19 @@
-﻿using MediatR;
+﻿using TaskTracker.Application.Abstraction;
 using TaskTracker.Database.Repository;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTaskStatus;
 
 namespace TaskTracker.Application.Command
 {
-    public class GetUserTaskStatusByIdQuery : IRequest<UserTaskStatusModel?>
+    public class GetUserTaskStatusByIdQuery : GetEntityByIdQuery<UserTaskStatusModel>
     {
-        public long Id { get; set; }
     }
 
-    public class GetUserTaskStatusByIdHandler : IRequestHandler<GetUserTaskStatusByIdQuery, UserTaskStatusModel?> 
+    public class GetUserTaskStatusByIdHandler : GetEntityByIdHandler<UserTaskStatus, UserTaskStatusModel, GetUserTaskStatusByIdQuery>
     {
-        private readonly IUserTaskStatusRepository _userTaskStatusRepository;
-
         public GetUserTaskStatusByIdHandler(IUserTaskStatusRepository userTaskStatusRepository)
+            : base(userTaskStatusRepository)
         {
-            _userTaskStatusRepository = userTaskStatusRepository;
-        }
-
-        public Task<UserTaskStatusModel?> Handle(GetUserTaskStatusByIdQuery request, CancellationToken cancellationToken)
-        {
-            return _userTaskStatusRepository.GetByIdAsync(request.Id);
         }
     }
 }

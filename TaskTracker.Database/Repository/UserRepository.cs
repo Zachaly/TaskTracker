@@ -8,7 +8,6 @@ namespace TaskTracker.Database.Repository
     public interface IUserRepository : IRepositoryBase<User, UserModel>
     {
         Task<User> GetByEmailAsync(string email);
-        Task UpdateAsync(User user);
     }
 
     public class UserRepository : RepositoryBase<User, UserModel>, IUserRepository
@@ -20,12 +19,5 @@ namespace TaskTracker.Database.Repository
 
         public Task<User> GetByEmailAsync(string email)
             => _dbContext.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
-
-        public Task UpdateAsync(User user)
-        {
-            _dbContext.Set<User>().Update(user);
-
-            return _dbContext.SaveChangesAsync();
-        }
     }
 }

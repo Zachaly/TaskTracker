@@ -22,6 +22,7 @@ namespace TaskTracker.Application.Command
             _userTaskStatusRepository = userTaskStatusRepository;
             _validator = validator;
         }
+
         public async Task<ResponseModel> Handle(UpdateUserTaskStatusCommand request, CancellationToken cancellationToken)
         {
             var validation = await _validator.ValidateAsync(request);

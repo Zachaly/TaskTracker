@@ -1,26 +1,19 @@
-﻿using MediatR;
+﻿using TaskTracker.Application.Abstraction;
 using TaskTracker.Database.Repository;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.TaskList;
 using TaskTracker.Model.TaskList.Request;
 
 namespace TaskTracker.Application.Command
 {
-    public class GetTaskListQuery : GetTaskListRequest, IRequest<IEnumerable<TaskListModel>>
+    public class GetTaskListQuery : GetTaskListRequest, IGetEntityQuery<TaskListModel>
     {
     }
 
-    public class GetTaskListHandler : IRequestHandler<GetTaskListQuery, IEnumerable<TaskListModel>>
+    public class GetTaskListHandler : GetEntityHandler<TaskList, TaskListModel, GetTaskListRequest, GetTaskListQuery>
     {
-        private readonly ITaskListRepository _taskListRepository;
-
-        public GetTaskListHandler(ITaskListRepository taskListRepository)
+        public GetTaskListHandler(ITaskListRepository repository) : base(repository)
         {
-            _taskListRepository = taskListRepository;
-        }
-
-        public Task<IEnumerable<TaskListModel>> Handle(GetTaskListQuery request, CancellationToken cancellationToken)
-        {
-            return _taskListRepository.GetAsync(request);
         }
     }
 }

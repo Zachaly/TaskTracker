@@ -1,43 +1,33 @@
-﻿using MediatR;
-using TaskTracker.Database.Exception;
+﻿using TaskTracker.Application.Abstraction;
 using TaskTracker.Database.Repository;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.Response;
+using TaskTracker.Model.TaskStatusGroup;
 
 namespace TaskTracker.Application.Command
 {
-    public class DeleteTaskStatusGroupByIdCommand : IRequest<ResponseModel>
+    public class DeleteTaskStatusGroupByIdCommand : DeleteEntityByIdCommand
     {
-        public long Id { get; set; }
+        
     }
 
-    public class DeleteTaskStatusGroupByIdHandler : IRequestHandler<DeleteTaskStatusGroupByIdCommand, ResponseModel>
+    public class DeleteTaskStatusGroupByIdHandler : DeleteEntityByIdHandler<TaskStatusGroup, TaskStatusGroupModel, DeleteTaskStatusGroupByIdCommand>
     {
-        private readonly ITaskStatusGroupRepository _taskStatusGroupRepository;
-
         public DeleteTaskStatusGroupByIdHandler(ITaskStatusGroupRepository taskStatusGroupRepository)
+            : base(taskStatusGroupRepository)
         {
-            _taskStatusGroupRepository = taskStatusGroupRepository;
         }
 
-        public async Task<ResponseModel> Handle(DeleteTaskStatusGroupByIdCommand request, CancellationToken cancellationToken)
+        public override async Task<ResponseModel> Handle(DeleteTaskStatusGroupByIdCommand request, CancellationToken cancellationToken)
         {
-            var isDefault = await _taskStatusGroupRepository.GetByIdAsync(request.Id, x => x.IsDefault);
+            var isDefault = await _repository.GetByIdAsync(request.Id, x => x.IsDefault);
 
             if (isDefault)
             {
                 return new ResponseModel("This status group cannot be deleted");
             }
 
-            try
-            {
-                await _taskStatusGroupRepository.DeleteByIdAsync(request.Id);
-            }
-            catch(EntityNotFoundException ex)
-            {
-                return new ResponseModel(ex.Message);
-            }
-
-            return new ResponseModel();
+            return await base.Handle(request, cancellationToken);
         }
     }
 }
