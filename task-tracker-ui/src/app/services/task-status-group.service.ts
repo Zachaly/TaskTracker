@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GetTaskStatusGroupRequest, mapGetTaskStatusGroupRequest } from '../model/request/get/GetUserTaskStatusGroupRequest';
-import AddTaskStatusGroupRequest from '../model/request/AddTaskStatusGroupRequest';
-import UpdateTaskStatusGroupRequest from '../model/request/UpdateTaskStatusGroupRequest';
-import TaskStatusGroupModel from '../model/TaskStatusGroupModel';
+import { GetTaskStatusGroupRequest, mapGetTaskStatusGroupRequest } from '../model/task-status-group/GetTaskStatusGroupRequest';
+import AddTaskStatusGroupRequest from '../model/task-status-group/AddTaskStatusGroupRequest';
+import UpdateTaskStatusGroupRequest from '../model/task-status-group/UpdateTaskStatusGroupRequest';
+import TaskStatusGroupModel from '../model/task-status-group/TaskStatusGroupModel';
 import { CreatedResponseModel } from '../model/ResponseModel';
 
 const API_URL = 'https://localhost:5001/api/task-status-group'

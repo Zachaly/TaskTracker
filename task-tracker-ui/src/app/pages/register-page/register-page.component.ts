@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import ResponseModel from 'src/app/model/ResponseModel';
-import RegisterRequest from 'src/app/model/request/RegisterRequest';
+import RegisterRequest from 'src/app/model/user/RegisterRequest';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -27,7 +27,7 @@ export class RegisterPageComponent {
 
   constructor(private router: Router, private userService: UserService) { }
 
-  public goToLogin(){
+  public goToLogin() {
     this.router.navigate(['/login'])
   }
 
@@ -39,7 +39,7 @@ export class RegisterPageComponent {
       },
       error: (err) => {
         alert(err.error.error)
-        if(err.error.validationErrors) {
+        if (err.error.validationErrors) {
           this.validationErrors = err.error.validationErrors
         }
       }

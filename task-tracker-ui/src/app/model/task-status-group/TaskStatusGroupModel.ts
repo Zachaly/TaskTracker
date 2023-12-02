@@ -1,4 +1,4 @@
-import UserTaskStatusModel from "./UserTaskStatusModel"
+import UserTaskStatusModel from "../user-task-status/UserTaskStatusModel"
 
 export default interface TaskStatusGroupModel {
     id: number

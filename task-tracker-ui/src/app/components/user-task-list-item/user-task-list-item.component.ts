@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import UserTaskModel from 'src/app/model/UserTaskModel';
-import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
-import { faTrash, faEllipsis, faFlag, faBan } from '@fortawesome/free-solid-svg-icons';
-import UserTaskPriority from 'src/app/model/enum/UserTaskPriority';
+import UserTaskModel from 'src/app/model/user-task/UserTaskModel';
+import UserTaskStatusModel from 'src/app/model/user-task-status/UserTaskStatusModel';
+import { faTrash, faEllipsis, faFlag, faBan, faPencil } from '@fortawesome/free-solid-svg-icons';
+import UserTaskPriority, { priorityColor } from 'src/app/model/enum/UserTaskPriority';
+import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
 
 @Component({
   selector: 'app-user-task-list-item',
@@ -24,17 +25,14 @@ export class UserTaskListItemComponent implements OnInit {
   faEllipsis = faEllipsis
   faFlag = faFlag
   faBan = faBan
-
+  faPencil = faPencil
   priorityLevels = UserTaskPriority
+  priorityColor = priorityColor
 
   @Input() statuses: UserTaskStatusModel[] = []
 
-  @Output() updateTitle: EventEmitter<string> = new EventEmitter()
   @Output() deleteTask: EventEmitter<number> = new EventEmitter()
-  @Output() updateDueTimestamp: EventEmitter<number | undefined> = new EventEmitter()
-  @Output() updateStatus: EventEmitter<number> = new EventEmitter()
-  @Output() updatePriority: EventEmitter<UserTaskPriority | undefined> = new EventEmitter()
-  @Output() taskUpdated: EventEmitter<UserTaskModel> = new EventEmitter()  
+  @Output() updateRequested: EventEmitter<UpdateUserTaskRequest> = new EventEmitter()
 
   showDialog = false
   isUpdatingTitle = false
@@ -45,22 +43,39 @@ export class UserTaskListItemComponent implements OnInit {
   updatedTitle = ''
   updatedDueTimestamp?: number = undefined
 
+  updateRequest: UpdateUserTaskRequest = {
+    id: 0
+  }
+
   creationTimestamp = () => new Date(this.task.creationTimestamp)
   dueTimestamp = () => new Date(this.task.dueTimestamp!)
 
   ngOnInit(): void {
-    this.updatedTitle = this.task.title
-    this.updatedDueTimestamp = this.task.dueTimestamp
+    this.resetUpdateRequest()
+  }
+
+  resetUpdateRequest() {
+    const { id, priority, dueTimestamp, title, description } = this.task
+
+    this.updateRequest = {
+      id,
+      priority,
+      dueTimestamp,
+      title,
+      statusId: this.task.status.id,
+      description: description
+    }
   }
 
   confirmUpdateTitle() {
     this.isUpdatingTitle = false
-    this.updateTitle.emit(this.updatedTitle)
+    this.confirmUpdate()
   }
 
   confirmUpdateDueTimestamp() {
     this.isUpdatingDueTimestamp = false
-    this.updateDueTimestamp.emit(this.updatedDueTimestamp)
+
+    this.confirmUpdate()
   }
 
   changeDueDate(e: Event) {
@@ -68,51 +83,41 @@ export class UserTaskListItemComponent implements OnInit {
 
     var date = new Date(target.value)
 
-    this.updatedDueTimestamp = date.getTime()
+    this.updateRequest.dueTimestamp = date.getTime()
   }
 
   updateTask(task: UserTaskModel) {
-    const { title, description, dueTimestamp } = task
+    const { title, description, dueTimestamp, priority } = task
     this.task.description = description
     this.task.title = title
     this.task.dueTimestamp = dueTimestamp
     this.task.status = task.status
+    this.task.priority = priority
+
+    this.resetUpdateRequest()
   }
 
-  toggleIsUpdatingStatus(){
+  toggleIsUpdatingStatus() {
     this.isUpdatingStatus = !this.isUpdatingStatus && this.statuses.length > 0
   }
 
-  confirmStatusUpdate(statusId: number){
-    this.updateStatus.emit(statusId)
+  confirmStatusUpdate(statusId: number) {
+    this.updateRequest.statusId = statusId
+
+    this.confirmUpdate()
 
     this.toggleIsUpdatingStatus()
-  }
-
-  priorityColor(priority?: UserTaskPriority) {
-    if(priority === undefined || priority === null) {
-      return '#fafafa'
-    }
-
-    if(priority == UserTaskPriority.urgent) {
-      return '#e02626'
-    }
-    else if(priority == UserTaskPriority.medium) {
-      return '#0bcde3'
-    }
-    else if(priority == UserTaskPriority.high) {
-      return '#e7ed32'
-    }
-    else if(priority == UserTaskPriority.low) {
-      return '#7f8485'
-    }
-
-    return '#ad0505'
   }
 
   confirmPriorityUpdate(priority?: UserTaskPriority) {
     this.isUpdatingPriority = false
 
-    this.updatePriority.emit(priority)
+    this.updateRequest.priority = priority
+
+    this.confirmUpdate()
+  }
+
+  confirmUpdate() {
+    this.updateRequested.emit(this.updateRequest)
   }
 }

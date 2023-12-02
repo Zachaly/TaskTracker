@@ -1,5 +1,5 @@
 import { HttpParams } from "@angular/common/http";
-import PagedRequest, { mapPagedRequest } from "./PagedRequest";
+import PagedRequest, { mapPagedRequest } from "../PagedRequest";
 
 export default interface GetTaskListRequest extends PagedRequest {
     creatorId?: number,
@@ -10,13 +10,13 @@ export default interface GetTaskListRequest extends PagedRequest {
 export const mapGetTaskListRequest = (request: GetTaskListRequest): HttpParams => {
     let params = mapPagedRequest(request)
 
-    if(request.creatorId) {
+    if (request.creatorId) {
         params = params.append('CreatorId', request.creatorId)
     }
-    if(request.joinTasks){
+    if (request.joinTasks) {
         params = params.append('JoinTasks', request.joinTasks)
     }
-    if(request.joinStatusGroup) {
+    if (request.joinStatusGroup) {
         params = params.append('JoinStatusGroup', request.joinStatusGroup)
     }
 

@@ -1,25 +1,30 @@
-<div class="columns">
-    <div class="column is-2" style="position: relative;">
+<div class="columns" style="position: relative;">
+    <div class="column is-1">
         <div class="task-status-icon" [ngStyle]="{'background-color': task.status.color }"
             (click)="toggleIsUpdatingStatus()">
         </div>
-        <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingStatus">
-            <p class="has-text-centered">
-                <button class="delete is-large" (click)="toggleIsUpdatingStatus()"></button>
+    </div>
+    <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingStatus">
+        <p class="has-text-centered">
+            <button class="delete is-large" (click)="toggleIsUpdatingStatus()"></button>
+        </p>
+        <div *ngFor="let status of statuses" (click)="confirmStatusUpdate(status.id)">
+            <div class="task-status-icon" [ngStyle]="{ 'background-color': status.color }"></div>
+            <p> {{ status.name }} <span *ngIf="status.id == task.status.id" class="has-text-success">(Current)</span>
             </p>
-            <div *ngFor="let status of statuses" (click)="confirmStatusUpdate(status.id)">
-                <div class="task-status-icon" [ngStyle]="{ 'background-color': status.color }"></div>
-                <p> {{ status.name }} <span *ngIf="status.id == task.status.id"
-                        class="has-text-success">(Current)</span></p>
-            </div>
         </div>
     </div>
     <div class="column is-3">
-        <p class="title has-text-centered" *ngIf="!isUpdatingTitle" (click)="isUpdatingTitle = true">
-            {{ task.title }}
+        <p class="has-text-centered" *ngIf="!isUpdatingTitle" (click)="isUpdatingTitle = true">
+            <span class="title" (click)="showDialog = true">
+                {{ task.title }}
+            </span>
+            <span class="icon is-5" (click)="isUpdatingTitle = true">
+                <fa-icon [icon]="faPencil"></fa-icon>
+            </span>
         </p>
         <div class="is-flex" *ngIf="isUpdatingTitle">
-            <input type="text" name="title" [(ngModel)]="updatedTitle" class="input">
+            <input type="text" name="title" [(ngModel)]="updateRequest.title" class="input">
             <button class="delete is-large" (click)="isUpdatingTitle = false"></button>
             <button class="button is-info" (click)="confirmUpdateTitle()">Confirm</button>
         </div>
@@ -43,7 +48,7 @@
     </div>
     <div class="column is-1" style="position: relative;">
         <span class="icon" (click)="isUpdatingPriority = true">
-            <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(task.priority)}"/>
+            <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(task.priority)}" />
         </span>
         <div class="status-select is-flex is-flex-direction-column box" *ngIf="isUpdatingPriority">
             <p class="has-text-centered">
@@ -51,7 +56,7 @@
             </p>
             <div (click)="confirmPriorityUpdate(priorityLevels.urgent)">
                 <span class="icon" (click)="isUpdatingPriority = true">
-                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.urgent)}"/>
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.urgent)}" />
                 </span>
                 <p>
                     Urgent
@@ -59,7 +64,7 @@
             </div>
             <div (click)="confirmPriorityUpdate(priorityLevels.high)">
                 <span class="icon" (click)="isUpdatingPriority = true">
-                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.high)}"/>
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.high)}" />
                 </span>
                 <p>
                     High
@@ -67,7 +72,7 @@
             </div>
             <div (click)="confirmPriorityUpdate(priorityLevels.medium)">
                 <span class="icon" (click)="isUpdatingPriority = true">
-                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.medium)}"/>
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.medium)}" />
                 </span>
                 <p>
                     Medium
@@ -75,7 +80,7 @@
             </div>
             <div (click)="confirmPriorityUpdate(priorityLevels.low)">
                 <span class="icon" (click)="isUpdatingPriority = true">
-                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.low)}"/>
+                    <fa-icon [icon]="faFlag" [ngStyle]="{'color': priorityColor(priorityLevels.low)}" />
                 </span>
                 <p>
                     Low
@@ -83,7 +88,7 @@
             </div>
             <div>
                 <span class="icon" (click)="confirmPriorityUpdate(undefined)">
-                    <fa-icon [icon]="faBan" [ngStyle]="{'color': priorityColor(undefined)}"/>
+                    <fa-icon [icon]="faBan" [ngStyle]="{'color': priorityColor(undefined)}" />
                 </span>
                 <p>
                     Clear
@@ -101,5 +106,5 @@
     </div>
 
     <app-task-dialog [id]="task.id" *ngIf="showDialog" (close)="showDialog = false"
-        (deleteTask)="deleteTask.emit(task.id)" (taskUpdated)="updateTask($event)" (taskUpdated)="taskUpdated.emit($event)" [statuses]="statuses" />
+        (deleteTask)="deleteTask.emit(task.id)" (taskUpdated)="updateTask($event)" [statuses]="statuses" />
 </div>

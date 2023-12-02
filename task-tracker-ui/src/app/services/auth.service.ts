@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, tap } from 'rxjs';
-import LoginRequest from '../model/request/LoginRequest';
-import LoginResponse from '../model/LoginResponse';
+import LoginRequest from '../model/user/LoginRequest';
+import LoginResponse from '../model/user/LoginResponse';
 import { TokenService } from './token.service';
 
 const API_URL = 'https://localhost:5001/api/auth'
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   public refreshToken() {
-    if(this.isRefreshingToken) {
+    if (this.isRefreshingToken) {
       return
     }
 
@@ -50,7 +50,7 @@ export class AuthService {
         this.setTokens()
         console.log(res)
         this.isRefreshingToken = false
-      }, 
+      },
       error: () => this.isRefreshingToken = false
     }))
   }
@@ -74,7 +74,7 @@ export class AuthService {
     const { accessToken, refreshToken } = this.userData!
 
     this.tokenService.setSessionTokens(accessToken, refreshToken);
-    if(this.rememberMe) {
+    if (this.rememberMe) {
       this.tokenService.saveTokens()
     }
   }
@@ -98,7 +98,7 @@ export class AuthService {
         this.setTokens()
         this.isRefreshingToken = false
       },
-      error: () =>  {
+      error: () => {
         this.isRefreshingToken = false
         this.clearUserData()
       }

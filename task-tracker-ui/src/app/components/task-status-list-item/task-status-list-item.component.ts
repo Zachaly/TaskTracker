@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
+import UserTaskStatusModel from 'src/app/model/user-task-status/UserTaskStatusModel';
 import { faTrash, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -35,7 +35,7 @@ export class TaskStatusListItemComponent {
   toggleIsUpdatingName() {
     this.isUpdatingName = !this.isUpdatingName
 
-    if(this.isUpdatingName) {
+    if (this.isUpdatingName) {
       this.updatedName = this.status.name
     }
   }
@@ -43,7 +43,7 @@ export class TaskStatusListItemComponent {
   toggleIsUpdatingColor() {
     this.isUpdatingColor = !this.isUpdatingColor
 
-    if(this.isUpdatingColor) {
+    if (this.isUpdatingColor) {
       this.updatedColor = this.status.color
     }
   }

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import UserTaskStatusModel from '../model/UserTaskStatusModel';
-import { GetUserTaskStatusRequest, mapGetUserTaskStatusRequest } from '../model/request/get/GetUserTaskStatusRequest';
-import AddUserTaskStatusRequest from '../model/request/AddUserTaskStatusRequest';
-import UpdateUserTaskRequest from '../model/request/UpdateUserTaskRequest';
+import UserTaskStatusModel from '../model/user-task-status/UserTaskStatusModel';
+import { GetUserTaskStatusRequest, mapGetUserTaskStatusRequest } from '../model/user-task-status/GetUserTaskStatusRequest';
+import AddUserTaskStatusRequest from '../model/user-task-status/AddUserTaskStatusRequest';
+import UpdateUserTaskRequest from '../model/user-task/UpdateUserTaskRequest';
 import { CreatedResponseModel } from '../model/ResponseModel';
 
 const API_URL = 'https://localhost:5001/api/user-task-status'

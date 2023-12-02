@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import TaskListModel from 'src/app/model/TaskListModel';
-import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
+import TaskListModel from 'src/app/model/task-list/TaskListModel';
+import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import UserTaskModel from 'src/app/model/UserTaskModel';
+import UserTaskModel from 'src/app/model/user-task/UserTaskModel';
 
 @Component({
   selector: 'app-task-list',
@@ -18,7 +18,7 @@ export class TaskListComponent {
     statusGroupId: 0
   }
   @Input() userId = 0
- 
+
   @Output() taskAdded: EventEmitter<any> = new EventEmitter()
   @Output() updateTask: EventEmitter<UpdateUserTaskRequest> = new EventEmitter()
   @Output() deleteTask: EventEmitter<number> = new EventEmitter()
@@ -28,10 +28,12 @@ export class TaskListComponent {
 
   curentIcon = faAngleDown
 
-  toggleShowTasks(){
+  defaultStatus = () => this.list.statusGroup?.statuses?.sort((a, b) => a.index - b.index)[0]
+
+  toggleShowTasks() {
     this.showTasks = !this.showTasks
 
-    if(this.showTasks){
+    if (this.showTasks) {
       this.loadTasks.emit()
       this.curentIcon = faAngleUp
     } else {
@@ -40,6 +42,11 @@ export class TaskListComponent {
   }
 
   onTaskUpdated(task: UserTaskModel) {
-    this.list.tasks![this.list.tasks!.findIndex(x => x.id == task.id)] = task
+    const taskToUpdate = this.list.tasks?.find(x => x.id == task.id)!
+
+    taskToUpdate.title = task.title
+    taskToUpdate.description = task.description
+    taskToUpdate.priority = task.priority
+    taskToUpdate.status = task.status
   }
 }

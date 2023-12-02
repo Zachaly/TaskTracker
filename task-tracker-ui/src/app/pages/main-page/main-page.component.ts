@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import TaskListModel from 'src/app/model/TaskListModel';
-import UserModel from 'src/app/model/UserModel';
-import UserTaskModel from 'src/app/model/UserTaskModel';
-import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
-import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
+import TaskListModel from 'src/app/model/task-list/TaskListModel';
+import UserModel from 'src/app/model/user/UserModel';
+import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
+import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';
 import { UserTaskService } from 'src/app/services/user-task.service';
 
 @Component({
@@ -18,7 +17,8 @@ export class MainPageComponent implements OnInit {
   public userData: UserModel
   public lists: TaskListModel[] = []
 
-  constructor(private authService: AuthService, private taskService: UserTaskService, private taskListService: TaskListService) {
+  constructor(private authService: AuthService, private taskService: UserTaskService, private taskListService: TaskListService,
+    private taskStatusGroupService: TaskStatusGroupService) {
     this.userData = authService.userData!.userData!
   }
 
@@ -27,12 +27,9 @@ export class MainPageComponent implements OnInit {
       .subscribe(res => this.lists = res)
   }
 
-  public loadListTasks(list: TaskListModel, reload: boolean = false) {
-    if (list.tasks && !reload) {
-      return
-    }
-
+  public loadListTasks(list: TaskListModel) {
     this.taskService.get({ listId: list.id }).subscribe(res => list.tasks = res)
+    this.taskStatusGroupService.getById(list.statusGroupId).subscribe(res => list.statusGroup = res)
   }
 
   deleteTask(id: number, list: TaskListModel) {

@@ -39,6 +39,11 @@ namespace TaskTracker.Application.Command
                 return new ResponseModel("Entity not found");
             }
 
+            if(status.IsDefault && request.Index.GetValueOrDefault() != 0 && request.Index.GetValueOrDefault() != 21)
+            {
+                return new ResponseModel("Cannot change index of default status!");
+            }
+
             var updateOtherStatuses = status.Index != request.Index && request.Index is not null;
 
             status.Name = request.Name ?? status.Name;

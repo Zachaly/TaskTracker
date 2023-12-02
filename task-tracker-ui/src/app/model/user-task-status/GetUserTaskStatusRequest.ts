@@ -1,4 +1,4 @@
-import PagedRequest, { mapPagedRequest } from "./PagedRequest"
+import PagedRequest, { mapPagedRequest } from "../PagedRequest"
 
 export interface GetUserTaskStatusRequest extends PagedRequest {
     groupId?: number

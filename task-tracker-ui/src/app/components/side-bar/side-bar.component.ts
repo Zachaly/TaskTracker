@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import TaskListModel from 'src/app/model/TaskListModel';
+import TaskListModel from 'src/app/model/task-list/TaskListModel';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 
@@ -27,7 +27,7 @@ export class SideBarComponent implements OnInit {
     this.router.navigate(['/login'])
   }
 
-  public isCurrentRoute(route: string){
+  public isCurrentRoute(route: string) {
     return this.router.url == route
   }
 }

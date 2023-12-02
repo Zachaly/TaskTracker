@@ -34,10 +34,7 @@
 
         <div class="mt-4">
             <app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask($event)"
-            (updateDueTimestamp)="updateTaskDueTimestamp(task.id, $event)"
-            (updateTitle)="updateTaskTitle(task.id, $event)"
-            (updateStatus)="updateTaskStatus(task.id, $event)"
-            (updatePriority)="updateTaskPriority(task.id, $event)"
+            (updateRequested)="updateTask($event, task)"
             [statuses]="statusGroup.statuses ?? []" />
         </div>
         <app-add-task-form [listId]="listId" [statusId]="defaultStatusId" [creatorId]="userId" (taskAdded)="loadTasks()">
