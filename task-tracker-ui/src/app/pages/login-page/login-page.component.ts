@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import LoginRequest from 'src/app/model/request/LoginRequest';
+import LoginRequest from 'src/app/model/user/LoginRequest';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -17,9 +17,9 @@ export class LoginPageComponent {
 
   public rememberMe = false
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) { }
 
-  public goToRegister(){
+  public goToRegister() {
     this.router.navigate(['/register'])
   }
 

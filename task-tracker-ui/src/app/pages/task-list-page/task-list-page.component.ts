@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import TaskListModel from 'src/app/model/TaskListModel';
-import TaskStatusGroupModel from 'src/app/model/TaskStatusGroupModel';
-import UserTaskModel from 'src/app/model/UserTaskModel';
-import UserTaskPriority from 'src/app/model/enum/UserTaskPriority';
-import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
-import UpdateTaskListRequest from 'src/app/model/request/UpdateTaskListRequest';
-import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
+import TaskListModel from 'src/app/model/task-list/TaskListModel';
+import TaskStatusGroupModel from 'src/app/model/task-status-group/TaskStatusGroupModel';
+import UserTaskModel from 'src/app/model/user-task/UserTaskModel';
+import AddUserTaskRequest from 'src/app/model/user-task/AddUserTaskRequest';
+import UpdateTaskListRequest from 'src/app/model/task-list/UpdateTaskListRequest';
+import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';
@@ -47,8 +46,7 @@ export class TaskListPageComponent implements OnInit {
   }
 
   constructor(private route: ActivatedRoute, private taskListService: TaskListService, private taskService: UserTaskService,
-    private authService: AuthService, private router: Router, private taskStatusGroupService: TaskStatusGroupService,
-    private taskStatusService: UserTaskStatusService) {
+    private authService: AuthService, private router: Router, private taskStatusGroupService: TaskStatusGroupService) {
     this.userId = authService.userData!.userData.id
   }
 
@@ -107,51 +105,15 @@ export class TaskListPageComponent implements OnInit {
     })
   }
 
-  updateTaskTitle(id: number, title: string) {
-    const request: UpdateUserTaskRequest = {
-      id,
-      title
-    }
-
+  updateTask(request: UpdateUserTaskRequest, task: UserTaskModel) {
     this.taskService.update(request).subscribe(() => {
-      this.tasks.find(x => x.id == id)!.title = title
+      this.taskService.getById(request.id).subscribe(res => {
+        task.priority = res.priority
+        task.status = res.status
+        task.title = res.title
+        task.dueTimestamp = res.dueTimestamp
+        task.description = res.description
+      })
     })
-  }
-
-  updateTaskDueTimestamp(id: number, dueTimestamp?: number) {
-    const request: UpdateUserTaskRequest = {
-      id,
-      dueTimestamp
-    }
-
-    this.taskService.update(request).subscribe(() => {
-      this.tasks.find(x => x.id == id)!.dueTimestamp = dueTimestamp
-    })
-  }
-
-  updateTaskStatus(id: number, statusId: number) {
-    const request: UpdateUserTaskRequest = {
-      id,
-      statusId
-    }
-
-    this.taskService.update(request).subscribe(() => {
-      this.taskService.getById(request.id).subscribe(res => this.tasks.find(x => x.id == res.id)!.status = res.status)
-    })
-  }
-
-  updateTaskPriority(id: number, priority?: UserTaskPriority) {
-    const request: UpdateUserTaskRequest = {
-      id,
-      priority
-    }
-
-    this.taskService.update(request).subscribe(() => {
-      this.tasks.find(x => x.id == id)!.priority = priority
-    })
-  }
-
-  taskUpdated(task: UserTaskModel) {
-    this.tasks[this.tasks.findIndex(x => x.id == task.id)]! = task
   }
 }

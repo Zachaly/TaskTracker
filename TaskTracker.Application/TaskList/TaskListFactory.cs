@@ -1,11 +1,11 @@
-﻿using TaskTracker.Domain.Entity;
+﻿using TaskTracker.Application.Abstraction;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.TaskList.Request;
 
 namespace TaskTracker.Application
 {
-    public interface ITaskListFactory
+    public interface ITaskListFactory : IEntityFactory<TaskList, AddTaskListRequest>
     {
-        TaskList Create(AddTaskListRequest request);
     }
 
     public class TaskListFactory : ITaskListFactory

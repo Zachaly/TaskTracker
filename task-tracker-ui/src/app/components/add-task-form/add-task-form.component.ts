@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import AddUserTaskRequest from 'src/app/model/request/AddUserTaskRequest';
+import AddUserTaskRequest from 'src/app/model/user-task/AddUserTaskRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 import { UserTaskService } from 'src/app/services/user-task.service';

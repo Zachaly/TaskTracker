@@ -1,11 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import GetUserTaskRequest, { mapGetUserTaskRequest } from '../model/request/get/GetUserTaskRequest';
+import GetUserTaskRequest, { mapGetUserTaskRequest } from '../model/user-task/GetUserTaskRequest';
 import { Observable } from 'rxjs';
-import UserTaskModel from '../model/UserTaskModel';
-import AddUserTaskRequest from '../model/request/AddUserTaskRequest';
-import UpdateUserTaskRequest from '../model/request/UpdateUserTaskRequest';
+import UserTaskModel from '../model/user-task/UserTaskModel';
+import AddUserTaskRequest from '../model/user-task/AddUserTaskRequest';
+import UpdateUserTaskRequest from '../model/user-task/UpdateUserTaskRequest';
 
 const API_URL = 'https://localhost:5001/api/user-task'
 
@@ -34,7 +34,7 @@ export class UserTaskService {
     return this.http.delete(`${API_URL}/${id}`)
   }
 
-  public update(request: UpdateUserTaskRequest) : Observable<any> {
+  public update(request: UpdateUserTaskRequest): Observable<any> {
     return this.http.put(API_URL, request)
   }
 }

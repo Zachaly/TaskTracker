@@ -62,7 +62,6 @@ namespace TaskTracker.Tests.Unit.CommandTests
             tokenRepository.GetTokenAsync(NewRefreshToken).ReturnsNull();
             tokenRepository.GetTokenAsync(currentToken.Token).Returns(currentToken);
 
-
             var handler = new RefreshTokenHandler(tokenRepository, tokenService, tokenFactory);
 
             var res = await handler.Handle(command, default);
@@ -94,7 +93,6 @@ namespace TaskTracker.Tests.Unit.CommandTests
             var tokenRepository = Substitute.For<IRefreshTokenRepository>();
 
             tokenRepository.GetTokenAsync(Arg.Any<string>()).ReturnsNull();
-
 
             var handler = new RefreshTokenHandler(tokenRepository, tokenService, tokenFactory);
 

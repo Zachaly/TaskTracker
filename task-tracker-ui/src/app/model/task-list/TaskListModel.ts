@@ -1,6 +1,6 @@
-import TaskStatusGroupModel from "./TaskStatusGroupModel";
-import UserModel from "./UserModel";
-import UserTaskModel from "./UserTaskModel";
+import TaskStatusGroupModel from "../task-status-group/TaskStatusGroupModel";
+import UserModel from "../user/UserModel";
+import UserTaskModel from "../user-task/UserTaskModel";
 
 export default interface TaskListModel {
     id: number,

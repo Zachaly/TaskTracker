@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import TaskListModel from 'src/app/model/TaskListModel';
+import TaskListModel from 'src/app/model/task-list/TaskListModel';
 
 @Component({
   selector: 'app-side-bar-list-link',
@@ -10,7 +10,7 @@ export class SideBarListLinkComponent {
   @Input() list: TaskListModel = {
     id: 0,
     title: '',
-    creator: { id: 0, firstName: '', lastName: '', email: ''},
+    creator: { id: 0, firstName: '', lastName: '', email: '' },
     statusGroupId: 0
   }
 

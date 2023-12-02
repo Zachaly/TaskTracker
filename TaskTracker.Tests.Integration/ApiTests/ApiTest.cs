@@ -59,7 +59,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var content = await response.Content.ReadFromJsonAsync<LoginResponse>();
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", content.AccessToken);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", content!.AccessToken);
 
             return content;
         }

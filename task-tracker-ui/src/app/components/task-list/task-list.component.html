@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card m-1">
     <div class="card-header is-flex is-justify-content-space-between is-align-items-center"
         [ngStyle]="{ 'background-color': list.color ?? ''}">
         <p class="card-header-title">{{ list.title }}</p>
@@ -10,14 +10,12 @@
     </div>
 </div>
 
-<div *ngIf="showTasks" class="column">
+<div *ngIf="showTasks" class="column m-1">
     <div *ngIf="list.tasks">
         <app-user-task-list-item *ngFor="let task of list.tasks" [task]="task" (deleteTask)="deleteTask.emit(task.id)"
-            (updateDueTimestamp)="updateTask.emit({ id: task.id, dueTimestamp: $event })"
-            (updateTitle)="updateTask.emit({ id: task.id, title: $event })"
-            (updateStatus)="updateTask.emit({ id: task.id, statusId: $event })"
-            (updatePriority)="updateTask.emit({ id: task.id, priority: $event })"
-            (taskUpdated)="onTaskUpdated($event)"
+            (updateRequested)="updateTask.emit($event)"
             [statuses]="list.statusGroup?.statuses ?? []" />
+        <app-add-task-form *ngIf="this.list.statusGroup?.statuses" [listId]="list.id" (taskAdded)="loadTasks.emit()" [statusId]="defaultStatus()!.id">
+        </app-add-task-form>
     </div>
 </div>

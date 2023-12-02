@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import TaskStatusGroupModel from 'src/app/model/TaskStatusGroupModel';
-import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
-import AddUserTaskStatusRequest from 'src/app/model/request/AddUserTaskStatusRequest';
-import UpdateTaskStatusGroupRequest from 'src/app/model/request/UpdateTaskStatusGroupRequest';
-import UpdateUserTaskStatusRequest from 'src/app/model/request/UpdateUserTaskStatusReqeust';
+import TaskStatusGroupModel from 'src/app/model/task-status-group/TaskStatusGroupModel';
+import UserTaskStatusModel from 'src/app/model/user-task-status/UserTaskStatusModel';
+import AddUserTaskStatusRequest from 'src/app/model/user-task-status/AddUserTaskStatusRequest';
+import UpdateTaskStatusGroupRequest from 'src/app/model/task-status-group/UpdateTaskStatusGroupRequest';
+import UpdateUserTaskStatusRequest from 'src/app/model/user-task-status/UpdateUserTaskStatusReqeust';
 import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';
 import { UserTaskStatusService } from 'src/app/services/user-task-status.service';
 

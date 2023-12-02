@@ -22,6 +22,7 @@ namespace TaskTracker.Application.Command
             _userTaskStatusRepository = userTaskStatusRepository;
             _validator = validator;
         }
+
         public async Task<ResponseModel> Handle(UpdateUserTaskStatusCommand request, CancellationToken cancellationToken)
         {
             var validation = await _validator.ValidateAsync(request);
@@ -36,6 +37,11 @@ namespace TaskTracker.Application.Command
             if(status is null)
             {
                 return new ResponseModel("Entity not found");
+            }
+
+            if(status.IsDefault && request.Index.GetValueOrDefault() != 0 && request.Index.GetValueOrDefault() != 21)
+            {
+                return new ResponseModel("Cannot change index of default status!");
             }
 
             var updateOtherStatuses = status.Index != request.Index && request.Index is not null;

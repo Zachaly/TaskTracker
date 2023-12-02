@@ -7,7 +7,6 @@ namespace TaskTracker.Database.Repository
 {
     public interface IRefreshTokenRepository : IRepositoryBase<RefreshToken, RefreshTokenModel>
     {
-        Task UpdateAsync(RefreshToken refreshToken);
         Task<RefreshToken?> GetTokenAsync(string token);
     }
 
@@ -24,12 +23,5 @@ namespace TaskTracker.Database.Repository
                 && t.Token == token 
                 && t.ExpiryDate >= DateTime.UtcNow)
                 .SingleOrDefaultAsync();
-
-        public Task UpdateAsync(RefreshToken refreshToken)
-        {
-            _dbContext.Set<RefreshToken>().Update(refreshToken);
-
-            return _dbContext.SaveChangesAsync();
-        }
     }
 }

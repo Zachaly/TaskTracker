@@ -1,7 +1,7 @@
 ﻿using TaskTracker.Database.Repository;
 using TaskTracker.Model.TaskStatusGroup.Request;
 
-namespace TaskTracker.Tests.Integration.DatabaseTests
+namespace TaskTracker.Tests.Integration.RepositoryTests
 {
     public class TaskStatusGroupRepositoryTests : DatabaseTest
     {

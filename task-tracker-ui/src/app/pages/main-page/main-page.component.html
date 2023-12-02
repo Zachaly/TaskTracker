@@ -8,8 +8,8 @@
                 <p class="title has-text-centered">Hello {{ userData.firstName }} {{ userData.firstName }}</p>
                 <p class="title has-text-centered">Your lists</p>
                 <app-task-list *ngFor="let list of lists" [list]="list" (updateTask)="updateTask($event, list)"
-                    (taskAdded)="loadListTasks(list, true)" (deleteTask)="deleteTask($event, list)"
-                    (loadTasks)="loadListTasks(list)" />
+                    (taskAdded)="loadListTasks(list)" (deleteTask)="deleteTask($event, list)"
+                    (loadTasks)="loadListTasks(list)"/>
             </div>
         </div>
 

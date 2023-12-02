@@ -1,5 +1,4 @@
-﻿using TaskTracker.Domain.Entity;
-using System.Net;
+﻿using System.Net;
 using TaskTracker.Model.TaskStatusGroup;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +70,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var request = new AddTaskStatusGroupRequest
             {
                 Name = "fun name",
-                UserId = loginData.UserData.Id
+                UserId = loginData.UserData!.Id
             };
 
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
@@ -92,7 +91,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var request = new AddTaskStatusGroupRequest
             {
                 Name = "",
-                UserId = loginData.UserData.Id
+                UserId = loginData.UserData!.Id
             };
 
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
@@ -164,7 +163,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
         {
             var loginData = await AuthorizeAsync();
 
-            var group = FakeDataFactory.GenerateTaskStatusGroups(1, loginData.UserData.Id).First();
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, loginData.UserData!.Id).First();
 
             _dbContext.TaskStatusGroups.Add(group);
             _dbContext.SaveChanges();
@@ -178,7 +177,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteByIdAsync_DefaultGroup_BadRequest()
         {
-            var loginData = await AuthorizeAsync();
+            await AuthorizeAsync();
 
             var group = _dbContext.TaskStatusGroups.First();
 

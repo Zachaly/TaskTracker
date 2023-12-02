@@ -1,7 +1,7 @@
 ﻿using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 
-namespace TaskTracker.Tests.Integration.DatabaseTests
+namespace TaskTracker.Tests.Integration.RepositoryTests
 {
     public class RefreshTokenRepositoryTests : DatabaseTest
     {

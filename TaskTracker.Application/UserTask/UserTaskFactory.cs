@@ -1,11 +1,11 @@
-﻿using TaskTracker.Domain.Entity;
+﻿using TaskTracker.Application.Abstraction;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTask.Request;
 
 namespace TaskTracker.Application
 {
-    public interface IUserTaskFactory
+    public interface IUserTaskFactory : IEntityFactory<UserTask, AddUserTaskRequest>
     {
-        UserTask Create(AddUserTaskRequest request);
     }
 
     public class UserTaskFactory : IUserTaskFactory

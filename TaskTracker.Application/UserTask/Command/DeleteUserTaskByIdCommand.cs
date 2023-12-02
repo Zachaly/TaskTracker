@@ -1,36 +1,18 @@
-﻿using MediatR;
-using TaskTracker.Database.Exception;
+﻿using TaskTracker.Application.Abstraction;
 using TaskTracker.Database.Repository;
-using TaskTracker.Model.Response;
+using TaskTracker.Domain.Entity;
+using TaskTracker.Model.UserTask;
 
 namespace TaskTracker.Application.Command
 {
-    public class DeleteUserTaskByIdCommand : IRequest<ResponseModel>
+    public class DeleteUserTaskByIdCommand : DeleteEntityByIdCommand
     {
-        public long Id { get; set; }
     }
 
-    public class DeleteUserTaskByIdHandler : IRequestHandler<DeleteUserTaskByIdCommand, ResponseModel>
-    {
-        private readonly IUserTaskRepository _userTaskRepository;
-
-        public DeleteUserTaskByIdHandler(IUserTaskRepository userTaskRepository)
+    public class DeleteUserTaskByIdHandler : DeleteEntityByIdHandler<UserTask, UserTaskModel, DeleteUserTaskByIdCommand>
+    { 
+        public DeleteUserTaskByIdHandler(IUserTaskRepository userTaskRepository) : base(userTaskRepository)
         {
-            _userTaskRepository = userTaskRepository;
-        }
-
-        public async Task<ResponseModel> Handle(DeleteUserTaskByIdCommand request, CancellationToken cancellationToken)
-        {
-            try
-            {
-                await _userTaskRepository.DeleteByIdAsync(request.Id);
-
-                return new ResponseModel();
-            }
-            catch(EntityNotFoundException ex)
-            {
-                return new ResponseModel(ex.Message);
-            }
         }
     }
 }

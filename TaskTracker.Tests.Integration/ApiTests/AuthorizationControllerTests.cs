@@ -25,7 +25,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var registerResponse = await _httpClient.PostAsJsonAsync("api/user", registerRequest);
 
-            var userId = (await registerResponse.Content.ReadFromJsonAsync<CreatedResponseModel>()).NewEntityId!;
+            var userId = (await registerResponse.Content.ReadFromJsonAsync<CreatedResponseModel>())!.NewEntityId!;
 
             var loginRequest = new LoginCommand
             {
@@ -173,7 +173,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var request = new InvalidateRefreshTokenCommand
             {
-                RefreshToken = loginData.RefreshToken
+                RefreshToken = loginData.RefreshToken!
             };
 
             var response = await _httpClient.PutAsJsonAsync($"{Endpoint}/revoke-token", request);

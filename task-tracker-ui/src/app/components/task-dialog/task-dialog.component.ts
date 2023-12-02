@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faBan, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { tap } from 'rxjs';
-import UserTaskModel from 'src/app/model/UserTaskModel';
-import UserTaskStatusModel from 'src/app/model/UserTaskStatusModel';
+import UserTaskModel from 'src/app/model/user-task/UserTaskModel';
+import UserTaskStatusModel from 'src/app/model/user-task-status/UserTaskStatusModel';
 import UserTaskPriority from 'src/app/model/enum/UserTaskPriority';
-import UpdateUserTaskRequest from 'src/app/model/request/UpdateUserTaskRequest';
+import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
 import { UserTaskService } from 'src/app/services/user-task.service';
 
 @Component({
@@ -99,20 +99,20 @@ export class TaskDialogComponent implements OnInit {
   }
 
   priorityColor(priority?: UserTaskPriority) {
-    if(priority === undefined || priority === null) {
+    if (priority === undefined || priority === null) {
       return '#fafafa'
     }
 
-    if(priority == UserTaskPriority.urgent) {
+    if (priority == UserTaskPriority.urgent) {
       return '#e02626'
     }
-    else if(priority == UserTaskPriority.medium) {
+    else if (priority == UserTaskPriority.medium) {
       return '#0bcde3'
     }
-    else if(priority == UserTaskPriority.high) {
+    else if (priority == UserTaskPriority.high) {
       return '#e7ed32'
     }
-    else if(priority == UserTaskPriority.low) {
+    else if (priority == UserTaskPriority.low) {
       return '#7f8485'
     }
 

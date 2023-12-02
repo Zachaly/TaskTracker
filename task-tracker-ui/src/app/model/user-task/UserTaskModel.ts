@@ -1,6 +1,6 @@
-import UserModel from "./UserModel";
-import UserTaskStatusModel from "./UserTaskStatusModel";
-import UserTaskPriority from "./enum/UserTaskPriority";
+import UserModel from "../user/UserModel";
+import UserTaskStatusModel from "../user-task-status/UserTaskStatusModel";
+import UserTaskPriority from "../enum/UserTaskPriority";
 
 export default interface UserTaskModel {
     id: number,

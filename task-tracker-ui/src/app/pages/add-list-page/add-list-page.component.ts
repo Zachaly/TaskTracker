@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import TaskStatusGroupModel from 'src/app/model/TaskStatusGroupModel';
-import AddTaskListRequest from 'src/app/model/request/AddTaskListRequest';
+import TaskStatusGroupModel from 'src/app/model/task-status-group/TaskStatusGroupModel';
+import AddTaskListRequest from 'src/app/model/task-list/AddTaskListRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';

@@ -8,7 +8,6 @@ namespace TaskTracker.Database.Repository
 {
     public interface ITaskListRepository : IRepositoryBase<TaskList, TaskListModel, GetTaskListRequest>
     {
-        Task UpdateAsync(TaskList list);
     }
 
     public class TaskListRepository : RepositoryBase<TaskList, TaskListModel, GetTaskListRequest>, ITaskListRepository
@@ -46,13 +45,6 @@ namespace TaskTracker.Database.Repository
             }
 
             return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
-        }
-
-        public Task UpdateAsync(TaskList list)
-        {
-            _dbContext.Set<TaskList>().Update(list);
-
-            return _dbContext.SaveChangesAsync();
         }
 
         public override Task DeleteByIdAsync(long id)

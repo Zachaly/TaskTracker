@@ -19,6 +19,7 @@ namespace TaskTracker.Database
         Task<long> AddAsync(TEntity entity);
         Task AddAsync(params TEntity[] entities);
         Task DeleteByIdAsync(long id);
+        Task UpdateAsync(TEntity entity);
     }
 
     public interface IRepositoryBase<TEntity, TModel, TGetRequest> : IRepositoryBase<TEntity, TModel>
@@ -52,6 +53,13 @@ namespace TaskTracker.Database
             return entity.Id;
         }
 
+        public Task AddAsync(params TEntity[] entities)
+        {
+            _dbContext.Set<TEntity>().AddRange(entities);
+
+            return _dbContext.SaveChangesAsync();
+        }
+
         public virtual async Task DeleteByIdAsync(long id)
         {
             TEntity entity;
@@ -70,9 +78,6 @@ namespace TaskTracker.Database
             await _dbContext.SaveChangesAsync();
         }
 
-        protected IQueryable<TModel> GetModels(IQueryable<TEntity> entities)
-            => entities.Select(ModelExpression);
-
         protected IQueryable<TEntity> FilterById(IQueryable<TEntity> entities, long id)
             => entities.Where(e => e.Id == id);
 
@@ -80,7 +85,7 @@ namespace TaskTracker.Database
         {
             var query = FilterById(_dbContext.Set<TEntity>(), id);
 
-            return GetModels(query).FirstOrDefaultAsync();
+            return query.Select(ModelExpression).FirstOrDefaultAsync();
         }
 
         public virtual Task<T> GetByIdAsync<T>(long id, Func<TEntity, T> selector)
@@ -108,9 +113,9 @@ namespace TaskTracker.Database
             foreach (var prop in props)
             {
                 var entityPropName = prop.Attr?.PropertyName ?? prop.Name;
-                var entityProp = typeof(TEntity).GetProperty(entityPropName);
+                var entityProp = typeof(TEntity).GetProperty(entityPropName)!;
                 var underlayingType = Nullable.GetUnderlyingType(entityProp.PropertyType);
-                var requestProp = typeof(TRequest).GetProperty(prop.Name);
+                var requestProp = typeof(TRequest).GetProperty(prop.Name)!;
 
                 Expression entityPropExpression = Expression.Property(entityParam, entityPropName);
 
@@ -123,7 +128,7 @@ namespace TaskTracker.Database
 
                 var filterAttribute = requestProp.GetCustomAttribute<CustomFilterAttribute>();
 
-                BinaryExpression comparisonExpression = null;
+                BinaryExpression comparisonExpression;
 
                 if (filterAttribute is not null)
                 {
@@ -163,9 +168,9 @@ namespace TaskTracker.Database
             return queryable.Skip(index * pageSize).Take(pageSize);
         }
 
-        public Task AddAsync(params TEntity[] entities)
+        public Task UpdateAsync(TEntity entity)
         {
-            _dbContext.Set<TEntity>().AddRange(entities);
+            _dbContext.Set<TEntity>().Update(entity);
 
             return _dbContext.SaveChangesAsync();
         }

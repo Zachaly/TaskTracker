@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import TaskStatusGroupModel from 'src/app/model/TaskStatusGroupModel';
-import AddTaskStatusGroupRequest from 'src/app/model/request/AddTaskStatusGroupRequest';
+import TaskStatusGroupModel from 'src/app/model/task-status-group/TaskStatusGroupModel';
+import AddTaskStatusGroupRequest from 'src/app/model/task-status-group/AddTaskStatusGroupRequest';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';
 import { UserTaskStatusService } from 'src/app/services/user-task-status.service';
