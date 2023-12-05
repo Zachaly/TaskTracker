@@ -5,7 +5,8 @@ export default interface GetUserTaskRequest extends PagedRequest {
     creatorId?: number,
     maxDueTimestamp?: number,
     minCreationTimestamp?: number
-    listId?: number
+    listId?: number,
+    
 }
 
 export const mapGetUserTaskRequest = (request: GetUserTaskRequest): HttpParams => {

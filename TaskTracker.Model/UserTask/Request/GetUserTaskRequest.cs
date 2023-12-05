@@ -14,5 +14,11 @@ namespace TaskTracker.Model.UserTask.Request
         public long? ListId { get; set; }
 
         public long? StatusId { get; set; }
+
+        [CustomFilter(ComparisonType = ComparisonType.Contains, PropertyName = "StatusId")]
+        public ICollection<long>? StatusIds { get; set; }
+
+        [CustomFilter(ComparisonType = ComparisonType.DoesNotContain, PropertyName = "StatusId")]
+        public ICollection<long>? SkipStatusIds { get; set; }
     }
 }

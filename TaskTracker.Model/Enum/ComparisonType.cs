@@ -5,6 +5,8 @@
         Greater,
         GreaterOrEqual,
         Lesser,
-        LesserOrEqual
+        LesserOrEqual,
+        Contains,
+        DoesNotContain
     }
 }

@@ -3,7 +3,8 @@ import { HttpParams } from "@angular/common/http"
 export default interface PagedRequest {
     pageIndex?: number,
     pageSize?: number,
-    skipPagination?: boolean
+    skipPagination?: boolean,
+    orderBy?: string
 }
 
 export const mapPagedRequest = (request: PagedRequest) : HttpParams => {
@@ -17,6 +18,9 @@ export const mapPagedRequest = (request: PagedRequest) : HttpParams => {
     }
     if(request.skipPagination != undefined) {
         params = params.append('SkipPagination', request.skipPagination)
+    }
+    if(request.orderBy){
+        params = params.append('OrderBy', request.orderBy)
     }
 
     return params;
