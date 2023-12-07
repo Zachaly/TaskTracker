@@ -1,12 +1,13 @@
 <div class="card-header is-justify-content-space-between is-align-items-center">
     <div *ngIf="!isUpdatingColor" class="task-status-icon" [ngStyle]="{'background-color': status.color}"
         (click)="toggleIsUpdatingColor()"></div>
-    <div *ngIf="isUpdatingColor" class="is-flex" >
+    <div *ngIf="isUpdatingColor" class="is-flex">
         <input name="color" style="min-width: 50px;" class="input" type="color" [(ngModel)]="updatedColor">
         <button class="delete is-large" (click)="toggleIsUpdatingColor()"></button>
         <button class="button is-info" (click)="confirmColorUpdate()">Confirm</button>
     </div>
-    <div *ngIf="!isUpdatingName" class="is-flex is-align-content-center has-text-centered subtitle" (click)="toggleIsUpdatingName()">
+    <div *ngIf="!isUpdatingName" class="is-flex is-align-content-center has-text-centered subtitle"
+        (click)="toggleIsUpdatingName()">
         {{ status.name }}
     </div>
     <div *ngIf="isUpdatingName" class="is-flex">
@@ -17,10 +18,10 @@
     <p class="subtitle">
         {{ status.index }}
         <span class="icon" (click)="moveIndexUp.emit()">
-            <fa-icon [icon]="faAngleUp" ></fa-icon>
+            <fa-icon [icon]="faAngleUp"></fa-icon>
         </span>
         <span class="icon" (click)="moveIndexDown.emit()">
-            <fa-icon [icon]="faAngleDown" ></fa-icon>
+            <fa-icon [icon]="faAngleDown"></fa-icon>
         </span>
         <span *ngIf="!status.isDefault" class="icon ml-2" (click)="deleteStatus.emit()">
             <fa-icon [icon]="faTrash" style="color: #e20000;"></fa-icon>

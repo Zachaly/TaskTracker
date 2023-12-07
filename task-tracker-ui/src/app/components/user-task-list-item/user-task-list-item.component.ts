@@ -6,7 +6,7 @@ import UserTaskPriority, { priorityColor } from 'src/app/model/enum/UserTaskPrio
 import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
 
 @Component({
-  selector: 'app-user-task-list-item',
+  selector: '[app-user-task-list-item]',
   templateUrl: './user-task-list-item.component.html',
   styleUrls: ['./user-task-list-item.component.css']
 })

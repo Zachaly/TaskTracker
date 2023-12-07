@@ -81,6 +81,148 @@ namespace TaskTracker.Tests.Integration.RepositoryTests
         }
 
         [Fact]
+        public async Task GetAsync_StatusIdsSpecified_ReturnsCorrectEntities()
+        {
+            var user = FakeDataFactory.GenerateUsers(1).First();
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var statuses = FakeDataFactory.GenerateTaskStatuses(5, group.Id);
+
+            _dbContext.UserTaskStatuses.AddRange(statuses);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            var tasks = statuses.SelectMany(s => FakeDataFactory.GenerateUserTasks(3, user.Id, list.Id, s.Id)).ToList();
+
+            _dbContext.Tasks.AddRange(tasks);
+            _dbContext.SaveChanges();
+
+            var request = new GetUserTaskRequest
+            {
+                StatusIds = statuses.Skip(2).Select(x => x.Id).ToArray(),
+                SkipPagination = true
+            };
+
+            var res = await _repository.GetAsync(request);
+
+            Assert.All(res, t => Assert.Contains(t.Status.Id, request.StatusIds));
+        }
+
+        [Fact]
+        public async Task GetAsync_OrderBySpecified_ReturnsOrderedEntities()
+        {
+            var user = FakeDataFactory.GenerateUsers(1).First();
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(5, user.Id, list.Id, status.Id));
+            _dbContext.SaveChanges();
+
+            var request = new GetUserTaskRequest
+            {
+                OrderBy = "Id"
+            };
+
+            var res = await _repository.GetAsync(request);
+
+            Assert.True(res.ToList().Select(x => x.Id).SequenceEqual(_dbContext.Tasks.OrderBy(t => t.Id).Select(x => x.Id)));
+        }
+
+        [Fact]
+        public async Task GetAsync_OrderByDescendingSpecified_ReturnsOrderedEntities()
+        {
+            var user = FakeDataFactory.GenerateUsers(1).First();
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
+
+            _dbContext.UserTaskStatuses.Add(status);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(5, user.Id, list.Id, status.Id));
+            _dbContext.SaveChanges();
+
+            var request = new GetUserTaskRequest
+            {
+                OrderByDescending = "Id"
+            };
+
+            var res = await _repository.GetAsync(request);
+
+            Assert.True(res.ToList().Select(x => x.Id).SequenceEqual(_dbContext.Tasks.OrderByDescending(t => t.Id).Select(x => x.Id)));
+        }
+
+        [Fact]
+        public async Task GetAsync_SkipStatusIdsSpecified_ReturnsCorrectEntities()
+        {
+            var user = FakeDataFactory.GenerateUsers(1).First();
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            var group = FakeDataFactory.GenerateTaskStatusGroups(1, user.Id).First();
+
+            _dbContext.TaskStatusGroups.Add(group);
+            _dbContext.SaveChanges();
+
+            var statuses = FakeDataFactory.GenerateTaskStatuses(5, group.Id);
+
+            _dbContext.UserTaskStatuses.AddRange(statuses);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, user.Id, group.Id).First();
+            _dbContext.TaskLists.Add(list);
+            _dbContext.SaveChanges();
+
+            var tasks = statuses.SelectMany(s => FakeDataFactory.GenerateUserTasks(3, user.Id, list.Id, s.Id)).ToList();
+
+            _dbContext.Tasks.AddRange(tasks);
+            _dbContext.SaveChanges();
+
+            var request = new GetUserTaskRequest
+            {
+                SkipStatusIds = statuses.Skip(2).Select(x => x.Id).ToArray(),
+                SkipPagination = true
+            };
+
+            var res = await _repository.GetAsync(request);
+
+            Assert.All(res, t => Assert.DoesNotContain(t.Status.Id, request.SkipStatusIds));
+        }
+
+        [Fact]
         public async Task GetAsync_MinCreationTimestampSpecified_ReturnsProperEntities()
         {
             var user = new User

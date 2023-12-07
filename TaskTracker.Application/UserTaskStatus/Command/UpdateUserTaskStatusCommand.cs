@@ -46,6 +46,8 @@ namespace TaskTracker.Application.Command
 
             var updateOtherStatuses = status.Index != request.Index && request.Index is not null;
 
+            int originalIndex = status.Index;
+
             status.Name = request.Name ?? status.Name;
             status.Index = request.Index ?? status.Index;
             status.Color = request.Color ?? status.Color;
@@ -54,13 +56,13 @@ namespace TaskTracker.Application.Command
 
             if (updateOtherStatuses)
             {
-                await UpdateGroupStatuses(status);
+                await UpdateGroupStatuses(status, originalIndex);
             }
 
             return new ResponseModel();
         }
 
-        private async Task UpdateGroupStatuses(UserTaskStatus updatedStatus)
+        private async Task UpdateGroupStatuses(UserTaskStatus updatedStatus, int originalIndex)
         {
             var statuses = await _userTaskStatusRepository.GetAsync(new GetUserTaskStatusRequest
             {
@@ -69,11 +71,22 @@ namespace TaskTracker.Application.Command
                 SkipPagination = true
             }, x => x);
 
-            foreach (var status in statuses.ToList().Where(x => x.Index >= updatedStatus.Index && updatedStatus.Id != x.Id))
+            var nextStatus = statuses.FirstOrDefault(s => s.Id != updatedStatus.Id && s.Index == updatedStatus.Index);
+
+            if(nextStatus is null)
             {
-                status.Index--;
-                await _userTaskStatusRepository.UpdateAsync(status);
+                return;
             }
+
+            if(originalIndex > updatedStatus.Index)
+            {
+                nextStatus.Index++;
+            }
+            else
+            {
+                nextStatus.Index--;
+            }
+            await _userTaskStatusRepository.UpdateAsync(nextStatus);
         }
     }
 }

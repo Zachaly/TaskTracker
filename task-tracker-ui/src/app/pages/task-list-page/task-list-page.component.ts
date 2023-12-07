@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import TaskListModel from 'src/app/model/task-list/TaskListModel';
 import TaskStatusGroupModel from 'src/app/model/task-status-group/TaskStatusGroupModel';
 import UserTaskModel from 'src/app/model/user-task/UserTaskModel';
@@ -9,8 +9,9 @@ import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';
-import { UserTaskStatusService } from 'src/app/services/user-task-status.service';
 import { UserTaskService } from 'src/app/services/user-task.service';
+import GetUserTaskRequest from 'src/app/model/user-task/GetUserTaskRequest';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-task-list-page',
@@ -45,6 +46,16 @@ export class TaskListPageComponent implements OnInit {
     id: 0,
   }
 
+  titleOrderBy = 0
+  creationDateOrderBy = 0
+  dueDateOrderBy = 0
+  priorityOrderBy = 0
+
+  showClosed = false
+
+  faAngleUp = faAngleUp
+  faAngleDown = faAngleDown
+
   constructor(private route: ActivatedRoute, private taskListService: TaskListService, private taskService: UserTaskService,
     private authService: AuthService, private router: Router, private taskStatusGroupService: TaskStatusGroupService) {
     this.userId = authService.userData!.userData.id
@@ -63,21 +74,52 @@ export class TaskListPageComponent implements OnInit {
           color: res.color,
           description: res.description
         }
-        this.taskService.get({ listId: id }).subscribe(res => {
-          this.tasks = res
-        })
 
         this.taskStatusGroupService.getById(res.statusGroupId)
           .subscribe(res => {
             this.statusGroup = res
             this.defaultStatusId = this.statusGroup.statuses!.find(x => x.index == 0)!.id
+
+            this.loadTasks()
           })
       })
     })
   }
 
   loadTasks() {
-    this.taskService.get({ listId: this.listId }).subscribe(res => {
+    const getRequest: GetUserTaskRequest = {
+      listId: this.list?.id
+    }
+
+    if (!this.showClosed) {
+      const closedStatusIndex = Math.max(...this.statusGroup.statuses!.map(x => x.index))
+      const closedStatus = this.statusGroup.statuses!.find(x => x.index == closedStatusIndex)!
+      getRequest.skipStatusIds = [closedStatus.id]
+    }
+
+    this.taskService.get(getRequest).subscribe(res => {
+      this.tasks = res.sort((a, b) => b.status.index - a.status.index)
+    })
+  }
+
+  loadOrderedTasks(orderBy: string, isDescending: boolean = false) {
+    const getRequest: GetUserTaskRequest = {
+      listId: this.list?.id
+    }
+
+    if (isDescending) {
+      getRequest.orderByDescending = orderBy
+    } else {
+      getRequest.orderBy = orderBy
+    }
+
+    if (!this.showClosed) {
+      const closedStatusIndex = Math.max(...this.statusGroup.statuses!.map(x => x.index))
+      const closedStatus = this.statusGroup.statuses!.find(x => x.index == closedStatusIndex)!
+      getRequest.skipStatusIds = [closedStatus.id]
+    }
+
+    this.taskService.get(getRequest).subscribe(res => {
       this.tasks = res
     })
   }
@@ -115,5 +157,82 @@ export class TaskListPageComponent implements OnInit {
         task.description = res.description
       })
     })
+  }
+
+  orderTasksByTitle() {
+    this.titleOrderBy++
+    this.priorityOrderBy = 0
+    this.creationDateOrderBy = 0
+    this.dueDateOrderBy = 0
+
+    if (this.titleOrderBy == 1) {
+      this.loadOrderedTasks('Title', true)
+    }
+    else if (this.titleOrderBy == 2) {
+      this.loadOrderedTasks('Title')
+    }
+    else {
+      this.titleOrderBy = 0
+      this.loadTasks()
+    }
+  }
+
+  orderTasksByCreationDate() {
+    this.priorityOrderBy = 0
+    this.titleOrderBy = 0
+    this.creationDateOrderBy++
+    this.dueDateOrderBy = 0
+
+    if (this.creationDateOrderBy == 1) {
+      this.loadOrderedTasks('CreationTimestamp', true)
+    }
+    else if (this.creationDateOrderBy == 2) {
+      this.loadOrderedTasks('CreationTimestamp')
+    }
+    else {
+      this.creationDateOrderBy = 0
+      this.loadTasks()
+    }
+  }
+
+  orderTasksByDueDate() {
+    this.priorityOrderBy = 0
+    this.titleOrderBy = 0
+    this.creationDateOrderBy = 0
+    this.dueDateOrderBy++
+
+    if (this.dueDateOrderBy == 1) {
+      this.loadOrderedTasks('DueTimestamp', true)
+    }
+    else if (this.dueDateOrderBy == 2) {
+      this.loadOrderedTasks('DueTimestamp')
+    }
+    else {
+      this.dueDateOrderBy = 0
+      this.loadTasks()
+    }
+  }
+
+  orderTasksByPriority() {
+    this.priorityOrderBy++
+    this.titleOrderBy = 0
+    this.creationDateOrderBy = 0
+    this.dueDateOrderBy = 0
+
+    if (this.priorityOrderBy == 1) {
+      this.loadOrderedTasks('Priority', true)
+    }
+    else if (this.priorityOrderBy == 2) {
+      this.loadOrderedTasks('Priority')
+    }
+    else {
+      this.priorityOrderBy = 0
+      this.loadTasks()
+    }
+  }
+
+  toggleShowClosed() {
+    this.showClosed = !this.showClosed
+    this.loadTasks()
   }
 }

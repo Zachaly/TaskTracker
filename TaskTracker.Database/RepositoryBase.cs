@@ -98,7 +98,7 @@ namespace TaskTracker.Database
         protected IQueryable<TEntity> FilterWithRequest<TRequest>(IQueryable<TEntity> queryable, TRequest request)
         {
             ImmutableList<(string Name, CustomFilterAttribute? Attr)> requestProps = typeof(TRequest).GetProperties()
-                .Where(p => p.Name != "PageIndex" && p.Name != "PageSize" && p.GetCustomAttribute<JoinAttribute>() is null)
+                .Where(p => p.Name != "PageIndex" && p.Name != "PageSize" && p.Name != "OrderBy" && p.GetCustomAttribute<JoinAttribute>() is null)
                 .Where(p => p.GetValue(request) is not null)
                 .Select(p =>  (p.Name, p.GetCustomAttribute<CustomFilterAttribute>())).ToImmutableList();
 
@@ -128,16 +128,20 @@ namespace TaskTracker.Database
 
                 var filterAttribute = requestProp.GetCustomAttribute<CustomFilterAttribute>();
 
-                BinaryExpression comparisonExpression;
+                Expression comparisonExpression;
 
                 if (filterAttribute is not null)
                 {
+                    var methodInfo = requestProp.PropertyType.GetMethod("Contains");
+
                     comparisonExpression = filterAttribute.ComparisonType switch
                     {
                         ComparisonType.Lesser => Expression.LessThan(entityPropExpression, requestPropExpression),
                         ComparisonType.LesserOrEqual => Expression.LessThanOrEqual(entityPropExpression, requestPropExpression),
                         ComparisonType.Greater => Expression.GreaterThan(entityPropExpression, requestPropExpression),
                         ComparisonType.GreaterOrEqual => Expression.GreaterThanOrEqual(entityPropExpression, requestPropExpression),
+                        ComparisonType.Contains => Expression.Call(requestPropExpression, methodInfo!, entityPropExpression),
+                        ComparisonType.DoesNotContain => Expression.Equal(Expression.Call(requestPropExpression, methodInfo!, entityPropExpression), Expression.Constant(false)),
                         _ => throw new NotSupportedException()
                     };
                 }
@@ -168,6 +172,28 @@ namespace TaskTracker.Database
             return queryable.Skip(index * pageSize).Take(pageSize);
         }
 
+        protected IQueryable<TEntity> OrderBy(IQueryable<TEntity> queryable, PagedRequest request)
+        {
+            if(request.OrderBy is null && request.OrderByDescending is null)
+            {
+                return queryable;
+            }
+
+            var propertyName = request.OrderBy is null ? request.OrderByDescending : request.OrderBy;
+
+            var methodName = request.OrderBy is null ? "OrderByDescending" : "OrderBy";
+
+            var type = typeof(TEntity);
+            var property = type.GetProperty(propertyName);
+            var parameter = Expression.Parameter(type, "p");
+            var propertyAccess = Expression.MakeMemberAccess(parameter, property);
+            var orderByExp = Expression.Lambda(propertyAccess, parameter);
+            var typeArguments = new Type[] { type, property.PropertyType };
+            var resultExp = Expression.Call(typeof(Queryable), methodName, typeArguments, queryable.Expression, Expression.Quote(orderByExp));
+
+            return queryable.Provider.CreateQuery<TEntity>(resultExp);
+        }
+
         public Task UpdateAsync(TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);
@@ -190,12 +216,16 @@ namespace TaskTracker.Database
         {
             var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
 
+            query = OrderBy(query, request);
+
             return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
         }
 
         public Task<IEnumerable<T>> GetAsync<T>(TGetRequest request, Func<TEntity, T> selector)
         {
             var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
+
+            query = query.IgnoreAutoIncludes();
 
             return Task.FromResult(AddPagination(query, request).Select(selector).AsEnumerable());
         }

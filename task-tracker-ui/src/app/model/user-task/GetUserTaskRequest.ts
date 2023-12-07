@@ -5,7 +5,9 @@ export default interface GetUserTaskRequest extends PagedRequest {
     creatorId?: number,
     maxDueTimestamp?: number,
     minCreationTimestamp?: number
-    listId?: number
+    listId?: number,
+    skipStatusIds?: number[],
+    statusIds?: number[]
 }
 
 export const mapGetUserTaskRequest = (request: GetUserTaskRequest): HttpParams => {
@@ -23,6 +25,17 @@ export const mapGetUserTaskRequest = (request: GetUserTaskRequest): HttpParams =
     if (request.listId) {
         params = params.append('ListId', request.listId)
     }
+    if(request.skipStatusIds) {
+        request.skipStatusIds.forEach(id => {
+            params = params.append('SkipStatusIds', id)
+        });
+    }
+    if(request.statusIds) {
+        request.statusIds.forEach(id => {
+            params = params.append('StatusIds', id)
+        })
+    }
+
 
     return params;
 } 

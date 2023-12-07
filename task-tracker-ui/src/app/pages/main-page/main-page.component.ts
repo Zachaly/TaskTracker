@@ -24,12 +24,22 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.taskListService.get({ creatorId: this.userData.id, joinStatusGroup: true })
-      .subscribe(res => this.lists = res)
+      .subscribe(res => {
+        this.lists = res
+      })
   }
 
   public loadListTasks(list: TaskListModel) {
-    this.taskService.get({ listId: list.id }).subscribe(res => list.tasks = res)
-    this.taskStatusGroupService.getById(list.statusGroupId).subscribe(res => list.statusGroup = res)
+    this.taskStatusGroupService.getById(list.statusGroupId).subscribe(res => {
+      list.statusGroup = res
+
+      const maxIndex = Math.max(...res.statuses!.map(x => x.index))
+      const closedStatus = res.statuses!.find(x => x.index == maxIndex)!
+
+      this.taskService.get({ listId: list.id, skipStatusIds: [closedStatus.id] }).subscribe(res => {
+        list.tasks = res.sort((a, b) => b.status.index - a.status.index)
+      })
+    })
   }
 
   deleteTask(id: number, list: TaskListModel) {
