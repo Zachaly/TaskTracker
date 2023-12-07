@@ -4,7 +4,8 @@ export default interface PagedRequest {
     pageIndex?: number,
     pageSize?: number,
     skipPagination?: boolean,
-    orderBy?: string
+    orderBy?: string,
+    orderByDescending?: string
 }
 
 export const mapPagedRequest = (request: PagedRequest) : HttpParams => {
@@ -21,6 +22,9 @@ export const mapPagedRequest = (request: PagedRequest) : HttpParams => {
     }
     if(request.orderBy){
         params = params.append('OrderBy', request.orderBy)
+    }
+    if(request.orderByDescending) {
+        params = params.append('OrderByDescending', request.orderByDescending)
     }
 
     return params;

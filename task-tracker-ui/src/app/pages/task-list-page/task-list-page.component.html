@@ -10,6 +10,9 @@
             <button class="button is-danger" (click)="deleteList()">Delete</button>
             <button class="button is-info" (click)="isUpdatingList = true">Update</button>
         </p>
+        <p class="has-text-centered" *ngIf="!isUpdatingList">
+            <button class="button is-success" (click)="toggleShowClosed()">Show closed</button>
+        </p>
 
         <div class="columns is-centered" *ngIf="isUpdatingList">
             <form class="column is-6 mt-2" (ngSubmit)="updateList()">
@@ -31,13 +34,57 @@
                 </div>
             </form>
         </div>
+        <table class="mt-4 table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th class="has-text-centered">Status</th>
+                    <th class="has-text-centered" (click)="orderTasksByTitle()">
+                        Title
+                        <span class="icon" *ngIf="titleOrderBy == 2">
+                            <fa-icon [icon]="faAngleUp"></fa-icon>
+                        </span>
+                        <span class="icon">
+                            <fa-icon [icon]="faAngleDown" *ngIf="titleOrderBy == 1"></fa-icon>
+                        </span>
+                    </th>
+                    <th class="has-text-centered">Creator</th>
+                    <th class="has-text-centered" (click)="orderTasksByCreationDate()">
+                        Creation date
+                        <span class="icon" *ngIf="creationDateOrderBy == 2">
+                            <fa-icon [icon]="faAngleUp"></fa-icon>
+                        </span>
+                        <span class="icon">
+                            <fa-icon [icon]="faAngleDown" *ngIf="creationDateOrderBy == 1"></fa-icon>
+                        </span>
+                    </th>
+                    <th class="has-text-centered" (click)="orderTasksByDueDate()">
+                        Due date
+                        <span class="icon" *ngIf="dueDateOrderBy == 2">
+                            <fa-icon [icon]="faAngleUp"></fa-icon>
+                        </span>
+                        <span class="icon">
+                            <fa-icon [icon]="faAngleDown" *ngIf="dueDateOrderBy == 1"></fa-icon>
+                        </span>
+                    </th>
+                    <th class="has-text-centered" (click)="orderTasksByPriority()">
+                        Priority
+                        <span class="icon" *ngIf="priorityOrderBy == 2">
+                            <fa-icon [icon]="faAngleUp"></fa-icon>
+                        </span>
+                        <span class="icon">
+                            <fa-icon [icon]="faAngleDown" *ngIf="priorityOrderBy == 1"></fa-icon>
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask($event)"
+                    (updateRequested)="updateTask($event, task)" [statuses]="statusGroup.statuses ?? []"></tr>
+            </tbody>
 
-        <div class="mt-4">
-            <app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask($event)"
-            (updateRequested)="updateTask($event, task)"
-            [statuses]="statusGroup.statuses ?? []" />
-        </div>
-        <app-add-task-form [listId]="listId" [statusId]="defaultStatusId" [creatorId]="userId" (taskAdded)="loadTasks()">
+        </table>
+        <app-add-task-form [listId]="listId" [statusId]="defaultStatusId" [creatorId]="userId"
+            (taskAdded)="loadTasks()">
 
         </app-add-task-form>
     </div>

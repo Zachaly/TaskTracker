@@ -141,7 +141,7 @@ namespace TaskTracker.Database
                         ComparisonType.Greater => Expression.GreaterThan(entityPropExpression, requestPropExpression),
                         ComparisonType.GreaterOrEqual => Expression.GreaterThanOrEqual(entityPropExpression, requestPropExpression),
                         ComparisonType.Contains => Expression.Call(requestPropExpression, methodInfo!, entityPropExpression),
-                        ComparisonType.DoesNotContain => Expression.And(Expression.Call(requestPropExpression, methodInfo!, entityPropExpression), Expression.Constant(false)),
+                        ComparisonType.DoesNotContain => Expression.Equal(Expression.Call(requestPropExpression, methodInfo!, entityPropExpression), Expression.Constant(false)),
                         _ => throw new NotSupportedException()
                     };
                 }
@@ -224,6 +224,8 @@ namespace TaskTracker.Database
         public Task<IEnumerable<T>> GetAsync<T>(TGetRequest request, Func<TEntity, T> selector)
         {
             var query = FilterWithRequest(_dbContext.Set<TEntity>(), request);
+
+            query = query.IgnoreAutoIncludes();
 
             return Task.FromResult(AddPagination(query, request).Select(selector).AsEnumerable());
         }

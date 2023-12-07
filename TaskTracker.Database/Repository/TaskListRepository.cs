@@ -32,6 +32,8 @@ namespace TaskTracker.Database.Repository
         {
             var query = FilterWithRequest(_dbContext.Set<TaskList>(), request);
 
+            query = query.IgnoreAutoIncludes();
+
             query = query.Include(l => l.Creator);
 
             if (request.JoinTasks.GetValueOrDefault())

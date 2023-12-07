@@ -11,11 +11,16 @@
 </div>
 
 <div *ngIf="showTasks" class="column m-1">
-    <div *ngIf="list.tasks">
-        <app-user-task-list-item *ngFor="let task of list.tasks" [task]="task" (deleteTask)="deleteTask.emit(task.id)"
-            (updateRequested)="updateTask.emit($event)"
-            [statuses]="list.statusGroup?.statuses ?? []" />
-        <app-add-task-form *ngIf="this.list.statusGroup?.statuses" [listId]="list.id" (taskAdded)="loadTasks.emit()" [statusId]="defaultStatus()!.id">
-        </app-add-task-form>
-    </div>
+    <table class="table" *ngIf="list.tasks" style="width: 100%;">
+        <tbody>
+            <tr app-user-task-list-item *ngFor="let task of list.tasks" [task]="task"
+                (deleteTask)="deleteTask.emit(task.id)" (updateRequested)="updateTask.emit($event)"
+                [statuses]="list.statusGroup?.statuses ?? []"></tr>
+        </tbody>
+
+
+    </table>
+    <app-add-task-form *ngIf="this.list.statusGroup?.statuses" [listId]="list.id" (taskAdded)="loadTasks.emit()"
+        [statusId]="defaultStatus()!.id">
+    </app-add-task-form>
 </div>
