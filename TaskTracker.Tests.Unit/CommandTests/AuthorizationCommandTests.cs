@@ -1,10 +1,15 @@
-﻿using NSubstitute;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using NSubstitute;
 using NSubstitute.ReturnsExtensions;
+using System.Transactions;
 using TaskTracker.Application;
 using TaskTracker.Application.Authorization.Command;
 using TaskTracker.Application.Authorization.Service;
+using TaskTracker.Application.Command;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
+using TaskTracker.Tests.Unit.ValidatorTests;
 
 namespace TaskTracker.Tests.Unit.CommandTests
 {
@@ -142,6 +147,149 @@ namespace TaskTracker.Tests.Unit.CommandTests
             Assert.False(result.IsSuccess);
             Assert.Null(result.Data);
             Assert.NotEmpty(result.Error);
+        }
+
+        [Fact]
+        public async Task ChangeUserPasswordCommand_Success()
+        {
+            var user = new User
+            {
+                PasswordHash = "hash"
+            };
+
+            var command = new ChangeUserPasswordCommand
+            {
+                UserId = 1,
+                CurrentPassword = "password",
+                NewPassword = "new password"
+            };
+
+            var tokens = new List<RefreshToken>()
+            {
+                new RefreshToken { IsValid = true },
+                new RefreshToken { IsValid = true },
+            };
+
+            var userRepository = Substitute.For<IUserRepository>();
+            userRepository.GetByIdAsync(command.UserId, Arg.Any<Func<User, User>>()).Returns(user);
+            userRepository.UpdateAsync(user).Returns(Task.CompletedTask);
+
+            var tokenRepository = Substitute.For<IRefreshTokenRepository>();
+            tokenRepository.GetByUserIdAsync(user.Id).Returns(tokens);
+
+            tokenRepository.UpdateAsync(Arg.Any<RefreshToken>()).Returns(Task.CompletedTask);
+
+            const string NewHash = "new hash";
+            var hashService = Substitute.For<IHashService>();
+            hashService.HashStringAsync(command.NewPassword).Returns(NewHash);
+
+            hashService.CompareStringWithHashAsync(command.CurrentPassword, user.PasswordHash).Returns(true);
+
+            var validator = Substitute.For<IValidator<ChangeUserPasswordCommand>>();
+            validator.ValidateAsync(command).Returns(new ValidationResult());
+
+            var handler = new ChangeUserPasswordHandler(userRepository, tokenRepository, validator, hashService);
+
+            var res = await handler.Handle(command, default);
+
+            await tokenRepository.Received(2).UpdateAsync(Arg.Any<RefreshToken>());
+            await userRepository.Received(1).UpdateAsync(user);
+
+            Assert.True(res.IsSuccess);
+            Assert.All(tokens, t => Assert.False(t.IsValid));
+            Assert.Equal(NewHash, user.PasswordHash);
+        }
+
+        [Fact]
+        public async Task ChangeUserPasswordCommand_InvalidRequest_Failure()
+        {
+
+            var command = new ChangeUserPasswordCommand
+            {
+                UserId = 1,
+                CurrentPassword = "password",
+                NewPassword = "new password"
+            };
+
+            var userRepository = Substitute.For<IUserRepository>();
+
+            var tokenRepository = Substitute.For<IRefreshTokenRepository>();
+
+            var hashService = Substitute.For<IHashService>();
+
+            var validator = Substitute.For<IValidator<ChangeUserPasswordCommand>>();
+            validator.ValidateAsync(command).Returns(new ValidationResult(new List<ValidationFailure>
+            {
+                new ValidationFailure("prop", "err")
+            }));
+
+            var handler = new ChangeUserPasswordHandler(userRepository, tokenRepository, validator, hashService);
+
+            var res = await handler.Handle(command, default);
+
+            Assert.False(res.IsSuccess);
+        }
+
+        [Fact]
+        public async Task ChangeUserPasswordCommand_UserNotFound_Failure()
+        {
+
+            var command = new ChangeUserPasswordCommand
+            {
+                UserId = 1,
+                CurrentPassword = "password",
+                NewPassword = "new password"
+            };
+
+            var userRepository = Substitute.For<IUserRepository>();
+            userRepository.GetByIdAsync(command.UserId, Arg.Any<Func<User, User>>()).ReturnsNull();
+
+            var tokenRepository = Substitute.For<IRefreshTokenRepository>();
+
+            var hashService = Substitute.For<IHashService>();
+
+            var validator = Substitute.For<IValidator<ChangeUserPasswordCommand>>();
+            validator.ValidateAsync(command).Returns(new ValidationResult());
+
+            var handler = new ChangeUserPasswordHandler(userRepository, tokenRepository, validator, hashService);
+
+            var res = await handler.Handle(command, default);
+
+            Assert.False(res.IsSuccess);
+        }
+
+        [Fact]
+        public async Task ChangeUserPasswordCommand_CurrentPasswordDoesNotMatchHash_Failure()
+        {
+            var user = new User
+            {
+                PasswordHash = "hash"
+            };
+
+            var command = new ChangeUserPasswordCommand
+            {
+                UserId = 1,
+                CurrentPassword = "password",
+                NewPassword = "new password"
+            };
+
+            var userRepository = Substitute.For<IUserRepository>();
+            userRepository.GetByIdAsync(command.UserId, Arg.Any<Func<User, User>>()).Returns(user);
+
+            var tokenRepository = Substitute.For<IRefreshTokenRepository>();
+
+            var hashService = Substitute.For<IHashService>();
+
+            hashService.CompareStringWithHashAsync(command.CurrentPassword, user.PasswordHash).Returns(false);
+
+            var validator = Substitute.For<IValidator<ChangeUserPasswordCommand>>();
+            validator.ValidateAsync(command).Returns(new ValidationResult());
+
+            var handler = new ChangeUserPasswordHandler(userRepository, tokenRepository, validator, hashService);
+
+            var res = await handler.Handle(command, default);
+
+            Assert.False(res.IsSuccess);
         }
     }
 }
