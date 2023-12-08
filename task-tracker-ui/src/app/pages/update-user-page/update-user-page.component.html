@@ -1,0 +1,40 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar></app-side-bar>
+    </div>
+    <div class="column columns mt-2">
+        <form class="column is-4" (ngSubmit)="confirmUserUpdate()">
+            <p class="title">Update profile info</p>
+            <div class="control">
+                <label for="fname" class="label">First name</label>
+                <input type="text" name="fname" class="input" [(ngModel)]="updateUserRequest.firstName">
+            </div>
+            <div class="control">
+                <label for="lname" class="label">Last name</label>
+                <input type="text" name="lname" class="input" [(ngModel)]="updateUserRequest.lastName">
+            </div>
+            <div class="control">
+                <button class="button is-success">Confirm</button>
+            </div>
+        </form>
+        <form class="column is-4" (ngSubmit)="confirmPasswordUpdate()">
+            <p class="title">Update password</p>
+            <div class="control">
+                <label for="currentPassword" class="lable">Current password</label>
+                <input type="password" class="input" name="currentPassword" [(ngModel)]="changePasswordRequest.currentPassword">
+            </div>
+            <div class="control">
+                <label for="newPassword" class="label">New password</label>
+                <input type="password" name="newPassword" class="input" [(ngModel)]="changePasswordRequest.newPassword">
+            </div>
+            <div class="control">
+                <label for="confirmNewPassword" class="label">Confirm new passsword</label>
+                <input type="password" name="confirmNewPassword" class="input" [(ngModel)]="confirmNewPassword">
+            </div>
+            <div class="control">
+                <button class="button is-warning" [disabled]="confirmNewPassword !== changePasswordRequest.newPassword">Confirm</button>
+            </div>
+        </form>
+    </div>
+
+</div>

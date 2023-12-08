@@ -16,8 +16,8 @@
         Account
     </p>
     <ul class="menu-list">
+        <app-side-bar-link name="Update Profile" link="/profile/update" [isActive]="isCurrentRoute('/profile/update')"/>
         <app-side-bar-link name="Task statuses" link="/task-status" [isActive]="isCurrentRoute('/task-status')"/>
         <li class="has-text-centered mt-1"><button class="button is-danger" (click)="logout()">Logout</button></li>
     </ul>
-
 </aside>

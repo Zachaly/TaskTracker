@@ -26,6 +26,7 @@ import { TaskStatusPageComponent } from './pages/task-status-page/task-status-pa
 import { UpdateStatusGroupPageComponent } from './pages/update-status-group-page/update-status-group-page.component';
 import { TaskStatusListItemComponent } from './components/task-status-list-item/task-status-list-item.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { UpdateUserPageComponent } from './pages/update-user-page/update-user-page.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -36,7 +37,8 @@ const routes: Routes = [
   route('list/add', AddListPageComponent, [RouteGuard]),
   route('list/:id', TaskListPageComponent, [RouteGuard]),
   route('task-status', TaskStatusPageComponent, [RouteGuard]),
-  route('task-status/update/:groupId', UpdateStatusGroupPageComponent, [RouteGuard])
+  route('task-status/update/:groupId', UpdateStatusGroupPageComponent, [RouteGuard]),
+  route('profile/update', UpdateUserPageComponent, [RouteGuard])
 ]
 
 @NgModule({
@@ -58,6 +60,7 @@ const routes: Routes = [
     TaskStatusPageComponent,
     UpdateStatusGroupPageComponent,
     TaskStatusListItemComponent,
+    UpdateUserPageComponent,
   ],
   imports: [
     BrowserModule,

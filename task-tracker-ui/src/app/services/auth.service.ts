@@ -4,6 +4,7 @@ import { Observable, Subject, tap } from 'rxjs';
 import LoginRequest from '../model/user/LoginRequest';
 import LoginResponse from '../model/user/LoginResponse';
 import { TokenService } from './token.service';
+import ChangeUserPasswordRequest from '../model/user/ChangeUserPasswordRequest';
 
 const API_URL = 'https://localhost:5001/api/auth'
 
@@ -27,6 +28,12 @@ export class AuthService {
         this.userDataSubject.next(res)
         this.setTokens()
       }
+    }))
+  }
+
+  public changeUserPassword(request: ChangeUserPasswordRequest) {
+    return this.http.patch(`${API_URL}/change-password`, request).pipe(tap({
+      next: () => this.clearUserData()
     }))
   }
 
