@@ -59,5 +59,20 @@ namespace TaskTracker.Api.Controllers
             
             return response.ReturnNoContentOrBadRequest();
         }
+
+        /// <summary>
+        /// Updates user password with data given in request and invalidates all refresh tokens
+        /// </summary>
+        /// <response code="204">Password changed successfully</response>
+        /// <response code="400">Invalid new password or invalid current password</response>
+        [HttpPatch("change-password")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<ResponseModel>> ChangeUserPasswordAsync(ChangeUserPasswordCommand command)
+        {
+            var res = await _mediator.Send(command);
+
+            return res.ReturnNoContentOrBadRequest();
+        }
     }
 }
