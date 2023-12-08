@@ -5,6 +5,7 @@ using TaskTracker.Application.Command;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.Response;
 using TaskTracker.Model.User;
+using TaskTracker.Model.User.Request;
 
 namespace TaskTracker.Tests.Integration.ApiTests
 {
@@ -180,6 +181,103 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
             Assert.False(_dbContext.RefreshTokens.First(x => x.Token == request.RefreshToken).IsValid);
+        }
+
+        [Fact]
+        public async Task ChangeUserPassword_PasswordChanged()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new ChangeUserPasswordRequest
+            {
+                UserId = loginData.UserData!.Id,
+                CurrentPassword = "password",
+                NewPassword = "newPassword"
+            };
+
+            var response = await _httpClient.PatchAsJsonAsync($"{Endpoint}/change-password", request);
+
+            var loginRequest = new LoginCommand
+            {
+                Email = loginData.UserData.Email,
+                Password = request.NewPassword
+            };
+
+            var loginResponse = await _httpClient.PostAsJsonAsync($"{Endpoint}/login", loginRequest);
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
+        }
+
+        [Fact]
+        public async Task ChangeUserPassword_UserNotFound_BadRequest()
+        {
+            await AuthorizeAsync();
+
+            var request = new ChangeUserPasswordRequest
+            {
+                UserId = 2137,
+                CurrentPassword = "password",
+                NewPassword = "newPassword"
+            };
+
+            var response = await _httpClient.PatchAsJsonAsync($"{Endpoint}/change-password", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ChangeUserPassword_InvalidCurrentPassword_BadRequest()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new ChangeUserPasswordRequest
+            {
+                UserId = loginData.UserData!.Id,
+                CurrentPassword = "pass",
+                NewPassword = "newPassword"
+            };
+
+            var response = await _httpClient.PatchAsJsonAsync($"{Endpoint}/change-password", request);
+
+            var loginRequest = new LoginCommand
+            {
+                Email = loginData.UserData.Email,
+                Password = request.NewPassword
+            };
+
+            var loginResponse = await _httpClient.PostAsJsonAsync($"{Endpoint}/login", loginRequest);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, loginResponse.StatusCode);
+        }
+
+        [Fact]
+        public async Task ChangeUserPasswordCommand_InvalidRequest_BadRequest()
+        {
+            var loginData = await AuthorizeAsync();
+
+            var request = new ChangeUserPasswordRequest
+            {
+                UserId = loginData.UserData!.Id,
+                CurrentPassword = "password",
+                NewPassword = ""
+            };
+
+            var response = await _httpClient.PatchAsJsonAsync($"{Endpoint}/change-password", request);
+            var content = await GetContentFromBadRequest<ResponseModel>(response);
+
+            var loginRequest = new LoginCommand
+            {
+                Email = loginData.UserData.Email,
+                Password = request.NewPassword
+            };
+
+            var loginResponse = await _httpClient.PostAsJsonAsync($"{Endpoint}/login", loginRequest);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, loginResponse.StatusCode);
+            Assert.Contains(content.ValidationErrors.Keys, x => x == "NewPassword");
         }
     }
 }
