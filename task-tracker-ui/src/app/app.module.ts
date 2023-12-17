@@ -27,6 +27,7 @@ import { UpdateStatusGroupPageComponent } from './pages/update-status-group-page
 import { TaskStatusListItemComponent } from './components/task-status-list-item/task-status-list-item.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UpdateUserPageComponent } from './pages/update-user-page/update-user-page.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -61,6 +62,7 @@ const routes: Routes = [
     UpdateStatusGroupPageComponent,
     TaskStatusListItemComponent,
     UpdateUserPageComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

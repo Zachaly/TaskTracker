@@ -4,6 +4,7 @@ import ChangeUserPasswordRequest from 'src/app/model/user/ChangeUserPasswordRequ
 import UpdateUserRequest from 'src/app/model/user/UpdateUserRequest';
 import UserModel from 'src/app/model/user/UserModel';
 import { AuthService } from 'src/app/services/auth.service';
+import { ImageService } from 'src/app/services/image.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -27,9 +28,13 @@ export class UpdateUserPageComponent implements OnInit {
     id: 0
   }
 
-  constructor(private authService: AuthService, private userService: UserService, private router: Router) {
+  newProfilePicture?: File
+
+  constructor(private authService: AuthService, private userService: UserService, private router: Router,
+    private imageService: ImageService) {
     this.user = authService.userData!.userData
   }
+
   ngOnInit(): void {
     this.refreshRequest()
   }
@@ -65,5 +70,32 @@ export class UpdateUserPageComponent implements OnInit {
         this.refreshRequest()
       })
     })
+  }
+
+  onProfilePictureChange(event: Event) {
+    const target = (event.target as HTMLInputElement)
+
+    if(target.files) {
+      this.newProfilePicture = target.files[0]
+    }
+    else {
+      this.newProfilePicture = undefined
+    }
+  }
+
+  confirmProfilePictureUpdate() {
+    this.imageService.updateProfilePicture(this.user.id, this.newProfilePicture).subscribe(() => {
+      alert('Profile picture updated!')
+    })
+  }
+
+  resetProfilePicture() {
+    this.imageService.updateProfilePicture(this.user.id, undefined).subscribe(() => {
+      alert('Profile picture updated!')
+    })
+  }
+
+  getProfilePicture() {
+    return this.imageService.profilePicturePath(this.user.id)
   }
 }

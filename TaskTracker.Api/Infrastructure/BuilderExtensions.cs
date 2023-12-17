@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TaskTracker.Application;
+using TaskTracker.Api.Infrastructure.Command;
 
 namespace TaskTracker.Api.Infrastructure
 {
@@ -38,6 +39,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddMediatR(opt =>
             {
                 opt.RegisterServicesFromAssemblyContaining<LoginCommand>();
+                opt.RegisterServicesFromAssemblyContaining<SaveProfilePictureCommand>();
             });
 
             builder.Services.AddValidatorsFromAssemblyContaining<RegisterCommandValidator>();
@@ -50,6 +52,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<ITaskListFactory, TaskListFactory>();
             builder.Services.AddScoped<IUserTaskStatusFactory, UserTaskStatusFactory>();
             builder.Services.AddScoped<ITaskStatusGroupFactory, TaskStatusGroupFactory>();
+            builder.Services.AddScoped<IFileService, FileService>();
 
             return builder;
         }
