@@ -29,8 +29,12 @@
         <button class="button is-info" (click)="confirmUpdateTitle()">Confirm</button>
     </div>
 </td>
-<td>
-    <p class="has-text-centered">{{ task.creator.firstName }} {{ task.creator.lastName }}</p>
+<td class="is-flex is-vcentered is-justify-content-center">
+    <app-user-profile [id]="task.creator.id" size="32x32"/>
+    <p class="has-text-centered ml-1">
+        
+        {{ task.creator.firstName }} {{ task.creator.lastName }}
+    </p>
 </td>
 <td>
     <p class="has-text-centered"> {{ creationTimestamp() | date: 'dd-MM-yyyy'}} </p>

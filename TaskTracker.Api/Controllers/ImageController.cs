@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskTracker.Api.Infrastructure;
 using TaskTracker.Api.Infrastructure.Command;
@@ -6,6 +7,7 @@ using TaskTracker.Model.Response;
 
 namespace TaskTracker.Api.Controllers
 {
+    [Route("api/image")]
     public class ImageController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,7 +37,7 @@ namespace TaskTracker.Api.Controllers
         /// <response code="400">Invalid request</response>
         [HttpPost("user")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [Authorize]
         public async Task<ActionResult<ResponseModel>> ChangeProfilePictureAsync([FromForm] SaveProfilePictureCommand command)
         {
             var res = await _mediator.Send(command);
