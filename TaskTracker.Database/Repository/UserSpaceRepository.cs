@@ -17,5 +17,27 @@ namespace TaskTracker.Database.Repository
         {
             ModelExpression = UserSpaceExpressions.Model;
         }
+
+        public override Task<IEnumerable<UserSpaceModel>> GetAsync(GetUserSpaceRequest request)
+        {
+            var query = FilterWithRequest(_dbContext.Set<UserSpace>(), request)
+                .Include(s => s.StatusGroup)
+                .ThenInclude(g => g.Statuses)
+                .Include(s => s.Lists)
+                .ThenInclude(l => l.Creator);
+
+            return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
+        }
+
+        public override Task<UserSpaceModel?> GetByIdAsync(long id)
+        {
+            var query = FilterById(_dbContext.Set<UserSpace>(), id)
+                .Include(s => s.StatusGroup)
+                .ThenInclude(g => g.Statuses)
+                .Include(s => s.Lists)
+                .ThenInclude(l => l.Creator);
+
+            return query.Select(ModelExpression).FirstOrDefaultAsync();
+        }
     }
 }
