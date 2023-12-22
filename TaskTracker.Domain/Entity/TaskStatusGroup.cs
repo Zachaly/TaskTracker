@@ -9,5 +9,6 @@
         public string Name { get; set; }
         public ICollection<UserTaskStatus> Statuses { get; set; }
         public ICollection<TaskList> Lists { get; set; }
+        public ICollection<UserSpace> Spaces { get; set; }
     }
 }

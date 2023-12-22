@@ -11,6 +11,7 @@ namespace TaskTracker.Application.Validator
             RuleFor(r => r.Description).MaximumLength(1000);
             RuleFor(r => r.CreatorId).GreaterThan(0);
             RuleFor(r => r.Color).MaximumLength(10);
+            RuleFor(r => r.SpaceId).GreaterThan(0);
         }
     }
 }

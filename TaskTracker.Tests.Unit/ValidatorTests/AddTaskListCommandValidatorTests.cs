@@ -19,6 +19,7 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
             {
                 CreatorId = 1,
                 Title = "Test",
+                SpaceId = 1,
             };
 
             var res = await _validator.ValidateAsync(request);
@@ -32,7 +33,8 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
             var request = new AddTaskListCommand
             {
                 CreatorId = 0,
-                Title = "title"
+                Title = "title",
+                SpaceId = 2
             };
 
             var res = await _validator.ValidateAsync(request);
@@ -48,7 +50,8 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
             var request = new AddTaskListCommand
             {
                 CreatorId = 1,
-                Title = new string('a', length)
+                Title = new string('a', length),
+                SpaceId = 2
             };
 
             var res = await _validator.ValidateAsync(request);
@@ -63,7 +66,8 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
             {
                 CreatorId = 1,
                 Title = "title",
-                Color = new string('a', 11)
+                Color = new string('a', 11),
+                SpaceId = 2
             };
 
             var res = await _validator.ValidateAsync(request);
@@ -78,7 +82,24 @@ namespace TaskTracker.Tests.Unit.ValidatorTests
             {
                 CreatorId = 1,
                 Title = "title",
-                Description = new string('a', 1001)
+                Description = new string('a', 1001),
+                SpaceId = 2
+            };
+
+            var res = await _validator.ValidateAsync(request);
+
+            Assert.False(res.IsValid);
+        }
+
+        [Fact]
+        public async Task InvalidSpaceId_DoesNotPassValidation()
+        {
+            var request = new AddTaskListCommand
+            {
+                CreatorId = 1,
+                Title = "title",
+                Description = "desc",
+                SpaceId = -1
             };
 
             var res = await _validator.ValidateAsync(request);

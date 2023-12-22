@@ -20,9 +20,7 @@ namespace TaskTracker.Api.Infrastructure
         public static WebApplicationBuilder AddDatabase(this WebApplicationBuilder builder)
         {
             builder.Services.AddDbContext<ApplicationDbContext>(opt =>
-            {
-                opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
-            });
+                opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
@@ -30,6 +28,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<ITaskListRepository, TaskListRepository>();
             builder.Services.AddScoped<IUserTaskStatusRepository, UserTaskStatusRepository>();
             builder.Services.AddScoped<ITaskStatusGroupRepository, TaskStatusGroupRepository>();
+            builder.Services.AddScoped<IUserSpaceRepository, UserSpaceRepository>();
 
             return builder;
         }
@@ -52,6 +51,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<ITaskListFactory, TaskListFactory>();
             builder.Services.AddScoped<IUserTaskStatusFactory, UserTaskStatusFactory>();
             builder.Services.AddScoped<ITaskStatusGroupFactory, TaskStatusGroupFactory>();
+            builder.Services.AddScoped<IUserSpaceFactory,  UserSpaceFactory>();
             builder.Services.AddScoped<IFileService, FileService>();
 
             return builder;

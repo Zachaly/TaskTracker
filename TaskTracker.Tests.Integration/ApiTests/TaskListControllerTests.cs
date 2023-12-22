@@ -19,6 +19,11 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
+            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
             var request = new AddTaskListCommand
             {
                 CreatorId = userData.UserData!.Id,
@@ -26,6 +31,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 Color = "#000000",
                 Title = "title",
                 StatusGroupId = group.Id,
+                SpaceId = space.Id
             };
 
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
@@ -73,14 +79,19 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id));
+            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id, space.Id));
             await _dbContext.SaveChangesAsync();
 
             var user = FakeDataFactory.GenerateUsers(1).First();
             _dbContext.Add(user);
             await _dbContext.SaveChangesAsync();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, user.Id, group.Id));
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, user.Id, group.Id, space.Id));
             await _dbContext.SaveChangesAsync();
 
             var response = await _httpClient.GetAsync($"{Endpoint}?CreatorId={userData.UserData.Id}");
@@ -99,7 +110,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id));
+            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id, space.Id));
             await _dbContext.SaveChangesAsync();
 
             var list = _dbContext.TaskLists.OrderBy(x => x.Id).Last();
@@ -135,7 +151,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(2, userData.UserData!.Id, group.Id));
+            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(2, userData.UserData!.Id, group.Id, space.Id));
             await _dbContext.SaveChangesAsync();
 
             var list = _dbContext.TaskLists.AsNoTracking().First();
@@ -180,7 +201,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(1, userData.UserData!.Id, group.Id));
+            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(1, userData.UserData!.Id, group.Id, space.Id));
             await _dbContext.SaveChangesAsync();
 
             var list = _dbContext.TaskLists.First();
@@ -206,7 +232,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var group = _dbContext.TaskStatusGroups.First();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id));
+            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, userData.UserData!.Id, group.Id, space.Id));
             await _dbContext.SaveChangesAsync();
 
             var listIds = _dbContext.TaskLists.Select(x => x.Id).ToList();
