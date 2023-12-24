@@ -7,5 +7,6 @@
         public string? Description { get; set; }
         public string Color { get; set; }
         public long StatusGroupId { get; set; }
+        public long SpaceId { get; set; }
     }
 }

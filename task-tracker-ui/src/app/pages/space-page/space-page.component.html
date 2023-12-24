@@ -1,0 +1,53 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar></app-side-bar>
+    </div>
+    <div class="column is-10">
+        <div class="columns is-centered mt-4">
+            <div class="column is-5">
+                <p *ngIf="!isUpdatingSpace" class="title has-text-centered">
+                    {{ space.title }}
+                </p>
+                <div class="buttons has-text-centered" *ngIf="!isUpdatingSpace">
+                    <button class="button is-info" (click)="isUpdatingSpace = true">Update title</button>
+                    <button class="button is-danger" (click)="deleteSpace()">Delete</button>
+                </div>
+                <form *ngIf="isUpdatingSpace" (ngSubmit)="update()">
+                    <div class="control">
+                        <input type="text" name="title" [(ngModel)]="updateRequest.title" class="input">
+                    </div>
+                    <div class="control">
+                        <button class="button is-info">Confirm</button>
+                        <button type="button" class="button is-warning"
+                            (click)="isUpdatingSpace = false">Cancel</button>
+                    </div>
+                </form>
+                <p class="subtitle">Lists</p>
+                <div>
+                    <app-task-list *ngFor="let list of space.lists" [list]="list" />
+                    <button class="button is-info" [routerLink]="['/list/add', space.id.toString()]">Add new</button>
+                </div>
+            </div>
+            <div class="column is-3">
+                <p class="title">Owner</p>
+                <div class="is-flex">
+                    <app-user-profile [id]="space.owner.id" size="128x128" />
+                    <div class="ml-5 ">
+                        <p class="subtitle">{{ space.owner.firstName }} {{ space.owner.lastName}}</p>
+                        <p class="subtitle">{{space.owner.email}}</p>
+                    </div>
+                </div>
+
+                <a [routerLink]="['/task-status/update', space.statusGroup.id.toString()]" class="title mt-3">Default
+                    status group</a>
+                <p>{{ space.statusGroup.name }}</p>
+                <div>
+                    <div class="is-flex is-align-content-center m-1" *ngFor="let status of space.statusGroup.statuses">
+                        <div class="task-status-icon m-1" [ngStyle]="{ 'background-color': status.color }"></div>
+                        <div class="subtitle m-1">{{ status.name }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

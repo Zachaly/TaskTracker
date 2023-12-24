@@ -28,6 +28,9 @@ import { TaskStatusListItemComponent } from './components/task-status-list-item/
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UpdateUserPageComponent } from './pages/update-user-page/update-user-page.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { AddSpacePageComponent } from './pages/add-space-page/add-space-page.component';
+import { SpacePageComponent } from './pages/space-page/space-page.component';
+import { SideBarSpaceLinkComponent } from './components/side-bar-space-link/side-bar-space-link.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -35,11 +38,13 @@ const routes: Routes = [
   route('register', RegisterPageComponent),
   route('login', LoginPageComponent),
   route('', MainPageComponent, [RouteGuard]),
-  route('list/add', AddListPageComponent, [RouteGuard]),
+  route('list/add/:spaceId', AddListPageComponent, [RouteGuard]),
   route('list/:id', TaskListPageComponent, [RouteGuard]),
   route('task-status', TaskStatusPageComponent, [RouteGuard]),
   route('task-status/update/:groupId', UpdateStatusGroupPageComponent, [RouteGuard]),
-  route('profile/update', UpdateUserPageComponent, [RouteGuard])
+  route('profile/update', UpdateUserPageComponent, [RouteGuard]),
+  route('space/add', AddSpacePageComponent, [RouteGuard]),
+  route('space/:id', SpacePageComponent, [RouteGuard])
 ]
 
 @NgModule({
@@ -63,6 +68,9 @@ const routes: Routes = [
     TaskStatusListItemComponent,
     UpdateUserPageComponent,
     UserProfileComponent,
+    AddSpacePageComponent,
+    SpacePageComponent,
+    SideBarSpaceLinkComponent,
   ],
   imports: [
     BrowserModule,

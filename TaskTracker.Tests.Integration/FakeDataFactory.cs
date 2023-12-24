@@ -23,13 +23,14 @@ namespace TaskTracker.Tests.Integration
                 .RuleFor(t => t.StatusId, _ => statusId)
                 .Generate(count);
 
-        public static List<TaskList> GenerateTaskLists(int count, long userId, long groupId)
+        public static List<TaskList> GenerateTaskLists(int count, long userId, long groupId, long spaceId)
             => new Faker<TaskList>()
                 .RuleFor(l => l.Color, f => f.Random.AlphaNumeric(5))
                 .RuleFor(l => l.Title, f => f.Random.AlphaNumeric(50))
                 .RuleFor(l => l.Description, f => f.Random.AlphaNumeric(100))
                 .RuleFor(l => l.CreatorId, _ => userId)
                 .RuleFor(l => l.TaskStatusGroupId, _ => groupId)
+                .RuleFor(l => l.SpaceId, _ => spaceId)
                 .Generate(count);
 
         public static List<UserTaskStatus> GenerateTaskStatuses(int count, long groupId)
@@ -46,6 +47,13 @@ namespace TaskTracker.Tests.Integration
                 .RuleFor(g => g.Name, f => f.Random.AlphaNumeric(50))
                 .RuleFor(g => g.UserId, _ => userId)
                 .RuleFor(g => g.IsDefault, _ => false)
+                .Generate(count);
+
+        public static List<UserSpace> GenerateUserSpaces(int count, long userId, long statusGroupId)
+            => new Faker<UserSpace>()
+                .RuleFor(s => s.Title, f => f.Random.AlphaNumeric(20))
+                .RuleFor(s => s.OwnerId, _ => userId)
+                .RuleFor(s => s.StatusGroupId, _ => statusGroupId)
                 .Generate(count);
     }
 }

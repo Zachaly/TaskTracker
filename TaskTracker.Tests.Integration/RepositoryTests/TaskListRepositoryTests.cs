@@ -28,7 +28,12 @@ namespace TaskTracker.Tests.Integration.RepositoryTests
             _dbContext.TaskStatusGroups.Add(group);
             _dbContext.SaveChanges();
 
-            _dbContext.TaskLists.AddRange(userIds.SelectMany(id => FakeDataFactory.GenerateTaskLists(5, id, group.Id)));
+            var space = FakeDataFactory.GenerateUserSpaces(1, userIds.First(), group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(userIds.SelectMany(id => FakeDataFactory.GenerateTaskLists(5, id, group.Id, space.Id)));
             _dbContext.SaveChanges();
 
             var userId = _dbContext.Users.First().Id;
@@ -57,7 +62,12 @@ namespace TaskTracker.Tests.Integration.RepositoryTests
             _dbContext.TaskStatusGroups.Add(group);
             _dbContext.SaveChanges();
 
-            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, user.Id, group.Id));
+            var space = FakeDataFactory.GenerateUserSpaces(1, user.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            _dbContext.TaskLists.AddRange(FakeDataFactory.GenerateTaskLists(5, user.Id, group.Id, space.Id));
             _dbContext.SaveChanges();
 
             var updatedList = _dbContext.TaskLists.AsEnumerable().First();
@@ -89,7 +99,12 @@ namespace TaskTracker.Tests.Integration.RepositoryTests
             _dbContext.UserTaskStatuses.Add(status);
             _dbContext.SaveChanges();
 
-            var lists = FakeDataFactory.GenerateTaskLists(2, user.Id, group.Id);
+            var space = FakeDataFactory.GenerateUserSpaces(1, user.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            var lists = FakeDataFactory.GenerateTaskLists(2, user.Id, group.Id, space.Id);
 
             _dbContext.TaskLists.AddRange(lists);
 

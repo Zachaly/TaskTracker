@@ -9,5 +9,6 @@ namespace TaskTracker.Model.TaskList.Request
         public bool? JoinTasks { get; set; }
         [Join]
         public bool? JoinStatusGroup { get; set; }
+        public long? SpaceId { get; set; }
     }
 }

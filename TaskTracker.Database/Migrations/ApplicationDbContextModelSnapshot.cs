@@ -71,6 +71,9 @@ namespace TaskTracker.Database.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<long>("SpaceId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("TaskStatusGroupId")
                         .HasColumnType("bigint");
 
@@ -82,6 +85,8 @@ namespace TaskTracker.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
+
+                    b.HasIndex("SpaceId");
 
                     b.HasIndex("TaskStatusGroupId");
 
@@ -147,6 +152,34 @@ namespace TaskTracker.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TaskTracker.Domain.Entity.UserSpace", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StatusGroupId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("StatusGroupId");
+
+                    b.ToTable("UserSpaces");
                 });
 
             modelBuilder.Entity("TaskTracker.Domain.Entity.UserTask", b =>
@@ -249,6 +282,12 @@ namespace TaskTracker.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TaskTracker.Domain.Entity.UserSpace", "Space")
+                        .WithMany("Lists")
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
                     b.HasOne("TaskTracker.Domain.Entity.TaskStatusGroup", "TaskStatusGroup")
                         .WithMany("Lists")
                         .HasForeignKey("TaskStatusGroupId")
@@ -256,6 +295,8 @@ namespace TaskTracker.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Creator");
+
+                    b.Navigation("Space");
 
                     b.Navigation("TaskStatusGroup");
                 });
@@ -267,6 +308,25 @@ namespace TaskTracker.Database.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskTracker.Domain.Entity.UserSpace", b =>
+                {
+                    b.HasOne("TaskTracker.Domain.Entity.User", "Owner")
+                        .WithMany("Spaces")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskTracker.Domain.Entity.TaskStatusGroup", "StatusGroup")
+                        .WithMany("Spaces")
+                        .HasForeignKey("StatusGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("StatusGroup");
                 });
 
             modelBuilder.Entity("TaskTracker.Domain.Entity.UserTask", b =>
@@ -316,6 +376,8 @@ namespace TaskTracker.Database.Migrations
                 {
                     b.Navigation("Lists");
 
+                    b.Navigation("Spaces");
+
                     b.Navigation("Statuses");
                 });
 
@@ -325,9 +387,16 @@ namespace TaskTracker.Database.Migrations
 
                     b.Navigation("RefreshTokens");
 
+                    b.Navigation("Spaces");
+
                     b.Navigation("StatusGroups");
 
                     b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("TaskTracker.Domain.Entity.UserSpace", b =>
+                {
+                    b.Navigation("Lists");
                 });
 
             modelBuilder.Entity("TaskTracker.Domain.Entity.UserTaskStatus", b =>

@@ -1,0 +1,12 @@
+<li>
+    <span class="is-flex is-align-items-center">
+        <a style="width: 100%;" [routerLink]="['/space', space.id.toString()]">{{ space.title }}</a>
+        <span class="icon" (click)="toggleIsExpanded()">
+            <fa-icon [icon]="currentIcon"></fa-icon>
+        </span>
+    </span>
+    <ul *ngIf="isExpanded">
+        <app-side-bar-list-link *ngFor="let list of space.lists" [list]="list"/>
+        <li><a [routerLink]="['/list/add', space.id.toString()]">Add new</a></li>
+    </ul>
+</li>

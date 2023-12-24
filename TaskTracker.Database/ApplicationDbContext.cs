@@ -11,6 +11,7 @@ namespace TaskTracker.Database
         public DbSet<TaskList> TaskLists { get; set; }
         public DbSet<TaskStatusGroup> TaskStatusGroups { get; set; }
         public DbSet<UserTaskStatus> UserTaskStatuses { get; set; }
+        public DbSet<UserSpace> UserSpaces { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -97,6 +98,25 @@ namespace TaskTracker.Database
                 .HasOne(l => l.TaskStatusGroup)
                 .WithMany(g => g.Lists)
                 .HasForeignKey(l => l.TaskStatusGroupId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Spaces)
+                .WithOne(s => s.Owner)
+                .HasForeignKey(s => s.OwnerId);
+
+            modelBuilder.Entity<UserSpace>()
+                .HasMany(s => s.Lists)
+                .WithOne(l => l.Space)
+                .HasForeignKey(l => l.SpaceId)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder.Entity<UserSpace>()
+                .Property(s => s.Title).HasMaxLength(100);
+
+            modelBuilder.Entity<TaskStatusGroup>()
+                .HasMany(g => g.Spaces)
+                .WithOne(s => s.StatusGroup)
+                .HasForeignKey(s => s.StatusGroupId);
         }
     }
 }

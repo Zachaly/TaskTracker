@@ -27,7 +27,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var status = FakeDataFactory.GenerateTaskStatuses(1, statusGroup.Id).First();
             _dbContext.Set<UserTaskStatus>().Add(status);
 
-            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), statusGroup.Id).First();
+            var space = FakeDataFactory.GenerateUserSpaces(1, userIds.First(), statusGroup.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), statusGroup.Id, space.Id).First();
             _dbContext.Set<TaskList>().Add(list);
             _dbContext.SaveChanges();
 
@@ -55,7 +60,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var status = _dbContext.UserTaskStatuses.First();
             var group = _dbContext.TaskStatusGroups.First();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id).First();
+            var space = FakeDataFactory.GenerateUserSpaces(1, loginData.UserData.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id, space.Id).First();
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
 
@@ -109,7 +119,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var status = _dbContext.UserTaskStatuses.First();
             var group = _dbContext.TaskStatusGroups.First();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id).First();
+            var space = FakeDataFactory.GenerateUserSpaces(1, loginData.UserData.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id, space.Id).First();
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
 
@@ -164,7 +179,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
             var status = _dbContext.UserTaskStatuses.First();
             var group = _dbContext.TaskStatusGroups.First();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id).First();
+            var space = FakeDataFactory.GenerateUserSpaces(1, loginData.UserData.Id, group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id, space.Id).First();
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
 
@@ -209,7 +229,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
             _dbContext.UserTaskStatuses.Add(status);
             _dbContext.SaveChanges();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id).First();
+            var space = FakeDataFactory.GenerateUserSpaces(1, userIds.First(), group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id, space.Id).First();
 
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
@@ -260,7 +285,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
             _dbContext.UserTaskStatuses.Add(status);
             _dbContext.SaveChanges();
 
-            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id).First();
+            var space = FakeDataFactory.GenerateUserSpaces(1, userIds.First(), group.Id).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id, space.Id).First();
 
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import TaskListModel from 'src/app/model/task-list/TaskListModel';
+import UserSpaceModel from 'src/app/model/user-space/UserSpaceModel';
 import { AuthService } from 'src/app/services/auth.service';
-import { TaskListService } from 'src/app/services/task-list.service';
+import { UserSpaceService } from 'src/app/services/user-space.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -11,14 +11,14 @@ import { TaskListService } from 'src/app/services/task-list.service';
 })
 export class SideBarComponent implements OnInit {
 
-  lists: TaskListModel[] = []
+  spaces: UserSpaceModel[] = []
 
-  constructor(private authService: AuthService, private router: Router, private taskListService: TaskListService) {
+  constructor(private authService: AuthService, private router: Router, private spaceService: UserSpaceService) {
 
   }
 
   ngOnInit(): void {
-    this.taskListService.get({ creatorId: this.authService.userData?.userData.id }).subscribe(res => this.lists = res)
+    this.spaceService.get({ ownerId: this.authService.userData?.userData.id }).subscribe(res => this.spaces = res)
   }
 
   public async logout() {
