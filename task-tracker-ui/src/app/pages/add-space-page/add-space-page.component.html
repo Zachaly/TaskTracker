@@ -1,0 +1,29 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar>
+
+        </app-side-bar>
+    </div>
+
+    <div class="column is-10">
+        <div class="columns is-centered">
+            <form class="column is-6 mt-4" (ngSubmit)="addSpace()">
+                <div class="control">
+                    <label for="title" class="label">Title</label>
+                    <input name="title" type="text" class="input" [(ngModel)]="addRequest.title">
+                </div>
+                <div class="control">
+                    <label for="statusGroupId" class="label">Status group</label>
+                    <div class="select">
+                        <select name="statusGroupId"  [(ngModel)]="addRequest.statusGroupId">
+                            <option *ngFor="let group of statusGroups" [value]="group.id">{{ group.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-info">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

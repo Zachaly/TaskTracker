@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using TaskTracker.Database.Exception;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Expressions;
 using TaskTracker.Model.UserSpace;
@@ -38,6 +40,23 @@ namespace TaskTracker.Database.Repository
                 .ThenInclude(l => l.Creator);
 
             return query.Select(ModelExpression).FirstOrDefaultAsync();
+        }
+
+        public override async Task DeleteByIdAsync(long id)
+        {
+            var space = await _dbContext.Set<UserSpace>()
+                .Include(s => s.Lists)
+                .ThenInclude(s => s.Tasks)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if(space is null)
+            {
+                throw new EntityNotFoundException(nameof(UserSpace));
+            }
+
+            _dbContext.Set<UserSpace>().Remove(space);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

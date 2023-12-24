@@ -6,11 +6,11 @@
         <app-side-bar-link name="Main" link="/" [isActive]="isCurrentRoute('/')"/>
     </ul>
     <p class="menu-label">
-        Lists
+        Spaces
     </p>
     <ul class="menu-list">
-        <app-side-bar-link name="Add new" link="/list/add" [isActive]="isCurrentRoute('/list/add')"/>
-        <app-side-bar-list-link *ngFor="let list of lists" [list]="list"/>
+        <app-side-bar-link name="Add new" link="/space/add" [isActive]="isCurrentRoute('/space/add')"/>
+        <app-side-bar-space-link *ngFor="let space of spaces" [space]="space"/>
     </ul>
     <p class="menu-label">
         Account

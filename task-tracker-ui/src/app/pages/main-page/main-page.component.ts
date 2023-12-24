@@ -6,6 +6,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { TaskListService } from 'src/app/services/task-list.service';
 import { TaskStatusGroupService } from 'src/app/services/task-status-group.service';
 import { UserTaskService } from 'src/app/services/user-task.service';
+import UserSpaceModel from 'src/app/model/user-space/UserSpaceModel';
+import { UserSpaceService } from 'src/app/services/user-space.service';
 
 @Component({
   selector: 'app-main-page',
@@ -16,9 +18,10 @@ export class MainPageComponent implements OnInit {
 
   public userData: UserModel
   public lists: TaskListModel[] = []
+  public spaces: UserSpaceModel[] = []
 
   constructor(private authService: AuthService, private taskService: UserTaskService, private taskListService: TaskListService,
-    private taskStatusGroupService: TaskStatusGroupService) {
+    private taskStatusGroupService: TaskStatusGroupService, private spaceService: UserSpaceService) {
     this.userData = authService.userData!.userData!
   }
 
@@ -27,6 +30,8 @@ export class MainPageComponent implements OnInit {
       .subscribe(res => {
         this.lists = res
       })
+
+    this.spaceService.get({ ownerId: this.userData.id }).subscribe(res => this.spaces = res)
   }
 
   public loadListTasks(list: TaskListModel) {

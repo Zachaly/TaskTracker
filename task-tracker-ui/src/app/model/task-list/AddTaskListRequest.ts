@@ -3,5 +3,6 @@ export default interface AddTaskListRequest {
     color?: string
     description?: string,
     title: string,
-    statusGroupId: number
+    statusGroupId: number,
+    spaceId: number
 }

@@ -6,6 +6,14 @@
         <div class="columns is-centered">
             <div class="column is-10">
                 <p class="title has-text-centered">Hello {{ userData.firstName }} {{ userData.lastName }}</p>
+
+                <p class="title has-text-centered">Your spaces</p>
+                <div>
+                    <div *ngFor="let space of spaces">
+                        <a class="title" [routerLink]="['space', space.id.toString()]">{{ space.title }}</a>
+                    </div>
+                </div>
+
                 <p class="title has-text-centered">Your lists</p>
                 <app-task-list *ngFor="let list of lists" [list]="list" (updateTask)="updateTask($event, list)"
                     (taskAdded)="loadListTasks(list)" (deleteTask)="deleteTask($event, list)"
