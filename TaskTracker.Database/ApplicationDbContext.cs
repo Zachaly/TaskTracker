@@ -123,17 +123,20 @@ namespace TaskTracker.Database
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Documents)
                 .WithOne(d => d.Creator)
-                .HasForeignKey(d => d.CreatorId);
+                .HasForeignKey(d => d.CreatorId)
+                .OnDelete(DeleteBehavior.ClientCascade);
 
             modelBuilder.Entity<UserSpace>()
                 .HasMany(s => s.Documents)
                 .WithOne(d => d.Space)
-                .HasForeignKey(d => d.SpaceId);
+                .HasForeignKey(d => d.SpaceId)
+                .OnDelete(DeleteBehavior.ClientCascade);
 
             modelBuilder.Entity<TaskTrackerDocument>()
                 .HasMany(d => d.Pages)
                 .WithOne(p => p.Document)
-                .HasForeignKey(p => p.DocumentId);
+                .HasForeignKey(p => p.DocumentId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

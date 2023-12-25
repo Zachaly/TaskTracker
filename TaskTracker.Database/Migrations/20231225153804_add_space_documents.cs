@@ -28,14 +28,12 @@ namespace TaskTracker.Database.Migrations
                         name: "FK_Documents_UserSpaces_SpaceId",
                         column: x => x.SpaceId,
                         principalTable: "UserSpaces",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Documents_Users_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -56,8 +54,7 @@ namespace TaskTracker.Database.Migrations
                         name: "FK_DocumentPages_Documents_DocumentId",
                         column: x => x.DocumentId,
                         principalTable: "Documents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,4 +1,5 @@
 ﻿using TaskTracker.Domain.Entity;
+using TaskTracker.Expressions;
 using TaskTracker.Model.DocumentPage;
 using TaskTracker.Model.DocumentPage.Request;
 
@@ -14,6 +15,7 @@ namespace TaskTracker.Database.Repository
     {
         public DocumentPageRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+            ModelExpression = DocumentPageExpressions.Model;
         }
     }
 }

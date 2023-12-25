@@ -55,5 +55,21 @@ namespace TaskTracker.Tests.Integration
                 .RuleFor(s => s.OwnerId, _ => userId)
                 .RuleFor(s => s.StatusGroupId, _ => statusGroupId)
                 .Generate(count);
+
+        public static List<TaskTrackerDocument> GenerateDocuments(int count, long spaceId, long creatorId)
+            => new Faker<TaskTrackerDocument>()
+                .RuleFor(d => d.Title, f => f.Random.AlphaNumeric(20))
+                .RuleFor(d => d.CreationTimestamp, f => f.Random.Long(0, 20000))
+                .RuleFor(d => d.CreatorId, _ => creatorId)
+                .RuleFor(d => d.SpaceId, _ => spaceId)
+                .Generate(count);
+
+        public static List<TaskTrackerDocumentPage> GenerateDocumentPages(int count, long documentId)
+            => new Faker<TaskTrackerDocumentPage>()
+                .RuleFor(p => p.DocumentId, _ => documentId)
+                .RuleFor(p => p.Title, f => f.Random.AlphaNumeric(20))
+                .RuleFor(p=> p.Content, f => f.Random.AlphaNumeric(100))
+                .RuleFor(p => p.LastModifiedTimestamp, f => f.Random.Long(0, 20000))
+                .Generate(count);
     }
 }

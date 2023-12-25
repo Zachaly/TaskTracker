@@ -373,13 +373,13 @@ namespace TaskTracker.Database.Migrations
                     b.HasOne("TaskTracker.Domain.Entity.User", "Creator")
                         .WithMany("Documents")
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("TaskTracker.Domain.Entity.UserSpace", "Space")
                         .WithMany("Documents")
                         .HasForeignKey("SpaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -392,7 +392,7 @@ namespace TaskTracker.Database.Migrations
                     b.HasOne("TaskTracker.Domain.Entity.TaskTrackerDocument", "Document")
                         .WithMany("Pages")
                         .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Document");

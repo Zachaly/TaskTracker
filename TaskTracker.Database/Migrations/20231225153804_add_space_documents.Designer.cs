@@ -12,7 +12,7 @@ using TaskTracker.Database;
 namespace TaskTracker.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231225142813_add_space_documents")]
+    [Migration("20231225153804_add_space_documents")]
     partial class add_space_documents
     {
         /// <inheritdoc />
@@ -376,13 +376,13 @@ namespace TaskTracker.Database.Migrations
                     b.HasOne("TaskTracker.Domain.Entity.User", "Creator")
                         .WithMany("Documents")
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("TaskTracker.Domain.Entity.UserSpace", "Space")
                         .WithMany("Documents")
                         .HasForeignKey("SpaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Creator");
@@ -395,7 +395,7 @@ namespace TaskTracker.Database.Migrations
                     b.HasOne("TaskTracker.Domain.Entity.TaskTrackerDocument", "Document")
                         .WithMany("Pages")
                         .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Document");
