@@ -1,11 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaskTracker.Application.DocumentPage.Command;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
