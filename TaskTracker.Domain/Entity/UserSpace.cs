@@ -9,5 +9,6 @@
         public long StatusGroupId { get; set; }
         public TaskStatusGroup StatusGroup { get; set; }
         public ICollection<TaskList> Lists { get; set; }
+        public ICollection<TaskTrackerDocument> Documents { get; set; }
     }
 }
