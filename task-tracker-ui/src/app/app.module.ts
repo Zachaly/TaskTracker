@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router'
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 
 import { AppComponent } from './app.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
@@ -31,6 +32,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { AddSpacePageComponent } from './pages/add-space-page/add-space-page.component';
 import { SpacePageComponent } from './pages/space-page/space-page.component';
 import { SideBarSpaceLinkComponent } from './components/side-bar-space-link/side-bar-space-link.component';
+import { DocumentPageComponent } from './pages/document-page/document-page.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -44,7 +46,8 @@ const routes: Routes = [
   route('task-status/update/:groupId', UpdateStatusGroupPageComponent, [RouteGuard]),
   route('profile/update', UpdateUserPageComponent, [RouteGuard]),
   route('space/add', AddSpacePageComponent, [RouteGuard]),
-  route('space/:id', SpacePageComponent, [RouteGuard])
+  route('space/:id', SpacePageComponent, [RouteGuard]),
+  route('doc/:id', DocumentPageComponent, [RouteGuard])
 ]
 
 @NgModule({
@@ -71,13 +74,15 @@ const routes: Routes = [
     AddSpacePageComponent,
     SpacePageComponent,
     SideBarSpaceLinkComponent,
+    DocumentPageComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    FontAwesomeModule
+    FontAwesomeModule,
+    QuillModule.forRoot()
   ],
   providers: [RouteGuard, AuthService, UserService, tokenInterceptor],
   bootstrap: [AppComponent]

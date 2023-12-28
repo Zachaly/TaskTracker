@@ -1,0 +1,46 @@
+<div class="columns">
+    <div class="column is-2">
+        <app-side-bar></app-side-bar>
+    </div>
+    <div class="column is-8 mt-2">
+        <p class="title has-text-centered" *ngIf="!isUpdatingDocumentTitle" (click)="isUpdatingDocumentTitle = true">{{ document.title }}</p>
+        <div class="control" *ngIf="isUpdatingDocumentTitle">
+            <input type="text" name="docTitle" [(ngModel)]="updateDocumentRequest.title" class="input">
+            <button class="button is-info" (click)="updateDocumentTitle()">Confirm</button>
+            <button class="button is-warning" (click)="isUpdatingDocumentTitle = false">Cancel</button>
+        </div>
+        <p class="subtitle has-text-centered">Created {{ getDate(document.creationTimestamp) | date: 'dd-MM-yyyy'}}</p>
+
+        <p *ngIf="!isUpdatingPageTitle" class="title has-text-centered mt-3" (click)="isUpdatingPageTitle = true">
+            {{ currentPage.title ?? 'Untitled' }}
+        </p>
+        <div class="control"  *ngIf="isUpdatingPageTitle">
+            <input type="text" name="title" [(ngModel)]="updatePageRequest.title" class="input">
+            <button class="button is-info" (click)="updatePageTitle()">Confirm</button>
+            <button class="button is-warning" (click)="isUpdatingPageTitle = false">Cancel</button>
+        </div>
+        <p class="subtitle has-text-centered">
+            Last modified {{ getDate(currentPage.lastModifiedTimestamp) | date: 'dd-MM-yyyy HH:mm' }}
+        </p>
+        <div>
+            <quill-editor [(ngModel)]="updatePageRequest.content"></quill-editor>
+        </div>
+        <button class="button is-success" (click)="updatePage()">Confirm changes</button>
+    </div>
+    <div class="column is-2 mt-2 mr-1">
+        <p class="title has-text-centered">Pages</p>
+        <div class="card" *ngFor="let page of document.pages">
+            <div class="card-header">
+                <p class="card-header-title" [ngClass]="{ 'has-text-success': page == currentPage}" (click)="changePage(page)">
+                    {{ page.title ?? 'Untitled'}}
+                </p>
+                <p class="card-header-icon" >
+                    {{ getDate(page.lastModifiedTimestamp) | date: 'dd-MM-yyyy HH:mm'}}
+                    <button class="delete" (click)="deletePage(page)"></button>
+                </p>
+                
+            </div>
+        </div>
+        <button (click)="addPage()" class="button is-info">Add new</button>
+    </div>
+</div>

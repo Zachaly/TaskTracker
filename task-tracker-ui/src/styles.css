@@ -1,5 +1,8 @@
 @import url('../node_modules/bulma/css/bulma.css');
 @import url('../node_modules/bulmaswatch/darkly/bulmaswatch.min.css');
+@import '~quill/dist/quill.snow.css';
+@import url('https://github.com/patel146/QuillDarkMode/blob/master/src/quill.smoke.css');
+
 
 .task-status-icon {
     width: 2rem;
