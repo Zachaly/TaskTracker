@@ -16,7 +16,6 @@ export class TokenRefreshInterceptor implements HttpInterceptor {
                 'Authorization': `Bearer ${this.tokenService.getAccessToken()}`
             }
         })
-        
         return next.handle(req).pipe(tap({
             error: async (err: HttpErrorResponse) => {
                 if (err.status == 401 && !this.authService.isRefreshingToken) {

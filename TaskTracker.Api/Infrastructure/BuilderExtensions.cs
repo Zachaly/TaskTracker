@@ -29,6 +29,8 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<IUserTaskStatusRepository, UserTaskStatusRepository>();
             builder.Services.AddScoped<ITaskStatusGroupRepository, TaskStatusGroupRepository>();
             builder.Services.AddScoped<IUserSpaceRepository, UserSpaceRepository>();
+            builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+            builder.Services.AddScoped<IDocumentPageRepository, DocumentPageRepository>();
 
             return builder;
         }
@@ -52,6 +54,8 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<IUserTaskStatusFactory, UserTaskStatusFactory>();
             builder.Services.AddScoped<ITaskStatusGroupFactory, TaskStatusGroupFactory>();
             builder.Services.AddScoped<IUserSpaceFactory,  UserSpaceFactory>();
+            builder.Services.AddScoped<IDocumentFactory,  DocumentFactory>();
+            builder.Services.AddScoped<IDocumentPageFactory, DocumentPageFactory>();
             builder.Services.AddScoped<IFileService, FileService>();
 
             return builder;

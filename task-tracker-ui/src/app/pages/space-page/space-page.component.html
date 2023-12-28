@@ -27,6 +27,27 @@
                     <app-task-list *ngFor="let list of space.lists" [list]="list" />
                     <button class="button is-info" [routerLink]="['/list/add', space.id.toString()]">Add new</button>
                 </div>
+
+                <p class="subtitle mt-1">Space documents</p>
+                <div>
+                    <div class="card m-1" *ngFor="let doc of documents">
+                        <div class="card-header">
+                            <p class="card-header-title">
+                                <a [routerLink]="['/doc', doc.id.toString()]">{{ doc.title }}</a>
+                            </p>
+                            <p class="card-header-icon">
+                                {{ doc.creator.firstName }} {{ doc.creator.lastName }}
+                                <button class="delete" (click)="deleteDocument(doc.id)"></button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <form (ngSubmit)="addDocument()">
+                    <div class="control">
+                        <input type="text" name="docTitle" class="input" [(ngModel)]="newDocumentTitle">
+                        <button class="button is-info">Add new doc</button>
+                    </div>
+                </form>
             </div>
             <div class="column is-3">
                 <p class="title">Owner</p>

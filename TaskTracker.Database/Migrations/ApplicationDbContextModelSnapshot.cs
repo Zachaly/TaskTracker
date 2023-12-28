@@ -119,6 +119,64 @@ namespace TaskTracker.Database.Migrations
                     b.ToTable("TaskStatusGroups");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskTrackerDocument", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CreationTimestamp")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("CreatorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("SpaceId");
+
+                    b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskTrackerDocumentPage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("DocumentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LastModifiedTimestamp")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
+
+                    b.ToTable("DocumentPages");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.User", b =>
                 {
                     b.Property<long>("Id")
@@ -310,6 +368,36 @@ namespace TaskTracker.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskTrackerDocument", b =>
+                {
+                    b.HasOne("TaskTracker.Domain.Entity.User", "Creator")
+                        .WithMany("Documents")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskTracker.Domain.Entity.UserSpace", "Space")
+                        .WithMany("Documents")
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Space");
+                });
+
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskTrackerDocumentPage", b =>
+                {
+                    b.HasOne("TaskTracker.Domain.Entity.TaskTrackerDocument", "Document")
+                        .WithMany("Pages")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Document");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.UserSpace", b =>
                 {
                     b.HasOne("TaskTracker.Domain.Entity.User", "Owner")
@@ -381,8 +469,15 @@ namespace TaskTracker.Database.Migrations
                     b.Navigation("Statuses");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.TaskTrackerDocument", b =>
+                {
+                    b.Navigation("Pages");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.User", b =>
                 {
+                    b.Navigation("Documents");
+
                     b.Navigation("Lists");
 
                     b.Navigation("RefreshTokens");
@@ -396,6 +491,8 @@ namespace TaskTracker.Database.Migrations
 
             modelBuilder.Entity("TaskTracker.Domain.Entity.UserSpace", b =>
                 {
+                    b.Navigation("Documents");
+
                     b.Navigation("Lists");
                 });
 

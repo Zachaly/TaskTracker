@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import AddDocumentRequest from 'src/app/model/document/AddDocumentRequest';
+import DocumentModel from 'src/app/model/document/DocumentModel';
 import UserSpaceModel from 'src/app/model/user-space/UserSpaceModel';
 import UpdateUserSpaceRequest from 'src/app/model/user-space/request/UpdateUserSpaceRequest';
+import { AuthService } from 'src/app/services/auth.service';
+import { DocumentService } from 'src/app/services/document.service';
 import { UserSpaceService } from 'src/app/services/user-space.service';
 
 @Component({
@@ -36,11 +40,16 @@ export class SpacePageComponent implements OnInit {
     title: ''
   }
 
+  documents: DocumentModel[] = []
+
   isUpdatingSpace = false
 
-  constructor(private spaceService: UserSpaceService, private route: ActivatedRoute, private router: Router) {
+  newDocumentTitle = ''
 
-  } 
+  constructor(private spaceService: UserSpaceService, private route: ActivatedRoute, private router: Router,
+    private documentService: DocumentService, private authService: AuthService) {
+
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(param => {
@@ -55,6 +64,7 @@ export class SpacePageComponent implements OnInit {
       this.updateRequest.id = res.id
       this.updateRequest.title = res.title
     })
+    this.documentService.get({ spaceId: this.spaceId }).subscribe(res => this.documents = res)
   }
 
   update() {
@@ -68,5 +78,22 @@ export class SpacePageComponent implements OnInit {
     this.spaceService.deleteById(this.spaceId).subscribe(() => {
       this.router.navigate(['/'])
     })
+  }
+
+  addDocument() {
+    const request: AddDocumentRequest = {
+      title: this.newDocumentTitle,
+      creatorId: this.authService.userData!.userData!.id,
+      spaceId: this.spaceId
+    }
+    this.documentService.add(request).subscribe(res => {
+      this.newDocumentTitle = ''
+
+      this.documentService.getById(res.newEntityId!).subscribe(doc => this.documents.push(doc))
+    })
+  }
+
+  deleteDocument(id: number) {
+    this.documentService.deleteById(id).subscribe(() => this.documents = this.documents.filter(x => x.id != id))
   }
 }

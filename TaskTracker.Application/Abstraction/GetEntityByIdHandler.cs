@@ -11,7 +11,7 @@ namespace TaskTracker.Application.Abstraction
         public long Id { get; set; }
     }
 
-    public class GetEntityByIdHandler<TEntity, TModel, TQuery> : IRequestHandler<TQuery, TModel?>
+    public abstract class GetEntityByIdHandler<TEntity, TModel, TQuery> : IRequestHandler<TQuery, TModel?>
         where TEntity : class, IEntity
         where TModel : IModel
         where TQuery : GetEntityByIdQuery<TModel>

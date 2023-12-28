@@ -12,6 +12,8 @@ namespace TaskTracker.Database
         public DbSet<TaskStatusGroup> TaskStatusGroups { get; set; }
         public DbSet<UserTaskStatus> UserTaskStatuses { get; set; }
         public DbSet<UserSpace> UserSpaces { get; set; }
+        public DbSet<TaskTrackerDocument> Documents { get; set; }
+        public DbSet<TaskTrackerDocumentPage> DocumentPages { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -117,6 +119,24 @@ namespace TaskTracker.Database
                 .HasMany(g => g.Spaces)
                 .WithOne(s => s.StatusGroup)
                 .HasForeignKey(s => s.StatusGroupId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Documents)
+                .WithOne(d => d.Creator)
+                .HasForeignKey(d => d.CreatorId)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder.Entity<UserSpace>()
+                .HasMany(s => s.Documents)
+                .WithOne(d => d.Space)
+                .HasForeignKey(d => d.SpaceId)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder.Entity<TaskTrackerDocument>()
+                .HasMany(d => d.Pages)
+                .WithOne(p => p.Document)
+                .HasForeignKey(p => p.DocumentId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }
