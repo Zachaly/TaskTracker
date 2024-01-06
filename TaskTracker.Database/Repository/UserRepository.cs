@@ -2,15 +2,16 @@
 using TaskTracker.Domain.Entity;
 using TaskTracker.Expressions;
 using TaskTracker.Model.User;
+using TaskTracker.Model.User.Request;
 
 namespace TaskTracker.Database.Repository
 {
-    public interface IUserRepository : IRepositoryBase<User, UserModel>
+    public interface IUserRepository : IRepositoryBase<User, UserModel, GetUserRequest>
     {
         Task<User> GetByEmailAsync(string email);
     }
 
-    public class UserRepository : RepositoryBase<User, UserModel>, IUserRepository
+    public class UserRepository : RepositoryBase<User, UserModel, GetUserRequest>, IUserRepository
     {
         public UserRepository(ApplicationDbContext dbContext) : base(dbContext)
         {

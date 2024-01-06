@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using TaskTracker.Database.Exception;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Expressions;
@@ -49,6 +48,7 @@ namespace TaskTracker.Database.Repository
             var space = await _dbContext.Set<UserSpace>()
                 .Include(s => s.Lists)
                 .ThenInclude(s => s.Tasks)
+                .Include(s => s.Users)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if(space is null)
