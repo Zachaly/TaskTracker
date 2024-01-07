@@ -11,7 +11,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class UpdateUserHandler : UpdateEntityHandler<User, UserModel, UpdateUserCommand>
+    public class UpdateUserHandler : UpdateEntityHandler<User, UserModel, GetUserRequest, UpdateUserCommand>
     {
         public UpdateUserHandler(IUserRepository userRepository, IValidator<UpdateUserCommand> validator) 
             : base(userRepository, validator)

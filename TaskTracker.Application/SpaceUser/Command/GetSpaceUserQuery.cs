@@ -1,26 +1,17 @@
-﻿using MediatR;
+﻿using TaskTracker.Application.Abstraction;
 using TaskTracker.Database.Repository;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.SpaceUser;
 using TaskTracker.Model.SpaceUser.Request;
 
 namespace TaskTracker.Application.Command
 {
-    public class GetSpaceUserQuery : GetSpaceUserRequest, IRequest<IEnumerable<SpaceUserModel>>
+    public class GetSpaceUserQuery : GetSpaceUserRequest, IGetEntityQuery<SpaceUserModel>
     {
     }
 
-    public class GetSpaceUserHandler : IRequestHandler<GetSpaceUserQuery, IEnumerable<SpaceUserModel>>
+    public class GetSpaceUserHandler : GetEntityHandler<SpaceUser, SpaceUserModel, GetSpaceUserRequest, GetSpaceUserQuery>
     {
-        private readonly ISpaceUserRepository _repository;
-
-        public GetSpaceUserHandler(ISpaceUserRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public Task<IEnumerable<SpaceUserModel>> Handle(GetSpaceUserQuery request, CancellationToken cancellationToken)
-        {
-            return _repository.GetAsync(request);
-        }
+        public GetSpaceUserHandler(ISpaceUserRepository repository) : base(repository) { }
     }
 }

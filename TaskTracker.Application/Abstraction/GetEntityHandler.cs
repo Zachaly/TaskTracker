@@ -13,13 +13,13 @@ namespace TaskTracker.Application.Abstraction
 
     public abstract class GetEntityHandler<TEntity, TModel, TGetRequest, TQuery> : IRequestHandler<TQuery, IEnumerable<TModel>>
         where TGetRequest : PagedRequest
-        where TEntity : class, IEntity
+        where TEntity : class, IKeylessEntity
         where TModel : IModel
         where TQuery : IGetEntityQuery<TModel>, TGetRequest
     {
-        protected readonly IRepositoryBase<TEntity, TModel, TGetRequest> _repository;
+        protected readonly IKeylessRepositoryBase<TEntity, TModel, TGetRequest> _repository;
 
-        protected GetEntityHandler(IRepositoryBase<TEntity, TModel, TGetRequest> repository)
+        protected GetEntityHandler(IKeylessRepositoryBase<TEntity, TModel, TGetRequest> repository)
         {
             _repository = repository;
         }

@@ -3,7 +3,7 @@
 namespace TaskTracker.Application.Abstraction
 {
     public interface IEntityFactory<out TEntity, in TAddRequest>
-        where TEntity : IEntity
+        where TEntity : IKeylessEntity
     {
         TEntity Create(TAddRequest request);
     }

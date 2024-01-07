@@ -56,7 +56,7 @@ namespace TaskTracker.Tests.Unit.CommandTests
 
             var tokenRepository = Substitute.For<IRefreshTokenRepository>();
             tokenRepository.AddAsync(Arg.Any<RefreshToken>())
-                .Returns(0L)
+                .Returns(Task.CompletedTask)
                 .AndDoes(info => tokens.Add(info.Arg<RefreshToken>()));
 
             tokenRepository.GetTokenAsync(NewRefreshToken).ReturnsNull();

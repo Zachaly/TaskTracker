@@ -7,21 +7,19 @@ using TaskTracker.Model.Response;
 
 namespace TaskTracker.Application.Abstraction
 {
-    public interface IAddEntityCommand : IRequest<CreatedResponseModel>
-    {
-    }
+    public interface IAddKeylessEntityCommand : IRequest<ResponseModel> { }
 
-    public abstract class AddEntityHandler<TEntity, TModel, TGetRequest, TAddRequest, TCommand> : IRequestHandler<TCommand, CreatedResponseModel>
-        where TEntity : class, IEntity
+    public abstract class AddKeylessEntityHandler<TEntity, TModel, TGetRequest, TAddRequest, TCommand> : IRequestHandler<TCommand, ResponseModel>
+        where TEntity : class, IKeylessEntity
         where TModel : IModel
-        where TCommand : IAddEntityCommand, TAddRequest
+        where TCommand : IAddKeylessEntityCommand, TAddRequest
         where TGetRequest : PagedRequest
     {
-        protected readonly IRepositoryBase<TEntity, TModel, TGetRequest> _repository;
+        protected readonly IKeylessRepositoryBase<TEntity, TModel, TGetRequest> _repository;
         protected readonly IEntityFactory<TEntity, TAddRequest> _entityFactory;
         protected readonly IValidator<TCommand> _validator;
 
-        protected AddEntityHandler(IRepositoryBase<TEntity, TModel, TGetRequest> repository,
+        protected AddKeylessEntityHandler(IKeylessRepositoryBase<TEntity, TModel, TGetRequest> repository,
             IEntityFactory<TEntity, TAddRequest> entityFactory,
             IValidator<TCommand> validator)
         {
@@ -30,20 +28,20 @@ namespace TaskTracker.Application.Abstraction
             _validator = validator;
         }
 
-        public virtual async Task<CreatedResponseModel> Handle(TCommand request, CancellationToken cancellationToken)
+        public virtual async Task<ResponseModel> Handle(TCommand request, CancellationToken cancellationToken)
         {
             var validation = await _validator.ValidateAsync(request);
 
-            if(!validation.IsValid)
+            if (!validation.IsValid)
             {
                 return new CreatedResponseModel(validation.ToDictionary());
             }
 
             var entity = _entityFactory.Create(request);
 
-            var newId = await _repository.AddAsync(entity);
+            await _repository.AddAsync(entity);
 
-            return new CreatedResponseModel(newId);
+            return new ResponseModel();
         }
     }
 }

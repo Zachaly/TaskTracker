@@ -12,7 +12,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class UpdateUserTaskHandler : UpdateEntityHandler<UserTask, UserTaskModel, UpdateUserTaskCommand>
+    public class UpdateUserTaskHandler : UpdateEntityHandler<UserTask, UserTaskModel, GetUserTaskRequest, UpdateUserTaskCommand>
     {
         public UpdateUserTaskHandler(IUserTaskRepository userTaskRepository, IValidator<UpdateUserTaskCommand> validator)
             : base(userTaskRepository, validator)

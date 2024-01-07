@@ -11,14 +11,15 @@ namespace TaskTracker.Application.Abstraction
         public long Id { get; set; }
     }
 
-    public abstract class GetEntityByIdHandler<TEntity, TModel, TQuery> : IRequestHandler<TQuery, TModel?>
+    public abstract class GetEntityByIdHandler<TEntity, TModel, TGetRequest, TQuery> : IRequestHandler<TQuery, TModel?>
         where TEntity : class, IEntity
         where TModel : IModel
         where TQuery : GetEntityByIdQuery<TModel>
+        where TGetRequest : PagedRequest
     {
-        private readonly IRepositoryBase<TEntity, TModel> _repository;
+        private readonly IRepositoryBase<TEntity, TModel, TGetRequest> _repository;
 
-        protected GetEntityByIdHandler(IRepositoryBase<TEntity, TModel> repository)
+        protected GetEntityByIdHandler(IRepositoryBase<TEntity, TModel, TGetRequest> repository)
         {
             _repository = repository;
         }

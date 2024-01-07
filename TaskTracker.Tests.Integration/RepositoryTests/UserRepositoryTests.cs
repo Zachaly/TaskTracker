@@ -1,6 +1,7 @@
 ﻿using TaskTracker.Database.Exception;
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
+using TaskTracker.Model.User.Request;
 
 namespace TaskTracker.Tests.Integration.RepositoryTests
 {
@@ -111,6 +112,31 @@ namespace TaskTracker.Tests.Integration.RepositoryTests
             await _repository.UpdateAsync(user);
 
             Assert.Equal(_dbContext.Users.First(x => x.Id == user.Id).Email, user.Email);
+        }
+
+        [Fact]
+        public async Task GetAsync_SearchEmail_ReturnsProperEntities()
+        {
+            var users = FakeDataFactory.GenerateUsers(5);
+
+            users.AddRange(new User[]
+            {
+                new User { Email = "email@email.com", FirstName = "fname", LastName = "lname", PasswordHash = "hash" },
+                new User { Email = "email2@email.com", FirstName = "fname", LastName = "lname", PasswordHash = "hash" },
+                new User { Email = "email3@email.com", FirstName = "fname", LastName = "lname", PasswordHash = "hash" },
+            });
+
+            _dbContext.Users.AddRange(users);
+            _dbContext.SaveChanges();
+
+            var request = new GetUserRequest
+            {
+                SearchEmail = "email"
+            };
+
+            var res = await _repository.GetAsync(request);
+
+            Assert.Equivalent(users.Where(x => x.Email.StartsWith(request.SearchEmail)).Select(x => x.Id), res.Select(x => x.Id));
         }
     }
 }

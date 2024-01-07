@@ -1,21 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskTracker.Domain.Entity;
-using TaskTracker.Expressions;
-using TaskTracker.Model.RefreshToken;
 
 namespace TaskTracker.Database.Repository
 {
-    public interface IRefreshTokenRepository : IRepositoryBase<RefreshToken, RefreshTokenModel>
+    public interface IRefreshTokenRepository
     {
         Task<RefreshToken?> GetTokenAsync(string token);
         Task<IEnumerable<RefreshToken>> GetByUserIdAsync(long userId);
+        Task AddAsync(RefreshToken refreshToken);
+        Task UpdateAsync(RefreshToken refreshToken);
     }
 
-    public class RefreshTokenRepository : RepositoryBase<RefreshToken, RefreshTokenModel>, IRefreshTokenRepository
+    public class RefreshTokenRepository : IRefreshTokenRepository
     {
-        public RefreshTokenRepository(ApplicationDbContext dbContext) : base(dbContext)
+        private readonly ApplicationDbContext _dbContext;
+
+        public RefreshTokenRepository(ApplicationDbContext dbContext)
         {
-            ModelExpression = RefreshTokenExpressions.Model;
+            _dbContext = dbContext;
+        }
+
+        public Task AddAsync(RefreshToken refreshToken)
+        {
+            _dbContext.RefreshTokens.Add(refreshToken);
+
+            return _dbContext.SaveChangesAsync();
         }
 
         public Task<IEnumerable<RefreshToken>> GetByUserIdAsync(long userId)
@@ -29,5 +38,12 @@ namespace TaskTracker.Database.Repository
                 && t.Token == token 
                 && t.ExpiryDate >= DateTime.UtcNow)
                 .SingleOrDefaultAsync();
+
+        public Task UpdateAsync(RefreshToken refreshToken)
+        {
+            _dbContext.Update(refreshToken);
+
+            return _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -1,11 +1,11 @@
-﻿using TaskTracker.Domain.Entity;
+﻿using TaskTracker.Application.Abstraction;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Model.SpaceUser.Request;
 
 namespace TaskTracker.Application
 {
-    public interface ISpaceUserFactory
+    public interface ISpaceUserFactory : IEntityFactory<SpaceUser, AddSpaceUserRequest>
     {
-        SpaceUser Create(AddSpaceUserRequest request);
     }
 
     public class SpaceUserFactory : ISpaceUserFactory

@@ -12,7 +12,8 @@ namespace TaskTracker.Application.Command
     }
 
 
-    public class AddUserSpaceHandler : AddEntityHandler<UserSpace, UserSpaceModel, AddUserSpaceRequest, AddUserSpaceCommand>
+    public class AddUserSpaceHandler : AddEntityHandler<UserSpace, UserSpaceModel,
+        GetUserSpaceRequest, AddUserSpaceRequest, AddUserSpaceCommand>
     {
         public AddUserSpaceHandler(IUserSpaceRepository repository, IUserSpaceFactory entityFactory,
             IValidator<AddUserSpaceCommand> validator) : base(repository, entityFactory, validator)

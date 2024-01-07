@@ -11,7 +11,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class UpdateTaskListHandler : UpdateEntityHandler<TaskList, TaskListModel, UpdateTaskListCommand>
+    public class UpdateTaskListHandler : UpdateEntityHandler<TaskList, TaskListModel, GetTaskListRequest, UpdateTaskListCommand>
     {
         public UpdateTaskListHandler(ITaskListRepository taskListRepository, IValidator<UpdateTaskListCommand> validator)
             : base(taskListRepository, validator)

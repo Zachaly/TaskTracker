@@ -11,7 +11,8 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class UpdateTaskStatusGroupHandler : UpdateEntityHandler<TaskStatusGroup, TaskStatusGroupModel, UpdateTaskStatusGroupCommand>
+    public class UpdateTaskStatusGroupHandler : UpdateEntityHandler<TaskStatusGroup, TaskStatusGroupModel,
+        GetTaskStatusGroupRequest, UpdateTaskStatusGroupCommand>
     {
         public UpdateTaskStatusGroupHandler(ITaskStatusGroupRepository taskStatusGroupRepository,
             IValidator<UpdateTaskStatusGroupCommand> validator)

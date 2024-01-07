@@ -2,6 +2,7 @@
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.DocumentPage;
+using TaskTracker.Model.DocumentPage.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -10,7 +11,7 @@ namespace TaskTracker.Application.Command
     }
 
     public class DeleteDocumentPageByIdHandler : DeleteEntityByIdHandler<TaskTrackerDocumentPage, DocumentPageModel,
-        DeleteDocumentPageByIdCommand>
+        GetDocumentPageRequest, DeleteDocumentPageByIdCommand>
     {
         public DeleteDocumentPageByIdHandler(IDocumentPageRepository repository) : base(repository)
         {

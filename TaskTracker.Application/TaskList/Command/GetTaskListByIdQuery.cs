@@ -2,6 +2,7 @@
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.TaskList;
+using TaskTracker.Model.TaskList.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -9,7 +10,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class GetTaskListByIdHandler : GetEntityByIdHandler<TaskList, TaskListModel, GetTaskListByIdQuery>
+    public class GetTaskListByIdHandler : GetEntityByIdHandler<TaskList, TaskListModel, GetTaskListRequest, GetTaskListByIdQuery>
     {
         public GetTaskListByIdHandler(ITaskListRepository taskListRepository) : base(taskListRepository)
         {

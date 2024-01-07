@@ -2,6 +2,7 @@
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserTaskStatus;
+using TaskTracker.Model.UserTaskStatus.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -9,7 +10,8 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class GetUserTaskStatusByIdHandler : GetEntityByIdHandler<UserTaskStatus, UserTaskStatusModel, GetUserTaskStatusByIdQuery>
+    public class GetUserTaskStatusByIdHandler : GetEntityByIdHandler<UserTaskStatus, UserTaskStatusModel,
+        GetUserTaskStatusRequest, GetUserTaskStatusByIdQuery>
     {
         public GetUserTaskStatusByIdHandler(IUserTaskStatusRepository userTaskStatusRepository)
             : base(userTaskStatusRepository)

@@ -11,7 +11,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class UpdateUserSpaceHandler : UpdateEntityHandler<UserSpace, UserSpaceModel, UpdateUserSpaceCommand>
+    public class UpdateUserSpaceHandler : UpdateEntityHandler<UserSpace, UserSpaceModel, GetUserSpaceRequest, UpdateUserSpaceCommand>
     {
         public UpdateUserSpaceHandler(IUserSpaceRepository repository, IValidator<UpdateUserSpaceCommand> validator) 
             : base(repository, validator)

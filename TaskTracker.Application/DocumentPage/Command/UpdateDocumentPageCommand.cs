@@ -11,7 +11,8 @@ namespace TaskTracker.Application.DocumentPage.Command
     {
     }
 
-    public class UpdateDocumentPageHandler : UpdateEntityHandler<TaskTrackerDocumentPage, DocumentPageModel, UpdateDocumentPageCommand>
+    public class UpdateDocumentPageHandler : UpdateEntityHandler<TaskTrackerDocumentPage, DocumentPageModel,
+        GetDocumentPageRequest, UpdateDocumentPageCommand>
     {
         public UpdateDocumentPageHandler(IDocumentPageRepository repository, IValidator<UpdateDocumentPageCommand> validator) : base(repository, validator)
         {

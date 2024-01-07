@@ -3,6 +3,7 @@ using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.Response;
 using TaskTracker.Model.TaskStatusGroup;
+using TaskTracker.Model.TaskStatusGroup.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -11,7 +12,8 @@ namespace TaskTracker.Application.Command
         
     }
 
-    public class DeleteTaskStatusGroupByIdHandler : DeleteEntityByIdHandler<TaskStatusGroup, TaskStatusGroupModel, DeleteTaskStatusGroupByIdCommand>
+    public class DeleteTaskStatusGroupByIdHandler : DeleteEntityByIdHandler<TaskStatusGroup, TaskStatusGroupModel,
+        GetTaskStatusGroupRequest, DeleteTaskStatusGroupByIdCommand>
     {
         public DeleteTaskStatusGroupByIdHandler(ITaskStatusGroupRepository taskStatusGroupRepository)
             : base(taskStatusGroupRepository)

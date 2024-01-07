@@ -102,7 +102,17 @@ namespace TaskTracker.Database
 
                 if (filterAttribute is not null)
                 {
-                    var methodInfo = requestProp.PropertyType.GetMethod("Contains");
+                    MethodInfo? methodInfo = null;
+
+                    if(requestProp.PropertyType != typeof(string))
+                    {
+                        methodInfo = requestProp.PropertyType.GetMethod("Contains");
+                    }
+
+                    if(filterAttribute.ComparisonType == ComparisonType.StartsWith)
+                    {
+                        methodInfo = requestProp.PropertyType.GetMethod("StartsWith", new[] { typeof(string) });
+                    }
 
                     comparisonExpression = filterAttribute.ComparisonType switch
                     {
@@ -111,6 +121,7 @@ namespace TaskTracker.Database
                         ComparisonType.Greater => Expression.GreaterThan(entityPropExpression, requestPropExpression),
                         ComparisonType.GreaterOrEqual => Expression.GreaterThanOrEqual(entityPropExpression, requestPropExpression),
                         ComparisonType.Contains => Expression.Call(requestPropExpression, methodInfo!, entityPropExpression),
+                        ComparisonType.StartsWith => Expression.Call(entityPropExpression, methodInfo!, requestPropExpression),
                         ComparisonType.DoesNotContain => Expression.Equal(Expression.Call(requestPropExpression, methodInfo!, entityPropExpression), Expression.Constant(false)),
                         _ => throw new NotSupportedException()
                     };

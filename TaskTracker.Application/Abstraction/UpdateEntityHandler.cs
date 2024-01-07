@@ -12,15 +12,16 @@ namespace TaskTracker.Application.Abstraction
         long Id { get; set; }
     }
 
-    public abstract class UpdateEntityHandler<TEntity, TModel, TCommand> : IRequestHandler<TCommand, ResponseModel>
+    public abstract class UpdateEntityHandler<TEntity, TModel, TGetRequest, TCommand> : IRequestHandler<TCommand, ResponseModel>
         where TEntity : class, IEntity
         where TModel : IModel
         where TCommand : IUpdateEntityCommand
+        where TGetRequest : PagedRequest
     {
-        private readonly IRepositoryBase<TEntity, TModel> _repository;
+        private readonly IRepositoryBase<TEntity, TModel, TGetRequest> _repository;
         private readonly IValidator<TCommand> _validator;
 
-        protected UpdateEntityHandler(IRepositoryBase<TEntity, TModel> repository, IValidator<TCommand> validator)
+        protected UpdateEntityHandler(IRepositoryBase<TEntity, TModel, TGetRequest> repository, IValidator<TCommand> validator)
         {
             _repository = repository;
             _validator = validator;
