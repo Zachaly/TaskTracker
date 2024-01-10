@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.SpaceUser;
+using TaskTracker.Model.UserSpace;
 
 namespace TaskTracker.Expressions
 {
@@ -8,10 +9,12 @@ namespace TaskTracker.Expressions
     {
         public static Expression<Func<SpaceUser, SpaceUserModel>> Model { get; } = user => new SpaceUserModel
         {
-            Email = user.User.Email,
-            FirstName = user.User.FirstName,
-            Id = user.User.Id,
-            LastName = user.User.LastName,
+            User = user.User == null ? null : UserExpressions.Model.Compile().Invoke(user.User),
+            Space = user.Space == null ? null : new UserSpaceModel
+            {
+                Id = user.Space.Id,
+                Title = user.Space.Title
+            }
         };
     }
 }

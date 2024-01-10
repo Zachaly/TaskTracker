@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 using TaskTracker.Database.Exception;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Expressions;
@@ -17,15 +18,6 @@ namespace TaskTracker.Database.Repository
         public SpaceUserRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             ModelExpression = SpaceUserExpressions.Model;
-        }
-
-        public override Task<IEnumerable<SpaceUserModel>> GetAsync(GetSpaceUserRequest request)
-        {
-            var query = FilterWithRequest(_dbContext.Set<SpaceUser>(), request);
-
-            query = OrderBy(query, request).Include(u => u.User);
-
-            return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
         }
 
         public override Task<IEnumerable<T>> GetAsync<T>(GetSpaceUserRequest request, Func<SpaceUser, T> selector)
