@@ -38,6 +38,8 @@ namespace TaskTracker.Api.Controllers
         /// <response code="204">User created successfully</response>
         /// <response code="400">Invalid data</response>
         [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<ResponseModel>> PostAsync(AddSpaceUserCommand command)
         {
             var res = await _mediator.Send(command);
@@ -51,6 +53,8 @@ namespace TaskTracker.Api.Controllers
         /// <response code="204">User deleted successfully</response>
         /// <response code="400">No user with specified ids found</response>
         [HttpDelete("{spaceId}/{userId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<ResponseModel>> DeleteAsync(long spaceId, long userId)
         {
             var res = await _mediator.Send(new DeleteSpaceUserCommand(spaceId, userId));

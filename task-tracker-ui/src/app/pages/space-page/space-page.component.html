@@ -55,7 +55,35 @@
                     <app-user-profile [id]="space.owner.id" size="128x128" />
                     <div class="ml-5 ">
                         <p class="subtitle">{{ space.owner.firstName }} {{ space.owner.lastName}}</p>
-                        <p class="subtitle">{{space.owner.email}}</p>
+                        <p class="subtitle">{{ space.owner.email }}</p>
+                    </div>
+                </div>
+                <p class="title">Members</p>
+                <div>
+                    <a class="button" routerLink="add-user">Add member</a>
+                    <div class="box" *ngFor="let user of users">
+                        <div class="media">
+                            <div class="media-left">
+                                <app-user-profile [id]="user.id" size="64x64" />
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <div class="is-flex">
+                                        <div>
+                                            <p>
+                                                {{ user.email }}
+                                            </p>
+                                            <p>
+                                                {{ user.firstName}} {{ user.lastName }}
+                                            </p>
+                                        </div>
+                                        <div class="ml-2" *ngIf="user.id == space.owner.id">
+                                            <button class="button is-danger" (click)="removeSpaceUser(user)">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

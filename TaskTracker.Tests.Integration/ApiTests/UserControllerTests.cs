@@ -161,5 +161,23 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
+
+        [Fact]    
+        public async Task GetAsync_ReturnsUsers()
+        {
+            await AuthorizeAsync();
+
+            var users = FakeDataFactory.GenerateUsers(5);
+
+            _dbContext.Users.AddRange(users);
+            _dbContext.SaveChanges();
+
+            var response = await _httpClient.GetAsync(Endpoint);
+
+            var content = await response.Content.ReadFromJsonAsync<IEnumerable<UserModel>>();
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equivalent(_dbContext.Users.Select(x => x.Id), content.Select(x => x.Id));
+        }
     }
 }

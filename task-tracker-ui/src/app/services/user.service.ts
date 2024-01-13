@@ -4,6 +4,7 @@ import RegisterRequest from '../model/user/RegisterRequest';
 import { Observable } from 'rxjs';
 import UpdateUserRequest from '../model/user/UpdateUserRequest';
 import UserModel from '../model/user/UserModel';
+import GetUserRequest, { mapGetUserRequest } from '../model/user/GetUserRequest';
 
 const API_URL = 'https://localhost:5001/api/user'
 
@@ -24,5 +25,11 @@ export class UserService {
 
   public getById(id: number) : Observable<UserModel> {
     return this.http.get<UserModel>(`${API_URL}/${id}`)
+  }
+
+  public get(request: GetUserRequest) {
+    const params = mapGetUserRequest(request)
+
+    return this.http.get<UserModel[]>(API_URL, { params })
   }
 }
