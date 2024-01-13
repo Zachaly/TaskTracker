@@ -33,6 +33,7 @@ import { AddSpacePageComponent } from './pages/add-space-page/add-space-page.com
 import { SpacePageComponent } from './pages/space-page/space-page.component';
 import { SideBarSpaceLinkComponent } from './components/side-bar-space-link/side-bar-space-link.component';
 import { DocumentPageComponent } from './pages/document-page/document-page.component';
+import { AddSpaceUserPageComponent } from './pages/add-space-user-page/add-space-user-page.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -47,7 +48,8 @@ const routes: Routes = [
   route('profile/update', UpdateUserPageComponent, [RouteGuard]),
   route('space/add', AddSpacePageComponent, [RouteGuard]),
   route('space/:id', SpacePageComponent, [RouteGuard]),
-  route('doc/:id', DocumentPageComponent, [RouteGuard])
+  route('doc/:id', DocumentPageComponent, [RouteGuard]),
+  route('space/:spaceId/add-user', AddSpaceUserPageComponent, [RouteGuard])
 ]
 
 @NgModule({
@@ -75,6 +77,7 @@ const routes: Routes = [
     SpacePageComponent,
     SideBarSpaceLinkComponent,
     DocumentPageComponent,
+    AddSpaceUserPageComponent,
   ],
   imports: [
     BrowserModule,

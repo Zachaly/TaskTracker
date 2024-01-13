@@ -7,6 +7,7 @@
         Lesser,
         LesserOrEqual,
         Contains,
-        DoesNotContain
+        DoesNotContain,
+        StartsWith
     }
 }

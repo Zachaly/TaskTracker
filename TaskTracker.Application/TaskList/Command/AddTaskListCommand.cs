@@ -11,7 +11,8 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class AddTaskListHandler : AddEntityHandler<TaskList, TaskListModel, AddTaskListRequest, AddTaskListCommand>
+    public class AddTaskListHandler : AddEntityHandler<TaskList, TaskListModel, GetTaskListRequest,
+        AddTaskListRequest, AddTaskListCommand>
     {
         public AddTaskListHandler(ITaskListRepository taskListRepository, ITaskListFactory taskListFactory,
             IValidator<AddTaskListCommand> validator) : base(taskListRepository, taskListFactory, validator)

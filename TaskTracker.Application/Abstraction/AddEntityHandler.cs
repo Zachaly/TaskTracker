@@ -11,16 +11,18 @@ namespace TaskTracker.Application.Abstraction
     {
     }
 
-    public abstract class AddEntityHandler<TEntity, TModel, TAddRequest, TCommand> : IRequestHandler<TCommand, CreatedResponseModel>
+    public abstract class AddEntityHandler<TEntity, TModel, TGetRequest, TAddRequest, TCommand> : IRequestHandler<TCommand, CreatedResponseModel>
         where TEntity : class, IEntity
         where TModel : IModel
         where TCommand : IAddEntityCommand, TAddRequest
+        where TGetRequest : PagedRequest
     {
-        protected readonly IRepositoryBase<TEntity, TModel> _repository;
+        protected readonly IRepositoryBase<TEntity, TModel, TGetRequest> _repository;
         protected readonly IEntityFactory<TEntity, TAddRequest> _entityFactory;
         protected readonly IValidator<TCommand> _validator;
 
-        protected AddEntityHandler(IRepositoryBase<TEntity, TModel> repository, IEntityFactory<TEntity, TAddRequest> entityFactory,
+        protected AddEntityHandler(IRepositoryBase<TEntity, TModel, TGetRequest> repository,
+            IEntityFactory<TEntity, TAddRequest> entityFactory,
             IValidator<TCommand> validator)
         {
             _repository = repository;

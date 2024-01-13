@@ -2,6 +2,7 @@
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.User;
+using TaskTracker.Model.User.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -9,7 +10,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class GetUserByIdHandler : GetEntityByIdHandler<User, UserModel, GetUserByIdQuery>
+    public class GetUserByIdHandler : GetEntityByIdHandler<User, UserModel, GetUserRequest, GetUserByIdQuery>
     {
         public GetUserByIdHandler(IUserRepository userRepository) : base(userRepository)
         {

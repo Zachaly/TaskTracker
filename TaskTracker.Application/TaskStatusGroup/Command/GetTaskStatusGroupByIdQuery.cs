@@ -2,6 +2,7 @@
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.TaskStatusGroup;
+using TaskTracker.Model.TaskStatusGroup.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -9,7 +10,8 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class GetTaskStatusGroupByIdHandler : GetEntityByIdHandler<TaskStatusGroup, TaskStatusGroupModel, GetTaskStatusGroupByIdQuery>
+    public class GetTaskStatusGroupByIdHandler : GetEntityByIdHandler<TaskStatusGroup, TaskStatusGroupModel,
+        GetTaskStatusGroupRequest, GetTaskStatusGroupByIdQuery>
     {
         public GetTaskStatusGroupByIdHandler(ITaskStatusGroupRepository taskStatusGroupRepository)
             : base(taskStatusGroupRepository) 

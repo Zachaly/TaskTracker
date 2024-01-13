@@ -14,6 +14,7 @@ namespace TaskTracker.Database
         public DbSet<UserSpace> UserSpaces { get; set; }
         public DbSet<TaskTrackerDocument> Documents { get; set; }
         public DbSet<TaskTrackerDocumentPage> DocumentPages { get; set; }
+        public DbSet<SpaceUser> SpaceUsers { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -137,6 +138,21 @@ namespace TaskTracker.Database
                 .WithOne(p => p.Document)
                 .HasForeignKey(p => p.DocumentId)
                 .OnDelete(DeleteBehavior.ClientCascade);
+
+            modelBuilder.Entity<SpaceUser>()
+                .HasKey(u => new { u.SpaceId, u.UserId });
+
+            modelBuilder.Entity<SpaceUser>()
+                .HasOne(u => u.Space)
+                .WithMany(s => s.Users)
+                .HasForeignKey(u => u.SpaceId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<SpaceUser>()
+                .HasOne(u => u.User)
+                .WithMany(u => u.SpaceUsers)
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

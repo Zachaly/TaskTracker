@@ -14,5 +14,6 @@
         public ICollection<TaskStatusGroup> StatusGroups { get; set; }
         public ICollection<UserSpace> Spaces { get; set; }
         public ICollection<TaskTrackerDocument> Documents { get; set; }
+        public ICollection<SpaceUser> SpaceUsers { get; set; }
     }
 }

@@ -53,6 +53,21 @@ namespace TaskTracker.Database.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.SpaceUser", b =>
+                {
+                    b.Property<long>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("SpaceId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SpaceUsers");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.TaskList", b =>
                 {
                     b.Property<long>("Id")
@@ -332,6 +347,25 @@ namespace TaskTracker.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.SpaceUser", b =>
+                {
+                    b.HasOne("TaskTracker.Domain.Entity.UserSpace", "Space")
+                        .WithMany("Users")
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TaskTracker.Domain.Entity.User", "User")
+                        .WithMany("SpaceUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Space");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.TaskList", b =>
                 {
                     b.HasOne("TaskTracker.Domain.Entity.User", "Creator")
@@ -482,6 +516,8 @@ namespace TaskTracker.Database.Migrations
 
                     b.Navigation("RefreshTokens");
 
+                    b.Navigation("SpaceUsers");
+
                     b.Navigation("Spaces");
 
                     b.Navigation("StatusGroups");
@@ -494,6 +530,8 @@ namespace TaskTracker.Database.Migrations
                     b.Navigation("Documents");
 
                     b.Navigation("Lists");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TaskTracker.Domain.Entity.UserTaskStatus", b =>

@@ -17,7 +17,7 @@ namespace TaskTracker.Tests.Integration
             => new Faker<UserTask>()
                 .RuleFor(t => t.Title, f => f.Random.AlphaNumeric(20))
                 .RuleFor(t => t.Description, f => f.Random.AlphaNumeric(40))
-                .RuleFor(t => t.CreatorId, _ =>  userId)
+                .RuleFor(t => t.CreatorId, _ => userId)
                 .RuleFor(t => t.CreationTimestamp, f => f.Random.Number(100))
                 .RuleFor(t => t.ListId, _ => listId)
                 .RuleFor(t => t.StatusId, _ => statusId)
@@ -68,8 +68,11 @@ namespace TaskTracker.Tests.Integration
             => new Faker<TaskTrackerDocumentPage>()
                 .RuleFor(p => p.DocumentId, _ => documentId)
                 .RuleFor(p => p.Title, f => f.Random.AlphaNumeric(20))
-                .RuleFor(p=> p.Content, f => f.Random.AlphaNumeric(100))
+                .RuleFor(p => p.Content, f => f.Random.AlphaNumeric(100))
                 .RuleFor(p => p.LastModifiedTimestamp, f => f.Random.Long(0, 20000))
                 .Generate(count);
+
+        public static List<SpaceUser> GenerateSpaceUsers(long spaceId, IEnumerable<long> userIds)
+            => userIds.Select(x => new SpaceUser { UserId = x, SpaceId = spaceId }).ToList();
     }
 }

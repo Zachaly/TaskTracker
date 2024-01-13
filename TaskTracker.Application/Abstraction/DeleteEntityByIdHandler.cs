@@ -12,14 +12,15 @@ namespace TaskTracker.Application.Abstraction
         public long Id { get; set; }
     }
 
-    public abstract class DeleteEntityByIdHandler<TEntity, TModel, TCommand> : IRequestHandler<TCommand, ResponseModel>
+    public abstract class DeleteEntityByIdHandler<TEntity, TModel, TGetRequest, TCommand> : IRequestHandler<TCommand, ResponseModel>
         where TCommand : DeleteEntityByIdCommand
         where TEntity : class, IEntity
         where TModel : IModel
+        where TGetRequest : PagedRequest
     {
-        protected readonly IRepositoryBase<TEntity, TModel> _repository;
+        protected readonly IRepositoryBase<TEntity, TModel, TGetRequest> _repository;
 
-        protected DeleteEntityByIdHandler(IRepositoryBase<TEntity, TModel> repository)
+        protected DeleteEntityByIdHandler(IRepositoryBase<TEntity, TModel, TGetRequest> repository)
         {
             _repository = repository;
         }

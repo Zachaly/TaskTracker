@@ -2,6 +2,7 @@
 using TaskTracker.Database.Repository;
 using TaskTracker.Domain.Entity;
 using TaskTracker.Model.UserSpace;
+using TaskTracker.Model.UserSpace.Request;
 
 namespace TaskTracker.Application.Command
 {
@@ -9,7 +10,8 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class DeleteUserSpaceByIdHandler : DeleteEntityByIdHandler<UserSpace, UserSpaceModel, DeleteUserSpaceByIdCommand>
+    public class DeleteUserSpaceByIdHandler : DeleteEntityByIdHandler<UserSpace, UserSpaceModel,
+        GetUserSpaceRequest,DeleteUserSpaceByIdCommand>
     {
         public DeleteUserSpaceByIdHandler(IUserSpaceRepository repository) : base(repository)
         {

@@ -61,5 +61,18 @@ namespace TaskTracker.Api.Controllers
 
             return res.ReturnNoContentOrBadRequest();
         }
+
+        /// <summary>
+        /// Returns list of users filtered by query
+        /// </summary>
+        /// <response code="200">List of users</response>
+        [HttpGet]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetAsync([FromQuery] GetUserQuery query)
+        {
+            var res = await _mediator.Send(query);
+
+            return Ok(res);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class AddUserTaskStatusHandler : AddEntityHandler<UserTaskStatus, UserTaskStatusModel,
+    public class AddUserTaskStatusHandler : AddEntityHandler<UserTaskStatus, UserTaskStatusModel, GetUserTaskStatusRequest,
         AddUserTaskStatusRequest, AddUserTaskStatusCommand>
     {
         public AddUserTaskStatusHandler(IUserTaskStatusRepository userTaskStatusRepository, IUserTaskStatusFactory userTaskStatusFactory,

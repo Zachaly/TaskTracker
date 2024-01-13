@@ -4,8 +4,10 @@ import AddDocumentRequest from 'src/app/model/document/AddDocumentRequest';
 import DocumentModel from 'src/app/model/document/DocumentModel';
 import UserSpaceModel from 'src/app/model/user-space/UserSpaceModel';
 import UpdateUserSpaceRequest from 'src/app/model/user-space/request/UpdateUserSpaceRequest';
+import UserModel from 'src/app/model/user/UserModel';
 import { AuthService } from 'src/app/services/auth.service';
 import { DocumentService } from 'src/app/services/document.service';
+import { SpaceUserService } from 'src/app/services/space-user.service';
 import { UserSpaceService } from 'src/app/services/user-space.service';
 
 @Component({
@@ -41,13 +43,14 @@ export class SpacePageComponent implements OnInit {
   }
 
   documents: DocumentModel[] = []
+  users: UserModel[] = []
 
   isUpdatingSpace = false
 
   newDocumentTitle = ''
 
   constructor(private spaceService: UserSpaceService, private route: ActivatedRoute, private router: Router,
-    private documentService: DocumentService, private authService: AuthService) {
+    private documentService: DocumentService, private authService: AuthService, private spaceUserService: SpaceUserService) {
 
   }
 
@@ -65,6 +68,7 @@ export class SpacePageComponent implements OnInit {
       this.updateRequest.title = res.title
     })
     this.documentService.get({ spaceId: this.spaceId }).subscribe(res => this.documents = res)
+    this.spaceUserService.get({ spaceId: this.spaceId }).subscribe(res => this.users = res.map(x => x.user))
   }
 
   update() {
@@ -95,5 +99,11 @@ export class SpacePageComponent implements OnInit {
 
   deleteDocument(id: number) {
     this.documentService.deleteById(id).subscribe(() => this.documents = this.documents.filter(x => x.id != id))
+  }
+
+  removeSpaceUser(user: UserModel) {
+    this.spaceUserService.delete(this.spaceId, user.id).subscribe(() => {
+      this.users = this.users.filter(x => x.id !== user.id)
+    })
   }
 }

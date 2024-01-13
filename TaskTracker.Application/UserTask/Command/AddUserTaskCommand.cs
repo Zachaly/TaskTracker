@@ -11,7 +11,8 @@ namespace TaskTracker.Application.Command
     {
     }
 
-    public class AddUserTaskHandler : AddEntityHandler<UserTask, UserTaskModel, AddUserTaskRequest, AddUserTaskCommand>
+    public class AddUserTaskHandler : AddEntityHandler<UserTask, UserTaskModel, GetUserTaskRequest,
+        AddUserTaskRequest, AddUserTaskCommand>
     {
         public AddUserTaskHandler(IUserTaskFactory userTaskFactory, IUserTaskRepository userTaskRepository, 
             IValidator<AddUserTaskCommand> validator) : base(userTaskRepository, userTaskFactory, validator)
