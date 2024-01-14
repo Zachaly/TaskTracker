@@ -26,6 +26,8 @@ namespace TaskTracker.Database.Repository
                 .ThenInclude(g => g.Statuses)
                 .Include(s => s.Lists)
                 .ThenInclude(l => l.Creator)
+                .Include(s => s.Lists)
+                .ThenInclude(l => l.Tasks).ThenInclude(t => t.AssignedUsers).ThenInclude(u => u.User)
                 .Include(s => s.Documents)
                 .ThenInclude(s => s.Pages);
 

@@ -1,4 +1,6 @@
-﻿using TaskTracker.Domain.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskTracker.Database.Exception;
+using TaskTracker.Domain.Entity;
 using TaskTracker.Expressions;
 using TaskTracker.Model.TaskAssignedUser;
 using TaskTracker.Model.TaskAssignedUser.Request;
@@ -18,9 +20,18 @@ namespace TaskTracker.Database.Repository
             ModelExpression = TaskAssignedUserExpressions.Model;
         }
 
-        public Task DeleteByTaskIdAndUserIdAsync(long taskId, long userId)
+        public async Task DeleteByTaskIdAndUserIdAsync(long taskId, long userId)
         {
-            throw new NotImplementedException();
+            var user = await _dbContext.Set<TaskAssignedUser>().FirstAsync(u => u.TaskId == taskId && u.UserId == userId);
+
+            if(user is null)
+            {
+                throw new EntityNotFoundException(nameof(TaskAssignedUser));
+            }
+
+            _dbContext.Remove(user);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using TaskTracker.Domain.Entity;
 
 namespace TaskTracker.Database
@@ -15,6 +16,7 @@ namespace TaskTracker.Database
         public DbSet<TaskTrackerDocument> Documents { get; set; }
         public DbSet<TaskTrackerDocumentPage> DocumentPages { get; set; }
         public DbSet<SpaceUser> SpaceUsers { get; set; }
+        public DbSet<TaskAssignedUser> TaskAssignedUsers { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -152,6 +154,21 @@ namespace TaskTracker.Database
                 .HasOne(u => u.User)
                 .WithMany(u => u.SpaceUsers)
                 .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TaskAssignedUser>()
+                .HasKey(u => new { u.TaskId, u.UserId });
+
+            modelBuilder.Entity<TaskAssignedUser>()
+                .HasOne(u => u.User)
+                .WithMany(u => u.AssingedTasks)
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TaskAssignedUser>()
+                .HasOne(u => u.Task)
+                .WithMany(t => t.AssignedUsers)
+                .HasForeignKey(u => u.TaskId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

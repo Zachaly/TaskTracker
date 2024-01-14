@@ -16,7 +16,7 @@ namespace TaskTracker.Expressions
                 Title = task.Title,
                 Status = UserTaskStatusExpressions.Model.Compile().Invoke(task.Status),
                 Priority = task.Priority,
-                AssignedUsers = task.AssignedUsers.AsQueryable().Select(x => x.User).Select(UserExpressions.Model)
+                AssignedUsers = task.AssignedUsers.Select(u => UserExpressions.Model.Compile().Invoke(u.User))
             };
     }
 }
