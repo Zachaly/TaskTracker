@@ -14,5 +14,6 @@ namespace TaskTracker.Model.UserTask
         public long? DueTimestamp { get; set; }
         public UserTaskStatusModel Status { get; set; }
         public UserTaskPriority? Priority { get; set; }
+        public IEnumerable<UserModel> AssignedUsers { get; set; }
     }
 }
