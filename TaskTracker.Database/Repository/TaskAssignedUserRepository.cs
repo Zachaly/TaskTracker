@@ -20,9 +20,27 @@ namespace TaskTracker.Database.Repository
             ModelExpression = TaskAssignedUserExpressions.Model;
         }
 
+        public override Task<IEnumerable<TaskAssignedUserModel>> GetAsync(GetTaskAssignedUserRequest request)
+        {
+            var query = FilterWithRequest(_dbContext.Set<TaskAssignedUser>(), request);
+
+            query = OrderBy(query, request);
+
+            query = query
+                .Include(u => u.Task)
+                .ThenInclude(t => t.AssignedUsers)
+                .ThenInclude(u => u.User)
+                .Include(u => u.Task)
+                .ThenInclude(t => t.Status)
+                .Include(u => u.Task)
+                .ThenInclude(t => t.Creator);
+
+            return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
+        }
+
         public async Task DeleteByTaskIdAndUserIdAsync(long taskId, long userId)
         {
-            var user = await _dbContext.Set<TaskAssignedUser>().FirstAsync(u => u.TaskId == taskId && u.UserId == userId);
+            var user = await _dbContext.Set<TaskAssignedUser>().FirstOrDefaultAsync(u => u.TaskId == taskId && u.UserId == userId);
 
             if(user is null)
             {
