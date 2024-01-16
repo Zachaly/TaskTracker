@@ -9,6 +9,7 @@ import { ImageService } from 'src/app/services/image.service';
 export class UserProfileComponent implements OnInit {
   @Input() size = ''
   @Input() id = 0
+  @Input() isRounded = false
 
   @ViewChild('template', { static: true }) template?: TemplateRef<HTMLElement>;
 

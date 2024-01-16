@@ -14,5 +14,6 @@ namespace TaskTracker.Model.TaskList
         public long StatusGroupId { get; set; }
         public IEnumerable<UserTaskModel> Tasks { get; set; }
         public TaskStatusGroupModel? StatusGroup { get; set; }
+        public long SpaceId { get; set; }
     }
 }

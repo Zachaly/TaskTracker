@@ -2,7 +2,8 @@ import PagedRequest, { mapPagedRequest } from "../PagedRequest";
 
 export default interface GetUserRequest extends PagedRequest {
     skipIds?: number[],
-    searchEmail?: string
+    searchEmail?: string,
+    ids?: number[]
 }
 
 export const mapGetUserRequest = (request: GetUserRequest) => {
@@ -10,6 +11,10 @@ export const mapGetUserRequest = (request: GetUserRequest) => {
 
     if(request.skipIds) {
         request.skipIds.forEach(id => params = params.append('SkipIds', id))
+    }
+
+    if(request.ids) {
+        request.ids.forEach(id => params = params.append('Ids', id))
     }
 
     if(request.searchEmail) {

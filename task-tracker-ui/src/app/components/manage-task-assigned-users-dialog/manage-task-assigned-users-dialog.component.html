@@ -1,0 +1,28 @@
+<div class="dialog box">
+    <div class="is-flex is-justify-content-flex-end">
+        <button class="delete" (click)="close.emit()"></button>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="is-flex" *ngFor="let user of assignedUsers">
+                <app-user-profile [isRounded]="true" size="64x64" [id]="user.id" />
+                <div>
+                    <p class="subtitle">{{ user.email }}</p>
+                    <p class="subtitle"> {{ user.firstName}} {{ user.lastName}}</p>
+                </div>
+                <button class="delete" (click)="deleteUser(user.id)"></button>
+            </div>
+        </div>
+        <div class="column">
+            <input type="text" class="input" [(ngModel)]="searchEmail" name="email" (input)="searchUsers()">
+            <div class="m-1 is-flex is-align-content-center" *ngFor="let user of searchedUsers">
+                <app-user-profile [isRounded]="true" size="64x64" [id]="user.id" />
+                <div>
+                    <p class="subtitle">{{ user.email }}</p>
+                    <p class="subtitle"> {{ user.firstName}} {{ user.lastName}}</p>
+                </div>
+                <button class="button" (click)="addUser(user)">Add</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,7 +11,8 @@ export class SideBarListLinkComponent {
     id: 0,
     title: '',
     creator: { id: 0, firstName: '', lastName: '', email: '' },
-    statusGroupId: 0
+    statusGroupId: 0,
+    spaceId: 0
   }
 
   link = () => `/list/${this.list.id}`

@@ -15,10 +15,8 @@
         <tbody>
             <tr app-user-task-list-item *ngFor="let task of list.tasks" [task]="task"
                 (deleteTask)="deleteTask.emit(task.id)" (updateRequested)="updateTask.emit($event)"
-                [statuses]="list.statusGroup?.statuses ?? []"></tr>
+                [statuses]="list.statusGroup?.statuses ?? []" [spaceId]="list.spaceId"></tr>
         </tbody>
-
-
     </table>
     <app-add-task-form *ngIf="this.list.statusGroup?.statuses" [listId]="list.id" (taskAdded)="loadTasks.emit()"
         [statusId]="defaultStatus()!.id">

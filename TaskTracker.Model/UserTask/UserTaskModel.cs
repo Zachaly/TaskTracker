@@ -15,5 +15,6 @@ namespace TaskTracker.Model.UserTask
         public UserTaskStatusModel Status { get; set; }
         public UserTaskPriority? Priority { get; set; }
         public IEnumerable<UserModel> AssignedUsers { get; set; }
+        public long ListId { get; set; }
     }
 }

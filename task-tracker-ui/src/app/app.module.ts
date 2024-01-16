@@ -34,6 +34,7 @@ import { SpacePageComponent } from './pages/space-page/space-page.component';
 import { SideBarSpaceLinkComponent } from './components/side-bar-space-link/side-bar-space-link.component';
 import { DocumentPageComponent } from './pages/document-page/document-page.component';
 import { AddSpaceUserPageComponent } from './pages/add-space-user-page/add-space-user-page.component';
+import { ManageTaskAssignedUsersDialogComponent } from './components/manage-task-assigned-users-dialog/manage-task-assigned-users-dialog.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -78,6 +79,7 @@ const routes: Routes = [
     SideBarSpaceLinkComponent,
     DocumentPageComponent,
     AddSpaceUserPageComponent,
+    ManageTaskAssignedUsersDialogComponent,
   ],
   imports: [
     BrowserModule,

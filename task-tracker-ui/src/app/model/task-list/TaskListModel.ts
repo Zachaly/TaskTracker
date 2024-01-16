@@ -10,5 +10,6 @@ export default interface TaskListModel {
     creator: UserModel
     tasks?: UserTaskModel[],
     statusGroupId: number,
-    statusGroup?: TaskStatusGroupModel
+    statusGroup?: TaskStatusGroupModel,
+    spaceId: number
 }

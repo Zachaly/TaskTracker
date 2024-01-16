@@ -30,11 +30,20 @@
     </div>
 </td>
 <td class="is-flex is-vcentered is-justify-content-center">
-    <app-user-profile [id]="task.creator.id" size="32x32"/>
+    <app-user-profile [isRounded]="true" [id]="task.creator.id" size="32x32" />
     <p class="has-text-centered ml-1">
-        
         {{ task.creator.firstName }} {{ task.creator.lastName }}
     </p>
+</td>
+<td>
+    <div class="has-background-grey-darker is-flex" (click)="isManagingAssignedUsers = true"
+        *ngIf="task.assignedUsers.length > 0">
+        <div *ngFor="let user of task.assignedUsers">
+            <app-user-profile [id]="user.id" [isRounded]="true" size="32x32"></app-user-profile>
+        </div>
+    </div>
+    <button class="button" (click)="isManagingAssignedUsers = true" *ngIf="task.assignedUsers.length == 0">Manage
+        Assignees</button>
 </td>
 <td>
     <p class="has-text-centered"> {{ creationTimestamp() | date: 'dd-MM-yyyy'}} </p>
@@ -110,4 +119,8 @@
 </td>
 
 <app-task-dialog [id]="task.id" *ngIf="showDialog" (close)="showDialog = false" (deleteTask)="deleteTask.emit(task.id)"
-    (taskUpdated)="updateTask($event)" [statuses]="statuses" />
+    (taskUpdated)="updateTask($event)" [statuses]="statuses" [spaceId]="spaceId" />
+
+<app-manage-task-assigned-users-dialog [taskId]="task.id" *ngIf="isManagingAssignedUsers"
+    (close)="isManagingAssignedUsers = false" (userAdded)="assignedUserAdded($event)"
+    (userDeleted)="assignedUserDeleted($event)" [spaceId]="spaceId"/>
