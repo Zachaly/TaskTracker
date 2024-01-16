@@ -15,7 +15,8 @@ export class TaskListComponent {
     title: '',
     description: '',
     creator: { id: 0, lastName: '', firstName: '', email: '' },
-    statusGroupId: 0
+    statusGroupId: 0,
+    spaceId: 0
   }
   @Input() userId = 0
 

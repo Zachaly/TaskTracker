@@ -4,6 +4,7 @@ import UserTaskStatusModel from 'src/app/model/user-task-status/UserTaskStatusMo
 import { faTrash, faEllipsis, faFlag, faBan, faPencil } from '@fortawesome/free-solid-svg-icons';
 import UserTaskPriority, { priorityColor } from 'src/app/model/enum/UserTaskPriority';
 import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
+import UserModel from 'src/app/model/user/UserModel';
 
 @Component({
   selector: '[app-user-task-list-item]',
@@ -18,8 +19,12 @@ export class UserTaskListItemComponent implements OnInit {
     title: '',
     description: '',
     creator: { id: 0, firstName: '', lastName: '', email: '' },
-    status: { id: 0, index: 0, name: '', color: '', isDefault: false }
+    status: { id: 0, index: 0, name: '', color: '', isDefault: false },
+    assignedUsers: [],
+    listId: 0
   }
+
+  @Input() spaceId: number = 0
 
   faTrash = faTrash
   faEllipsis = faEllipsis
@@ -39,6 +44,7 @@ export class UserTaskListItemComponent implements OnInit {
   isUpdatingDueTimestamp = false
   isUpdatingStatus = false
   isUpdatingPriority = false
+  isManagingAssignedUsers = false
 
   updatedTitle = ''
   updatedDueTimestamp?: number = undefined
@@ -119,5 +125,13 @@ export class UserTaskListItemComponent implements OnInit {
 
   confirmUpdate() {
     this.updateRequested.emit(this.updateRequest)
+  }
+
+  assignedUserDeleted(id: number) {
+    this.task.assignedUsers = this.task.assignedUsers.filter(x => x.id !== id)
+  }
+
+  assignedUserAdded(user: UserModel) {
+    this.task.assignedUsers.push(user)
   }
 }

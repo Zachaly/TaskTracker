@@ -74,5 +74,8 @@ namespace TaskTracker.Tests.Integration
 
         public static List<SpaceUser> GenerateSpaceUsers(long spaceId, IEnumerable<long> userIds)
             => userIds.Select(x => new SpaceUser { UserId = x, SpaceId = spaceId }).ToList();
+
+        public static List<TaskAssignedUser> GenerateTaskAssignedUsers(long taskId, IEnumerable<long> userIds)
+            => userIds.Select(id => new TaskAssignedUser { UserId = id, TaskId = taskId }).ToList();
     }
 }

@@ -87,6 +87,18 @@
             <p class="title is-5">Creator</p>
             <p class="subtitle">{{ task.creator.firstName }} {{ task.creator.firstName }}</p>
             <p class="subtitle">{{ task.creator.email }}</p>
+
+            <p class="title is-5">
+                Assigned users
+                <button class="button" (click)="isManagingAssignedUsers = true">Manage</button>
+            </p>
+            <div class="is-flex" *ngFor="let user of task.assignedUsers">
+                <app-user-profile [isRounded]="true" size="64x64" [id]="user.id" />
+                <div>
+                    <p class="subtitle">{{ user.email }}</p>
+                    <p class="subtitle"> {{ user.firstName}} {{ user.lastName}}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -110,3 +122,7 @@
         <button class="button is-warning" (click)="isUpdating = false">Cancel</button>
     </div>
 </div>
+
+<app-manage-task-assigned-users-dialog [taskId]="task.id" *ngIf="isManagingAssignedUsers"
+    (close)="isManagingAssignedUsers = false" (userAdded)="assignedUserAdded($event)"
+    (userDeleted)="assignedUserDeleted($event)" [spaceId]="spaceId"/>

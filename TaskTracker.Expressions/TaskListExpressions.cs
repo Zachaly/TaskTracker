@@ -15,7 +15,8 @@ namespace TaskTracker.Expressions
             Title = list.Title,
             StatusGroupId = list.TaskStatusGroupId,
             Tasks = list.Tasks.AsQueryable().Select(UserTaskExpressions.Model).AsEnumerable(),
-            StatusGroup = list.TaskStatusGroup == null ? TaskStatusGroupExpressions.Model.Compile().Invoke(list.TaskStatusGroup) : null
+            StatusGroup = list.TaskStatusGroup == null ? TaskStatusGroupExpressions.Model.Compile().Invoke(list.TaskStatusGroup) : null,
+            SpaceId = list.SpaceId
         };
     }
 }

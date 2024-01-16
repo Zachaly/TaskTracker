@@ -10,5 +10,8 @@ namespace TaskTracker.Model.User.Request
 
         [CustomFilter(ComparisonType = ComparisonType.StartsWith, PropertyName = "Email")]
         public string? SearchEmail { get; set; }
+
+        [CustomFilter(ComparisonType = ComparisonType.Contains, PropertyName = "Id")]
+        public ICollection<long>? Ids { get; set; }
     }
 }

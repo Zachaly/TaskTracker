@@ -1,5 +1,5 @@
 <ng-template #template>
     <figure class="image" [ngClass]="getSize()">
-        <img [src]="getUrl()" alt="">
+        <img [ngClass]="{ 'is-rounded': isRounded }" [src]="getUrl()" alt="">
     </figure>
 </ng-template>

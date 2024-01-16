@@ -16,5 +16,6 @@ namespace TaskTracker.Domain.Entity
         public long StatusId { get; set; }
         public UserTaskStatus Status { get; set; }
         public UserTaskPriority? Priority { get; set; }
+        public ICollection<TaskAssignedUser> AssignedUsers { get; set; }
     }
 }

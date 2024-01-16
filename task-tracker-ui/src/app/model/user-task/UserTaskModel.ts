@@ -11,4 +11,6 @@ export default interface UserTaskModel {
     creationTimestamp: number,
     status: UserTaskStatusModel,
     priority?: UserTaskPriority
+    assignedUsers: UserModel[],
+    listId: number
 }

@@ -23,7 +23,8 @@ namespace TaskTracker.Database.Repository
 
             query = query
                 .Include(l => l.Creator)
-                .Include(l => l.TaskStatusGroup).ThenInclude(g => g.Statuses);
+                .Include(l => l.TaskStatusGroup).ThenInclude(g => g.Statuses)
+                .Include(l => l.Tasks).ThenInclude(t => t.AssignedUsers).ThenInclude(u => u.User);
 
             return query.Select(ModelExpression).FirstOrDefaultAsync();
         }
@@ -32,7 +33,7 @@ namespace TaskTracker.Database.Repository
         {
             var query = FilterWithRequest(_dbContext.Set<TaskList>(), request);
 
-            query = query.IgnoreAutoIncludes();
+            query = OrderBy(query, request);
 
             query = query.Include(l => l.Creator);
 
