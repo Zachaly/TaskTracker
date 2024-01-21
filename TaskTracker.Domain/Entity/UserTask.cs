@@ -17,5 +17,6 @@ namespace TaskTracker.Domain.Entity
         public UserTaskStatus Status { get; set; }
         public UserTaskPriority? Priority { get; set; }
         public ICollection<TaskAssignedUser> AssignedUsers { get; set; }
+        public ICollection<TaskFileAttachment> Attachments { get; set; }
     }
 }

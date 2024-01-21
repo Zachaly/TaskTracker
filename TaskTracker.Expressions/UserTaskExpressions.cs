@@ -18,6 +18,7 @@ namespace TaskTracker.Expressions
                 Priority = task.Priority,
                 AssignedUsers = task.AssignedUsers.Select(u => UserExpressions.Model.Compile().Invoke(u.User)),
                 ListId = task.ListId,
+                Attachments = task.Attachments.Select(f => TaskFileAttachmentExpressions.Model.Compile().Invoke(f)),
             };
     }
 }
