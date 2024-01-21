@@ -17,6 +17,7 @@ namespace TaskTracker.Database
         public DbSet<TaskTrackerDocumentPage> DocumentPages { get; set; }
         public DbSet<SpaceUser> SpaceUsers { get; set; }
         public DbSet<TaskAssignedUser> TaskAssignedUsers { get; set; }
+        public DbSet<TaskFileAttachment> TaskFileAttachments { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -170,6 +171,11 @@ namespace TaskTracker.Database
                 .WithMany(t => t.AssignedUsers)
                 .HasForeignKey(u => u.TaskId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<UserTask>()
+                .HasMany(t => t.Attachments)
+                .WithOne(a => a.Task)
+                .HasForeignKey(a => a.TaskId);
         }
     }
 }

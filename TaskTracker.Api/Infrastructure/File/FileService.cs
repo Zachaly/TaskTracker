@@ -69,7 +69,7 @@
 
             foreach(var file in files)
             {
-                var fileName = $"{Guid.NewGuid()}.{file.FileName[file.FileName.LastIndexOf('.')..]}";
+                var fileName = $"{Guid.NewGuid()}{file.FileName[file.FileName.LastIndexOf('.')..]}";
 
                 var filePath = Path.Combine(_taskFileAttachmentPath, fileName);
     

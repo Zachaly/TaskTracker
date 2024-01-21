@@ -77,5 +77,11 @@ namespace TaskTracker.Tests.Integration
 
         public static List<TaskAssignedUser> GenerateTaskAssignedUsers(long taskId, IEnumerable<long> userIds)
             => userIds.Select(id => new TaskAssignedUser { UserId = id, TaskId = taskId }).ToList();
+
+        public static List<TaskFileAttachment> GenerateTaskFileAttachments(int count, long taskId)
+            => new Faker<TaskFileAttachment>()
+                .RuleFor(a => a.TaskId, _ => taskId)
+                .RuleFor(a => a.FileName, f => f.Random.Uuid() + ".ext")
+                .Generate(count);
     }
 }

@@ -44,6 +44,8 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var response = await _httpClient.GetAsync(Endpoint);
 
+            var t = await response.Content.ReadAsStringAsync();
+
             var content = await response.Content.ReadFromJsonAsync<IEnumerable<TaskAssignedUserModel>>();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

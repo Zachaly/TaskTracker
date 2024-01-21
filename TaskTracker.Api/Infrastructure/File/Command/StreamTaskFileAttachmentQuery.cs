@@ -7,10 +7,12 @@ namespace TaskTracker.Api.Infrastructure.Command
     public class TaskFileAttachmentStreamResponse : ResponseModel
     {
         public Stream? Stream { get; set; }
+        public string FileName { get; set; }
 
-        public TaskFileAttachmentStreamResponse(Stream stream) : base()
+        public TaskFileAttachmentStreamResponse(Stream stream, string fileName) : base()
         {
             Stream = stream;
+            FileName = fileName;
         }
 
         public TaskFileAttachmentStreamResponse(string error) : base(error)
@@ -44,7 +46,7 @@ namespace TaskTracker.Api.Infrastructure.Command
             }
 
             return new TaskFileAttachmentStreamResponse(
-                await _fileService.GetTaskFileAttachmentAsync(file.FileName));
+                await _fileService.GetTaskFileAttachmentAsync(file.FileName), file.FileName);
         }
     }
 }
