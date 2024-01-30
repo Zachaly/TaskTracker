@@ -83,6 +83,7 @@ namespace TaskTracker.Api.Controllers
         /// <response code="200">File stream</response>
         /// <response code="404">File not found</response>
         [HttpGet("file/{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> GetFileByIdAsync(long id)

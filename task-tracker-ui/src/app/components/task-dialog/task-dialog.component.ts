@@ -7,6 +7,7 @@ import UserTaskPriority from 'src/app/model/enum/UserTaskPriority';
 import UpdateUserTaskRequest from 'src/app/model/user-task/UpdateUserTaskRequest';
 import { UserTaskService } from 'src/app/services/user-task.service';
 import UserModel from 'src/app/model/user/UserModel';
+import { TaskFileAttachmentService } from 'src/app/services/task-file-attachment.service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -29,7 +30,8 @@ export class TaskDialogComponent implements OnInit {
     creator: { id: 0, firstName: '', lastName: '', email: '' },
     status: { id: 0, index: 0, name: '', color: '', isDefault: false },
     assignedUsers: [],
-    listId: 0
+    listId: 0,
+    attachments: []
   }
 
   faFlag = faFlag
@@ -50,7 +52,7 @@ export class TaskDialogComponent implements OnInit {
   creationDate = () => new Date(this.task.creationTimestamp)
   dueDate = () => new Date(this.task.dueTimestamp!)
 
-  constructor(private taskService: UserTaskService) {
+  constructor(private taskService: UserTaskService, private taskFileAttachmentService: TaskFileAttachmentService) {
 
   }
 
@@ -131,5 +133,23 @@ export class TaskDialogComponent implements OnInit {
     }
 
     return '#ad0505'
+  }
+
+  deleteAttachedFile(id: number) {
+    this.taskFileAttachmentService.deleteById(id).subscribe(() => this.task.attachments = this.task.attachments.filter(x => x.id !== id))
+  }
+
+  attachFiles(e: Event) {
+    const target = e.target as HTMLInputElement
+
+    const files: File[] = []
+
+    for(let i = 0; i < target.files!.length; i++) {
+      files.push(target.files![i])
+    }
+
+    this.taskFileAttachmentService.post(this.task.id, files).subscribe(() => {
+      this.taskFileAttachmentService.get({ taskId: this.task.id }).subscribe(res => this.task.attachments = res)
+    })
   }
 }

@@ -21,7 +21,8 @@ export class UserTaskListItemComponent implements OnInit {
     creator: { id: 0, firstName: '', lastName: '', email: '' },
     status: { id: 0, index: 0, name: '', color: '', isDefault: false },
     assignedUsers: [],
-    listId: 0
+    listId: 0,
+    attachments: []
   }
 
   @Input() spaceId: number = 0
