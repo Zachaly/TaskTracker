@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TaskTracker.Application;
 using TaskTracker.Api.Infrastructure.Command;
+using MediatR;
 
 namespace TaskTracker.Api.Infrastructure
 {
@@ -33,6 +34,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<IDocumentPageRepository, DocumentPageRepository>();
             builder.Services.AddScoped<ISpaceUserRepository, SpaceUserRepository>();
             builder.Services.AddScoped<ITaskAssignedUserRepository, TaskAssignedUserRepository>();
+            builder.Services.AddScoped<ITaskFileAttachmentRepository, TaskFileAttachmentRepository>();
 
             return builder;
         }
@@ -60,7 +62,9 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<IDocumentPageFactory, DocumentPageFactory>();
             builder.Services.AddScoped<ISpaceUserFactory, SpaceUserFactory>();
             builder.Services.AddScoped<ITaskAssignedUserFactory, TaskAssignedUserFactory>();
+            builder.Services.AddScoped<ITaskFileAttachmentFactory, TaskFileAttachmentFactory>();
             builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DeleteTaskPipeline<,>));
 
             return builder;
         }

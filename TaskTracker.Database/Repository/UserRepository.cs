@@ -8,7 +8,7 @@ namespace TaskTracker.Database.Repository
 {
     public interface IUserRepository : IRepositoryBase<User, UserModel, GetUserRequest>
     {
-        Task<User> GetByEmailAsync(string email);
+        Task<User?> GetByEmailAsync(string email);
     }
 
     public class UserRepository : RepositoryBase<User, UserModel, GetUserRequest>, IUserRepository
@@ -18,7 +18,7 @@ namespace TaskTracker.Database.Repository
             ModelExpression = UserExpressions.Model;
         }
 
-        public Task<User> GetByEmailAsync(string email)
+        public Task<User?> GetByEmailAsync(string email)
             => _dbContext.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
     }
 }

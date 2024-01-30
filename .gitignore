@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 *.png
 !default.png
+
+*.pdf
+*.jpg

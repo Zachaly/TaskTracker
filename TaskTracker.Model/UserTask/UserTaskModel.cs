@@ -1,4 +1,5 @@
 ﻿using TaskTracker.Domain.Enum;
+using TaskTracker.Model.TaskFileAttachment;
 using TaskTracker.Model.User;
 using TaskTracker.Model.UserTaskStatus;
 
@@ -15,6 +16,7 @@ namespace TaskTracker.Model.UserTask
         public UserTaskStatusModel Status { get; set; }
         public UserTaskPriority? Priority { get; set; }
         public IEnumerable<UserModel> AssignedUsers { get; set; }
+        public IEnumerable<TaskFileAttachmentModel> Attachments { get; set; }
         public long ListId { get; set; }
     }
 }

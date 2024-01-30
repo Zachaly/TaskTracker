@@ -82,6 +82,27 @@
                 <div class="subtitle" *ngIf="task.dueTimestamp">Due date: {{ dueDate() | date: 'dd-MM-yyyy' }}</div>
             </div>
             <p>{{ task.description}}</p>
+            <p class="subtitle">Attached files</p>
+            <div>
+                <div class="p-2" style="width: fit-content;" *ngFor="let file of task.attachments">
+                    <a target="_blank"
+                        [href]="'https://localhost:5001/api/task-file-attachment/file/' + file.id.toString()">{{
+                        file.fileName }}</a>
+                    <button class="delete" (click)="deleteAttachedFile(file.id)"></button>
+                </div>
+            </div>
+            <div>
+                <div class="file">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="resume" multiple (change)="attachFiles($event)">
+                        <span class="file-cta">
+                            <span class="file-label">
+                                Attach files
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
         </div>
         <div class="column is-3">
             <p class="title is-5">Creator</p>
@@ -99,6 +120,7 @@
                     <p class="subtitle"> {{ user.firstName}} {{ user.lastName}}</p>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -125,4 +147,4 @@
 
 <app-manage-task-assigned-users-dialog [taskId]="task.id" *ngIf="isManagingAssignedUsers"
     (close)="isManagingAssignedUsers = false" (userAdded)="assignedUserAdded($event)"
-    (userDeleted)="assignedUserDeleted($event)" [spaceId]="spaceId"/>
+    (userDeleted)="assignedUserDeleted($event)" [spaceId]="spaceId" />

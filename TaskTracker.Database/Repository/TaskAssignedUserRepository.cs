@@ -33,7 +33,9 @@ namespace TaskTracker.Database.Repository
                 .Include(u => u.Task)
                 .ThenInclude(t => t.Status)
                 .Include(u => u.Task)
-                .ThenInclude(t => t.Creator);
+                .ThenInclude(t => t.Creator)
+                .Include(u => u.Task)
+                .ThenInclude(u => u.Attachments);
 
             return Task.FromResult(AddPagination(query, request).Select(ModelExpression).AsEnumerable());
         }
