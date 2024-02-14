@@ -16,5 +16,6 @@
         public ICollection<TaskTrackerDocument> Documents { get; set; }
         public ICollection<SpaceUser> SpaceUsers { get; set; }
         public ICollection<TaskAssignedUser> AssingedTasks { get; set; }
+        public ICollection<SpaceUserPermissions> SpacePermissions { get; set; }
     }
 }
