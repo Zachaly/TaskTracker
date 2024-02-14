@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using TaskTracker.Domain.Entity;
 
 namespace TaskTracker.Database
@@ -18,6 +17,7 @@ namespace TaskTracker.Database
         public DbSet<SpaceUser> SpaceUsers { get; set; }
         public DbSet<TaskAssignedUser> TaskAssignedUsers { get; set; }
         public DbSet<TaskFileAttachment> TaskFileAttachments { get; set; }
+        public DbSet<SpaceUserPermissions> SpaceUserPermissions { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -176,6 +176,21 @@ namespace TaskTracker.Database
                 .HasMany(t => t.Attachments)
                 .WithOne(a => a.Task)
                 .HasForeignKey(a => a.TaskId);
+
+            modelBuilder.Entity<SpaceUserPermissions>()
+                .HasKey(p => new { p.UserId, p.SpaceId });
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.SpacePermissions)
+                .WithOne(p => p.User)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<UserSpace>()
+                .HasMany(s => s.Permissions)
+                .WithOne(p => p.Space)
+                .HasForeignKey(p => p.SpaceId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

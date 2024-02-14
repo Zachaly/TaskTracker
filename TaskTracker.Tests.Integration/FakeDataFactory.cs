@@ -83,5 +83,8 @@ namespace TaskTracker.Tests.Integration
                 .RuleFor(a => a.TaskId, _ => taskId)
                 .RuleFor(a => a.FileName, f => f.Random.Uuid() + ".ext")
                 .Generate(count);
+
+        public static List<SpaceUserPermissions> GenerateSpaceUserPermissions(long spaceId, IEnumerable<long> userIds)
+            => userIds.Select(id => new SpaceUserPermissions { UserId = id, SpaceId = spaceId }).ToList();
     }
 }

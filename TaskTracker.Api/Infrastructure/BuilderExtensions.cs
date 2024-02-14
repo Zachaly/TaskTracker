@@ -35,6 +35,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<ISpaceUserRepository, SpaceUserRepository>();
             builder.Services.AddScoped<ITaskAssignedUserRepository, TaskAssignedUserRepository>();
             builder.Services.AddScoped<ITaskFileAttachmentRepository, TaskFileAttachmentRepository>();
+            builder.Services.AddScoped<ISpaceUserPermissionsRepository, SpaceUserPermissionsRepository>();
 
             return builder;
         }
@@ -63,6 +64,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<ISpaceUserFactory, SpaceUserFactory>();
             builder.Services.AddScoped<ITaskAssignedUserFactory, TaskAssignedUserFactory>();
             builder.Services.AddScoped<ITaskFileAttachmentFactory, TaskFileAttachmentFactory>();
+            builder.Services.AddScoped<ISpaceUserPermissionsFactory, SpaceUserPermissionsFactory>();
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DeleteTaskPipeline<,>));
 
