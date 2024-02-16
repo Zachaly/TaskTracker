@@ -130,6 +130,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 Title = "new title"
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", updatedSpace.Id.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             await _dbContext.Entry(updatedSpace).ReloadAsync();
@@ -141,14 +142,15 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task UpdateAsync_InvalidSpaceId_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var request = new UpdateUserSpaceRequest
             {
-                Id = 1,
+                Id = 2137,
                 Title = "new title"
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             var content = await GetContentFromBadRequest<ResponseModel>(response);
@@ -177,6 +179,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 Title = ""
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", updatedSpace.Id.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             await _dbContext.Entry(updatedSpace).ReloadAsync();
@@ -202,6 +205,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var id = spaces.Last().Id;
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", id.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/{id}");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -211,8 +215,9 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteByIdAsync_InvalidId_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/2137");
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

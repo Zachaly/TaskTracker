@@ -50,6 +50,7 @@ namespace TaskTracker.Api.Controllers
         /// <response code="201">Task created successfully</response>
         /// <response code="400">Invalid request</response>
         [HttpPost]
+        [SpacePermissionRequired(SpacePermissionTypes.CanModifyTasks)]
         public async Task<ActionResult<CreatedResponseModel>> PostAsync(AddUserTaskCommand command)
         {
             var res = await _mediator.Send(command);
@@ -63,6 +64,7 @@ namespace TaskTracker.Api.Controllers
         /// <response code="204">User task deleted successfully</response>
         /// <response code="400">No task with specified id exists</response>
         [HttpDelete("{id}")]
+        [SpacePermissionRequired(SpacePermissionTypes.CanRemoveTasks)]
         public async Task<ActionResult<ResponseModel>> DeleteByIdAsync(long id)
         {
             var res = await _mediator.Send(new DeleteUserTaskByIdCommand { Id = id });
@@ -76,6 +78,7 @@ namespace TaskTracker.Api.Controllers
         /// <response code="204">Task updated successfully</response>
         /// <response code="400">Invalid request</response>
         [HttpPut]
+        [SpacePermissionRequired(SpacePermissionTypes.CanModifyTasks)]
         public async Task<ActionResult<ResponseModel>> UpdateAsync(UpdateUserTaskCommand command)
         {
             var res = await _mediator.Send(command);

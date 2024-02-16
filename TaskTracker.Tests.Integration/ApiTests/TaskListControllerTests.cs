@@ -34,6 +34,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 SpaceId = space.Id
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
             var content = await response.Content.ReadFromJsonAsync<CreatedResponseModel>();
@@ -52,17 +53,18 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task PostAsync_InvalidRequest_ReturnsBadRequest()
         {
-            var userData = await AuthorizeAsync();
+            var userData = await AuthorizeAndCreateSpaceAsync();
 
             var request = new AddTaskListCommand
             {
-                CreatorId = userData.UserData!.Id,
+                CreatorId = userData.UserId,
                 Description = "desc",
                 Color = "#000000",
                 Title = new string('a', 201),
                 StatusGroupId = 1
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", userData.SpaceId.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
             var content = await GetContentFromBadRequest<CreatedResponseModel>(response);
@@ -167,6 +169,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 Description = "new desc",
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             var updatedList = _dbContext.TaskLists.First(x => x.Id == request.Id);
@@ -182,13 +185,14 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task PutAsync_ListNotFound_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var request = new UpdateTaskListRequest
             {
                 Id = 2137
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -217,6 +221,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 Title = ""
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             var content = await GetContentFromBadRequest<ResponseModel>(response);
@@ -249,6 +254,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var deletedListId = listIds.Last();
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/{deletedListId}");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -259,8 +265,9 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteByIdAsync_NoListWithSpecifiedId_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/2137");
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

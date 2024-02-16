@@ -14,14 +14,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task GetAsync_ReturnsUserAndSpace()
         {
-            var userData = await AuthorizeAsync();
-
-            var statusGroupId = _dbContext.TaskStatusGroups.First().Id;
-
-            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id!, statusGroupId).First();
-
-            _dbContext.UserSpaces.Add(space);
-            _dbContext.SaveChanges();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var users = FakeDataFactory.GenerateUsers(5);
 
@@ -29,7 +22,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             _dbContext.SaveChanges();
 
-            var spaceUsers = FakeDataFactory.GenerateSpaceUsers(space.Id, users.Select(x => x.Id));
+            var spaceUsers = FakeDataFactory.GenerateSpaceUsers(spaceId, users.Select(x => x.Id));
 
             _dbContext.SpaceUsers.AddRange(spaceUsers);
             _dbContext.SaveChanges();
@@ -46,14 +39,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task PostAsync_ValidRequest_AddsNewSpaceUser()
         {
-            var userData = await AuthorizeAsync();
-
-            var statusGroupId = _dbContext.TaskStatusGroups.First().Id;
-
-            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id, statusGroupId).First();
-
-            _dbContext.UserSpaces.Add(space);
-            _dbContext.SaveChanges();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var user = FakeDataFactory.GenerateUsers(1).First();
 
@@ -62,10 +48,11 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var request = new AddSpaceUserCommand
             {
-                SpaceId = space.Id,
+                SpaceId = spaceId,
                 UserId = user.Id
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -75,7 +62,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task PostAsync_InvalidRequest_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var request = new AddSpaceUserCommand
             {
@@ -83,6 +70,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 UserId = -1
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
             var content = await GetContentFromBadRequest<ResponseModel>(response);
@@ -94,14 +82,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteAsync_DeletesCorrectEntity()
         {
-            var userData = await AuthorizeAsync();
-
-            var statusGroupId = _dbContext.TaskStatusGroups.First().Id;
-
-            var space = FakeDataFactory.GenerateUserSpaces(1, userData.UserData!.Id!, statusGroupId).First();
-
-            _dbContext.UserSpaces.Add(space);
-            _dbContext.SaveChanges();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var users = FakeDataFactory.GenerateUsers(5);
 
@@ -109,13 +90,14 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             _dbContext.SaveChanges();
 
-            var spaceUsers = FakeDataFactory.GenerateSpaceUsers(space.Id, users.Select(x => x.Id));
+            var spaceUsers = FakeDataFactory.GenerateSpaceUsers(spaceId, users.Select(x => x.Id));
 
             _dbContext.SpaceUsers.AddRange(spaceUsers);
             _dbContext.SaveChanges();
 
             var deletedUser = spaceUsers.First();
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/{deletedUser.SpaceId}/{deletedUser.UserId}");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -125,9 +107,10 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteAsync_SpaceUserNotFound_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
-            var response = await _httpClient.DeleteAsync($"{Endpoint}/21/37");
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
+            var response = await _httpClient.DeleteAsync($"{Endpoint}/{spaceId}/37");
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }

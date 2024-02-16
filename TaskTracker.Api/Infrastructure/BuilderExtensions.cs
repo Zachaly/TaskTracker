@@ -67,6 +67,7 @@ namespace TaskTracker.Api.Infrastructure
             builder.Services.AddScoped<ISpaceUserPermissionsFactory, SpaceUserPermissionsFactory>();
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DeleteTaskPipeline<,>));
+            builder.Services.AddScoped<SpacePermissionsMiddleware>();
 
             return builder;
         }

@@ -40,6 +40,7 @@ namespace TaskTracker.Api.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [SpacePermissionRequired(SpacePermissionTypes.CanAssignTaskUsers)]
         public async Task<ActionResult<ResponseModel>> PostAsync(AddTaskAssignedUserCommand command)
         {
             var res = await _mediator.Send(command);
@@ -55,6 +56,7 @@ namespace TaskTracker.Api.Controllers
         [HttpDelete("{taskId}/{userId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [SpacePermissionRequired(SpacePermissionTypes.CanAssignTaskUsers)]
         public async Task<ActionResult<ResponseModel>> DeleteAsync(long taskId, long userId)
         {
             var res = await _mediator.Send(new DeleteTaskAssignedUserCommand(taskId, userId));

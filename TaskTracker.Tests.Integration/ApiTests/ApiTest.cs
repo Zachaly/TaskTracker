@@ -63,5 +63,20 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             return content;
         }
+
+        protected async Task<(long UserId, long SpaceId)> AuthorizeAndCreateSpaceAsync()
+        {
+            var userId = (await AuthorizeAsync()).UserData!.Id;
+
+            var statusGroupId = _dbContext.TaskStatusGroups.First().Id;
+
+            var space = FakeDataFactory.GenerateUserSpaces(1, userId, statusGroupId).First();
+
+            _dbContext.UserSpaces.Add(space);
+            _dbContext.SaveChanges();
+
+            return (userId, space.Id);
+        }
+
     }
 }

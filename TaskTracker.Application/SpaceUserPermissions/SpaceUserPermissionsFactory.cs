@@ -16,16 +16,16 @@ namespace TaskTracker.Application
             {
                 SpaceId = request.SpaceId,
                 UserId = request.UserId,
-                CanAddUsers = request.CanAddUsers,
-                CanChangePermissions = request.CanChangePermissions,
-                CanAssignTaskUsers = request.CanAssignTaskUsers,
-                CanModifyLists = request.CanModifyLists,
-                CanModifySpace = request.CanModifySpace,
-                CanModifyStatusGroups = request.CanModifyStatusGroups,
-                CanModifyTasks = request.CanModifyTasks,
-                CanRemoveLists = request.CanRemoveLists,
-                CanRemoveTasks = request.CanRemoveTasks,
-                CanRemoveUsers = request.CanRemoveUsers,
+                CanAddUsers = request.CanAddUsers.GetValueOrDefault(),
+                CanChangePermissions = request.CanChangePermissions.GetValueOrDefault(),
+                CanAssignTaskUsers = request.CanAssignTaskUsers.GetValueOrDefault(),
+                CanModifyLists = request.CanModifyLists.GetValueOrDefault(),
+                CanModifySpace = request.CanModifySpace.GetValueOrDefault(),
+                CanModifyStatusGroups = request.CanModifyStatusGroups.GetValueOrDefault(),
+                CanModifyTasks = request.CanModifyTasks.GetValueOrDefault(),
+                CanRemoveLists = request.CanRemoveLists.GetValueOrDefault(),
+                CanRemoveTasks = request.CanRemoveTasks.GetValueOrDefault(),
+                CanRemoveUsers = request.CanRemoveUsers.GetValueOrDefault(),
             };
     }
 }
