@@ -42,6 +42,7 @@ app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<SpacePermissionsMiddleware>();
 
 app.MapControllers();
 

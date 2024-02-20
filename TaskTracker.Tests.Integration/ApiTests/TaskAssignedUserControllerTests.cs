@@ -42,9 +42,8 @@ namespace TaskTracker.Tests.Integration.ApiTests
             _dbContext.TaskAssignedUsers.AddRange(assignedUsers);
             _dbContext.SaveChanges();
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.GetAsync(Endpoint);
-
-            var t = await response.Content.ReadAsStringAsync();
 
             var content = await response.Content.ReadFromJsonAsync<IEnumerable<TaskAssignedUserModel>>();
 
@@ -81,6 +80,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 TaskId = task.Id
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -90,7 +90,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task PostAsync_InvalidRequest_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var request = new AddTaskAssignedUserCommand
             {
@@ -98,6 +98,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 TaskId = 1
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
 
             var content = await GetContentFromBadRequest<ResponseModel>(response);
@@ -140,6 +141,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var deletedUser = assignedUsers.Last();
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/{deletedUser.TaskId}/{deletedUser.UserId}");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -150,8 +152,9 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteAsync_UserDoesNotExists_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/21/37");
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

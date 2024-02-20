@@ -82,12 +82,12 @@
             </thead>
             <tbody>
                 <tr app-user-task-list-item *ngFor="let task of tasks" [task]="task" (deleteTask)="deleteTask($event)"
-                    (updateRequested)="updateTask($event, task)" [statuses]="statusGroup.statuses ?? []"></tr>
+                    (updateRequested)="updateTask($event, task)" [statuses]="statusGroup.statuses ?? []" [spaceId]="list!.spaceId"></tr>
             </tbody>
 
         </table>
         <app-add-task-form [listId]="listId" [statusId]="defaultStatusId" [creatorId]="userId"
-            (taskAdded)="loadTasks()">
+            (taskAdded)="loadTasks()" [spaceId]="list!.spaceId">
 
         </app-add-task-form>
     </div>

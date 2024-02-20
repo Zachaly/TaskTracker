@@ -19,11 +19,19 @@ export class TaskAssignedUserService {
     return this.http.get<TaskAssignedUserModel[]>(API_URL, { params })
   }
 
-  public add(request: AddTaskAssignedUserRequest) {
-    return this.http.post(API_URL, request)
+  public add(request: AddTaskAssignedUserRequest, spaceId: number) {
+    return this.http.post(API_URL, request, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 
-  public delete(taskId: number, userId: number) {
-    return this.http.delete(`${API_URL}/${taskId}/${userId}`)
+  public delete(taskId: number, userId: number, spaceId: number) {
+    return this.http.delete(`${API_URL}/${taskId}/${userId}`, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 }

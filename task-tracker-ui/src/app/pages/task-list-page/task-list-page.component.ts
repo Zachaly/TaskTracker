@@ -125,7 +125,7 @@ export class TaskListPageComponent implements OnInit {
   }
 
   deleteTask(id: number) {
-    this.taskService.deleteById(id).subscribe(() => {
+    this.taskService.deleteById(id, this.list!.spaceId).subscribe(() => {
       this.loadTasks()
     })
   }
@@ -137,18 +137,18 @@ export class TaskListPageComponent implements OnInit {
       return
     }
 
-    this.taskListService.deleteById(this.list!.id).subscribe(() => this.router.navigate(['/']))
+    this.taskListService.deleteById(this.list!.id, this.list!.spaceId).subscribe(() => this.router.navigate(['/']))
   }
 
   updateList() {
-    this.taskListService.update(this.updateRequest).subscribe(() => {
+    this.taskListService.update(this.updateRequest, this.list!.spaceId).subscribe(() => {
       this.isUpdatingList = false
       this.taskListService.getById(this.list!.id).subscribe(res => this.list = res)
     })
   }
 
   updateTask(request: UpdateUserTaskRequest, task: UserTaskModel) {
-    this.taskService.update(request).subscribe(() => {
+    this.taskService.update(request, this.list!.spaceId).subscribe(() => {
       this.taskService.getById(request.id).subscribe(res => {
         task.priority = res.priority
         task.status = res.status

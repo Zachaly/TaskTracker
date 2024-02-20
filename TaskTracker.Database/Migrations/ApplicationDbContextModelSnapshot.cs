@@ -68,6 +68,51 @@ namespace TaskTracker.Database.Migrations
                     b.ToTable("SpaceUsers");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.SpaceUserPermissions", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SpaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("CanAddUsers")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanAssignTaskUsers")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanChangePermissions")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanModifyLists")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanModifySpace")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanModifyStatusGroups")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanModifyTasks")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanRemoveLists")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanRemoveTasks")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanRemoveUsers")
+                        .HasColumnType("bit");
+
+                    b.HasKey("UserId", "SpaceId");
+
+                    b.HasIndex("SpaceId");
+
+                    b.ToTable("SpaceUserPermissions");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.TaskAssignedUser", b =>
                 {
                     b.Property<long>("TaskId")
@@ -403,6 +448,25 @@ namespace TaskTracker.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entity.SpaceUserPermissions", b =>
+                {
+                    b.HasOne("TaskTracker.Domain.Entity.UserSpace", "Space")
+                        .WithMany("Permissions")
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TaskTracker.Domain.Entity.User", "User")
+                        .WithMany("SpacePermissions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Space");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entity.TaskAssignedUser", b =>
                 {
                     b.HasOne("TaskTracker.Domain.Entity.UserTask", "Task")
@@ -585,6 +649,8 @@ namespace TaskTracker.Database.Migrations
 
                     b.Navigation("RefreshTokens");
 
+                    b.Navigation("SpacePermissions");
+
                     b.Navigation("SpaceUsers");
 
                     b.Navigation("Spaces");
@@ -599,6 +665,8 @@ namespace TaskTracker.Database.Migrations
                     b.Navigation("Documents");
 
                     b.Navigation("Lists");
+
+                    b.Navigation("Permissions");
 
                     b.Navigation("Users");
                 });

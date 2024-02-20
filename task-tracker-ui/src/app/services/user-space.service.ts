@@ -30,7 +30,11 @@ export class UserSpaceService {
   }
 
   update(request: UpdateUserSpaceRequest) {
-    return this.http.put(API_URL, request)
+    return this.http.put(API_URL, request, {
+      headers: {
+        'SpaceId': request.id.toString()
+      }
+    })
   }
 
   deleteById(id: number) {

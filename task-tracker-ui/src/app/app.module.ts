@@ -35,6 +35,7 @@ import { SideBarSpaceLinkComponent } from './components/side-bar-space-link/side
 import { DocumentPageComponent } from './pages/document-page/document-page.component';
 import { AddSpaceUserPageComponent } from './pages/add-space-user-page/add-space-user-page.component';
 import { ManageTaskAssignedUsersDialogComponent } from './components/manage-task-assigned-users-dialog/manage-task-assigned-users-dialog.component';
+import { ManagePermissionsPageComponent } from './pages/manage-permissions-page/manage-permissions-page.component';
 
 const route = (path: string, component: any, canActivate: any[] = []) => ({ path, component, canActivate })
 
@@ -50,7 +51,8 @@ const routes: Routes = [
   route('space/add', AddSpacePageComponent, [RouteGuard]),
   route('space/:id', SpacePageComponent, [RouteGuard]),
   route('doc/:id', DocumentPageComponent, [RouteGuard]),
-  route('space/:spaceId/add-user', AddSpaceUserPageComponent, [RouteGuard])
+  route('space/:spaceId/add-user', AddSpaceUserPageComponent, [RouteGuard]),
+  route('space/:spaceId/permissions', ManagePermissionsPageComponent, [RouteGuard])
 ]
 
 @NgModule({
@@ -80,6 +82,7 @@ const routes: Routes = [
     DocumentPageComponent,
     AddSpaceUserPageComponent,
     ManageTaskAssignedUsersDialogComponent,
+    ManagePermissionsPageComponent,
   ],
   imports: [
     BrowserModule,

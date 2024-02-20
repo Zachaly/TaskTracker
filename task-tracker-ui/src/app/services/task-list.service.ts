@@ -25,14 +25,26 @@ export class TaskListService {
   }
 
   add(request: AddTaskListRequest): Observable<any> {
-    return this.http.post(API_URL, request)
+    return this.http.post(API_URL, request, {
+      headers: {
+        'SpaceId': request.spaceId.toString()
+      }
+    })
   }
 
-  update(request: UpdateTaskListRequest): Observable<any> {
-    return this.http.put(API_URL, request)
+  update(request: UpdateTaskListRequest, spaceId: number): Observable<any> {
+    return this.http.put(API_URL, request, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 
-  deleteById(id: number): Observable<any> {
-    return this.http.delete(`${API_URL}/${id}`)
+  deleteById(id: number, spaceId: number): Observable<any> {
+    return this.http.delete(`${API_URL}/${id}`, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 }

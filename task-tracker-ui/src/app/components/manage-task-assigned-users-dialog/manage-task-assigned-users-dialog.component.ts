@@ -43,7 +43,7 @@ export class ManageTaskAssignedUsersDialogComponent implements OnInit {
   }
 
   deleteUser(userId: number) {
-    this.taskAssignedUserService.delete(this.taskId, userId).subscribe(() => {
+    this.taskAssignedUserService.delete(this.taskId, userId, this.spaceId).subscribe(() => {
       this.assignedUsers = this.assignedUsers.filter(x => x.id !== userId)
       this.userDeleted.emit(userId)
     })
@@ -55,7 +55,7 @@ export class ManageTaskAssignedUsersDialogComponent implements OnInit {
       taskId: this.taskId
     }
 
-    this.taskAssignedUserService.add(request).subscribe(() => {
+    this.taskAssignedUserService.add(request, this.spaceId).subscribe(() => {
       this.assignedUsers.push(user)
       this.userAdded.emit(user)
       this.searchedUsers = this.searchedUsers.filter(u => u.id !== user.id)

@@ -55,6 +55,7 @@ namespace TaskTracker.Api.Controllers
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
+        [SpacePermissionRequired(SpacePermissionTypes.CanModifyLists)]
         public async Task<ActionResult<CreatedResponseModel>> PostAsync(AddTaskListCommand command)
         {
             var res = await _mediator.Send(command);
@@ -70,6 +71,7 @@ namespace TaskTracker.Api.Controllers
         [HttpPut]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [SpacePermissionRequired(SpacePermissionTypes.CanModifyLists)]
         public async Task<ActionResult<ResponseModel>> PutAsync(UpdateTaskListCommand command)
         {
             var res = await _mediator.Send(command);
@@ -85,6 +87,7 @@ namespace TaskTracker.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [SpacePermissionRequired(SpacePermissionTypes.CanRemoveLists)]
         public async Task<ActionResult<ResponseModel>> DeleteByIdAsync(long id)
         {
             var res = await _mediator.Send(new DeleteTaskListByIdCommand { Id = id });

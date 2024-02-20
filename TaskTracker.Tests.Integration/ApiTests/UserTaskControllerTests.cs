@@ -104,8 +104,9 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task GetByIdAsync_NoTaskWithSpecifiedId_ReturnsNotFound()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.GetAsync($"{Endpoint}/2137");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -138,6 +139,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 ListId = list.Id
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", space.Id.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
             var content = await response.Content.ReadFromJsonAsync<CreatedResponseModel>();
 
@@ -153,17 +155,18 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task PostAsync_InvalidRequest_ReturnsBadRequest()
         {
-            var logindata = await AuthorizeAsync();
+            var userData = await AuthorizeAndCreateSpaceAsync();
 
             var request = new AddUserTaskCommand
             {
-                CreatorId = logindata.UserData!.Id,
+                CreatorId = userData.UserId,
                 Description = "desc",
                 DueTimestamp = 1,
                 Title = "",
                 StatusId = 1
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", userData.SpaceId.ToString());
             var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
             var content = await GetContentFromBadRequest<CreatedResponseModel>(response);
 
@@ -174,25 +177,21 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteByIdAsync_DeletesCorrectTask()
         {
-            var loginData = await AuthorizeAsync();
+            var userData = await AuthorizeAndCreateSpaceAsync();
 
             var status = _dbContext.UserTaskStatuses.First();
             var group = _dbContext.TaskStatusGroups.First();
 
-            var space = FakeDataFactory.GenerateUserSpaces(1, loginData.UserData.Id, group.Id).First();
-
-            _dbContext.UserSpaces.Add(space);
-            _dbContext.SaveChanges();
-
-            var list = FakeDataFactory.GenerateTaskLists(1, loginData.UserData!.Id, group.Id, space.Id).First();
+            var list = FakeDataFactory.GenerateTaskLists(1, userData.UserId, group.Id, userData.SpaceId).First();
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
 
-            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(5, loginData.UserData.Id, list.Id, status.Id));
+            _dbContext.Tasks.AddRange(FakeDataFactory.GenerateUserTasks(5, userData.UserId, list.Id, status.Id));
             _dbContext.SaveChanges();
 
             var taskId = _dbContext.Tasks.OrderBy(t => t.Id).Last().Id;
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", userData.SpaceId.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/{taskId}");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -202,8 +201,9 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task DeleteByIdAsync_TaskNotFound_ReturnsBadRequest()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.DeleteAsync($"{Endpoint}/2137");
             var content = await GetContentFromBadRequest<ResponseModel>(response);
 
@@ -219,22 +219,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var userIds = _dbContext.Users.Select(x => x.Id).ToList();
 
-            var group = FakeDataFactory.GenerateTaskStatusGroups(1, userIds.First()).First();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
-            _dbContext.TaskStatusGroups.Add(group);
-            _dbContext.SaveChanges();
+            var group = _dbContext.TaskStatusGroups.First();
+            var status = _dbContext.UserTaskStatuses.First();
 
-            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
-
-            _dbContext.UserTaskStatuses.Add(status);
-            _dbContext.SaveChanges();
-
-            var space = FakeDataFactory.GenerateUserSpaces(1, userIds.First(), group.Id).First();
-
-            _dbContext.UserSpaces.Add(space);
-            _dbContext.SaveChanges();
-
-            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id, space.Id).First();
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id, spaceId).First();
 
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
@@ -254,8 +244,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 DueTimestamp = updatedTask.DueTimestamp + 1,
             };
 
-            await AuthorizeAsync();
-
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             await _dbContext.Entry(updatedTask).ReloadAsync();
@@ -275,22 +264,12 @@ namespace TaskTracker.Tests.Integration.ApiTests
 
             var userIds = _dbContext.Users.Select(x => x.Id).ToList();
 
-            var group = FakeDataFactory.GenerateTaskStatusGroups(1, userIds.First()).First();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
-            _dbContext.TaskStatusGroups.Add(group);
-            _dbContext.SaveChanges();
+            var group = _dbContext.TaskStatusGroups.First();
+            var status = _dbContext.UserTaskStatuses.First();
 
-            var status = FakeDataFactory.GenerateTaskStatuses(1, group.Id).First();
-
-            _dbContext.UserTaskStatuses.Add(status);
-            _dbContext.SaveChanges();
-
-            var space = FakeDataFactory.GenerateUserSpaces(1, userIds.First(), group.Id).First();
-
-            _dbContext.UserSpaces.Add(space);
-            _dbContext.SaveChanges();
-
-            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id, space.Id).First();
+            var list = FakeDataFactory.GenerateTaskLists(1, userIds.First(), group.Id, spaceId).First();
 
             _dbContext.TaskLists.Add(list);
             _dbContext.SaveChanges();
@@ -310,8 +289,7 @@ namespace TaskTracker.Tests.Integration.ApiTests
                 DueTimestamp = updatedTask.DueTimestamp + 1,
             };
 
-            await AuthorizeAsync();
-
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
             var content = await GetContentFromBadRequest<ResponseModel>(response);
 
@@ -322,13 +300,14 @@ namespace TaskTracker.Tests.Integration.ApiTests
         [Fact]
         public async Task UpdateAsync_EntityNotFound_Failure()
         {
-            await AuthorizeAsync();
+            var spaceId = (await AuthorizeAndCreateSpaceAsync()).SpaceId;
 
             var request = new UpdateUserTaskRequest
             {
                 Id = 0,
             };
 
+            _httpClient.DefaultRequestHeaders.Add("SpaceId", spaceId.ToString());
             var response = await _httpClient.PutAsJsonAsync(Endpoint, request);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
