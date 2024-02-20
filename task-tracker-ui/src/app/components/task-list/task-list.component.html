@@ -1,7 +1,7 @@
 <div class="card m-1">
     <div class="card-header is-flex is-justify-content-space-between is-align-items-center"
         [ngStyle]="{ 'background-color': list.color ?? ''}">
-        <p class="card-header-title">{{ list.title }}</p>
+        <p [routerLink]="['/list', list.id.toString()]" class="card-header-title">{{ list.title }}</p>
         <button class="card-header-icon" (click)="toggleShowTasks()">
             <span class="icon">
                 <fa-icon [icon]="curentIcon"></fa-icon>
@@ -19,6 +19,6 @@
         </tbody>
     </table>
     <app-add-task-form *ngIf="this.list.statusGroup?.statuses" [listId]="list.id" (taskAdded)="loadTasks.emit()"
-        [statusId]="defaultStatus()!.id">
+        [statusId]="defaultStatus()!.id" [spaceId]="list.spaceId">
     </app-add-task-form>
 </div>

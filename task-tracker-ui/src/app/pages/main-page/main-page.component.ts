@@ -48,13 +48,13 @@ export class MainPageComponent implements OnInit {
   }
 
   deleteTask(id: number, list: TaskListModel) {
-    this.taskService.deleteById(id).subscribe(() => {
+    this.taskService.deleteById(id, list.spaceId).subscribe(() => {
       list.tasks = list.tasks?.filter(x => x.id !== id)
     })
   }
 
   updateTask(request: UpdateUserTaskRequest, list: TaskListModel) {
-    this.taskService.update(request).subscribe(() => {
+    this.taskService.update(request, list.spaceId).subscribe(() => {
       this.taskService.getById(request.id).subscribe(updatedTask => {
         list.tasks![list.tasks!.findIndex(t => t.id == updatedTask.id)] = updatedTask
       })

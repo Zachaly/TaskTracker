@@ -22,19 +22,31 @@ export class UserTaskService {
     return this.http.get<UserTaskModel[]>(API_URL, { params })
   }
 
-  public post(request: AddUserTaskRequest): Observable<any> {
-    return this.http.post(API_URL, request)
+  public post(request: AddUserTaskRequest, spaceId: number): Observable<any> {
+    return this.http.post(API_URL, request, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 
   public getById(id: number): Observable<UserTaskModel> {
     return this.http.get<UserTaskModel>(`${API_URL}/${id}`)
   }
 
-  public deleteById(id: number): Observable<any> {
-    return this.http.delete(`${API_URL}/${id}`)
+  public deleteById(id: number, spaceId: number): Observable<any> {
+    return this.http.delete(`${API_URL}/${id}`, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 
-  public update(request: UpdateUserTaskRequest): Observable<any> {
-    return this.http.put(API_URL, request)
+  public update(request: UpdateUserTaskRequest, spaceId: number): Observable<any> {
+    return this.http.put(API_URL, request, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 }

@@ -14,6 +14,7 @@ export class AddTaskFormComponent {
   @Input() listId?: number
   @Input() creatorId: number = 0
   @Input() statusId: number = 0
+  @Input() spaceId: number = 0
   @Output() taskAdded: EventEmitter<any> = new EventEmitter()
 
   newTask: AddUserTaskRequest = {
@@ -43,7 +44,7 @@ export class AddTaskFormComponent {
     this.newTask.creatorId = this.authService.userData!.userData.id
     this.newTask.statusId = this.statusId
 
-    this.taskService.post(this.newTask).subscribe(() => this.taskAdded.emit())
+    this.taskService.post(this.newTask, this.spaceId).subscribe(() => this.taskAdded.emit())
     this.newTask = {
       title: '',
       description: '',

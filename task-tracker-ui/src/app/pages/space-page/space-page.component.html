@@ -60,7 +60,11 @@
                 </div>
                 <p class="title">Members</p>
                 <div>
-                    <a class="button" routerLink="add-user">Add member</a>
+                    <div>
+                        <a class="button" routerLink="add-user">Add member</a>
+                        <a class="button" routerLink="permissions">Manage permissions</a>
+                    </div>
+                    
                     <div class="box" *ngFor="let user of users">
                         <div class="media">
                             <div class="media-left">

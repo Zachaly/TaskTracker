@@ -13,17 +13,25 @@ export class SpaceUserService {
 
   constructor(private http: HttpClient) { }
 
-  get(request: GetSpaceUserRequest){
+  get(request: GetSpaceUserRequest) {
     const params = mapGetSpaceUserRequest(request)
 
     return this.http.get<SpaceUserModel[]>(API_URL, { params })
   }
 
   add(request: AddSpaceUserRequest) {
-    return this.http.post(API_URL, request)
+    return this.http.post(API_URL, request, {
+      headers: {
+        'SpaceId': request.spaceId.toString()
+      }
+    })
   }
 
   delete(spaceId: number, userId: number) {
-    return this.http.delete(`${API_URL}/${spaceId}/${userId}`)
+    return this.http.delete(`${API_URL}/${spaceId}/${userId}`, {
+      headers: {
+        'SpaceId': spaceId.toString()
+      }
+    })
   }
 }

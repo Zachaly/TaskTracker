@@ -74,7 +74,7 @@ export class TaskDialogComponent implements OnInit {
   }
 
   public updateTask() {
-    this.taskService.update(this.updateRequest).subscribe(() => {
+    this.taskService.update(this.updateRequest, this.spaceId).subscribe(() => {
       this.isUpdating = false
       this.isUpdatingStatus = false
       this.loadTask().subscribe(res => this.taskUpdated.emit(res))

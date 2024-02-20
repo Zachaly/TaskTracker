@@ -23,6 +23,9 @@ export class TokenRefreshInterceptor implements HttpInterceptor {
                         retry(1)
                     })
                 }
+                if(err.status == 403) {
+                    alert("You are not allowed to do that!")
+                }
             }
         }))
     }
